@@ -2,7 +2,7 @@
 #define TF02_DRIVER_EXPORT_H
 
 #ifdef _WIN32
-#	ifdef tf02_driver_EXPORTS
+#	ifdef tf0x_drivers_EXPORTS
 #		define API __declspec(dllexport)
 #	else
 #		define API __declspec(dllimport)

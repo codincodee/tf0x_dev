@@ -1,4 +1,4 @@
-add_executable(tf02_traffic main.c)
+add_executable(tf02_traffic main.cpp)
 
 target_link_libraries(tf02_traffic tf0x_drivers)
 

@@ -3,7 +3,7 @@ configure_file(config.h.in "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 add_library(
   tf0x_drivers
     SHARED
-      tf02_driver.c
+      tf02_driver.cpp
       tf02_driver.h
       config.h.in
       export.h
