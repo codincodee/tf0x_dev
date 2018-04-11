@@ -1,12 +1,15 @@
 configure_file(config.h.in "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 
 add_library(
-  tf0x_common    SHARED
+  tf0x_common
+    SHARED
       tf0x_common.cpp
       tf0x_common.h
       config.h.in
       export.h
 )
+
+target_link_libraries(tf0x_common tf0x_drivers)
 
 set_target_properties(tf0x_common PROPERTIES
   PUBLIC_HEADER "tf02_common.h;${CMAKE_CURRENT_BINARY_DIR}/config.h")

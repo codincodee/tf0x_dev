@@ -42,7 +42,7 @@ add_subdirectory(tf02_traffic)
 # ===============================
 
 # Add all targets to the build-tree export set
-export(TARGETS tf0x_drivers tf02_traffic
+export(TARGETS tf0x_drivers tf02_traffic tf0x_common
   FILE "${PROJECT_BINARY_DIR}/tf0x_devTargets.cmake")
 
 # Export the package for use from the build-tree

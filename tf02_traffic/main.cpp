@@ -1,8 +1,7 @@
-
-#include "tf0x_drivers/tf02_driver.h"
+#include "tf0x_common/tf0x_common.h"
 
 int main(int argc, char* argv[])
 {
-  tf02_driver();
+  tf0x_common();
 	return 0;
 }

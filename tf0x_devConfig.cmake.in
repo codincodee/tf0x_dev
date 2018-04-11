@@ -12,5 +12,5 @@ set(tf0x_dev_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
 include("${tf0x_dev_CMAKE_DIR}/tf0x_devTargets.cmake")
 
 # These are IMPORTED targets created by tf0x_devTargets.cmake
-set(tf0x_dev_LIBRARIES tf02_driver)
+set(tf0x_dev_LIBRARIES tf0x_drivers tf0x_common)
 set(tf0x_dev_EXECUTABLE tf02_traffic)
