@@ -35,7 +35,7 @@ include_directories(
 
 # Add sub-directories
 add_subdirectory(tf0x_drivers)
-# add_subdirectory(tf0x_common)
+add_subdirectory(tf0x_common)
 add_subdirectory(tf02_traffic)
 
 # The interesting stuff goes here
