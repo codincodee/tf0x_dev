@@ -30,11 +30,11 @@ endforeach()
 
 # set up include-directories
 include_directories(
-  "${PROJECT_SOURCE_DIR}"   # to find tf02_driver/tf02_driver.h
-  "${PROJECT_BINARY_DIR}")  # to find tf02_driver/config.h
+  "${PROJECT_SOURCE_DIR}"   # to find tf0x_drivers/tf0x_drivers.h
+  "${PROJECT_BINARY_DIR}")  # to find tf0x_drivers/config.h
 
 # Add sub-directories
-add_subdirectory(tf02_driver)
+add_subdirectory(tf0x_drivers)
 # add_subdirectory(tf0x_common)
 add_subdirectory(tf02_traffic)
 
@@ -42,7 +42,7 @@ add_subdirectory(tf02_traffic)
 # ===============================
 
 # Add all targets to the build-tree export set
-export(TARGETS tf02_driver tf02_traffic
+export(TARGETS tf0x_drivers tf02_traffic
   FILE "${PROJECT_BINARY_DIR}/tf0x_devTargets.cmake")
 
 # Export the package for use from the build-tree
