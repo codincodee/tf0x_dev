@@ -11,8 +11,17 @@ add_library(
 
 target_link_libraries(tf0x_common tf0x_drivers)
 
+set(
+  PUBLIC_HEADERS
+    tf0x_common.h
+    export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
+
 set_target_properties(tf0x_common PROPERTIES
-  PUBLIC_HEADER "tf02_common.h;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+  PUBLIC_HEADER
+    "${PUBLIC_HEADERS}"
+)
 
 install(TARGETS tf0x_common
   # IMPORTANT: Add the tf0x_common library to the "export-set"

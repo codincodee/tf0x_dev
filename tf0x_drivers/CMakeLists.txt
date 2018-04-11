@@ -9,8 +9,17 @@ add_library(
       export.h
 )
 
+set(
+  PUBLIC_HEADERS
+    tf02_driver.h
+    export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+)
+
 set_target_properties(tf0x_drivers PROPERTIES
-  PUBLIC_HEADER "tf02_driver.h;${CMAKE_CURRENT_BINARY_DIR}/config.h")
+  PUBLIC_HEADER
+    "${PUBLIC_HEADERS}"
+)
 
 install(TARGETS tf0x_drivers
   # IMPORTANT: Add the tf0x_drivers library to the "export-set"
