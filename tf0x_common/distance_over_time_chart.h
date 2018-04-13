@@ -3,15 +3,18 @@
 
 #include "export.h"
 #include <QtCharts/qchart.h>
+#include <QLineSeries>
 
 namespace tf0x_common {
 class API DistanceOverTimeChart : public QtCharts::QChart {
   Q_OBJECT
 public:
   DistanceOverTimeChart();
-  void AddPoint(const float& meter, const int& millisecond);
   virtual ~DistanceOverTimeChart();
+  bool AddPoint(const float& meter, const int& millisecond);
   void SetTimeWindow(const int& millisecond);
+private:
+  QtCharts::QLineSeries* line_series_;
 };
 } // namespace tf0x_common
 

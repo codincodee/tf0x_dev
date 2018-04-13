@@ -16,16 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
-  series_ = new QLineSeries();
-
+  this->setWindowTitle("TF02 Traffic");
+  this->resize(1000, 800);
   chart_ = new tf0x_common::DistanceOverTimeChart();
-  chart_->legend()->hide();
-  chart_->addSeries(series_);
-
-  auto axisy = new QValueAxis;
-  axisy->setGridLineVisible(true);
-  axisy->setTickCount(20);
-  chart_->addAxis(axisy, Qt::AlignLeft);
 
   // chart_->createDefaultAxes();
   // chart->setTitle("Simple line chart example");
@@ -61,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
+  delete chart_;
 }
 
 void MainWindow::timerEvent(QTimerEvent *event) {
@@ -73,43 +67,5 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   }
   static int cnt = 0;
   ++cnt;
-//  if (cnt % 10 != 0) {
-//    return;
-//  }
-  *series_ << QPointF(cnt, dist);
-
-  while (series_->count()) {
-    if ((series_->at(0).x() + 500) < cnt) {
-      series_->removePoints(0, 1);
-    } else {
-      break;
-    }
-  }
-  float min = 1000;
-  float max = 0;
-  for (auto i = 0; i < series_->count(); ++i) {
-    if (series_->at(i).y() > max) {
-      max = series_->at(i).y();
-    }
-    if (series_->at(i).y() < min) {
-      min = series_->at(i).y();
-    }
-  }
-  if (max > 20) {
-    max = 20;
-  }
-  if (max < 5) {
-    max = 5;
-  }
-  min = 0;
-  chart_->removeSeries(series_);
-  chart_->addSeries(series_);
-
-  auto axisy = chart_->axisY();
-  axisy->setRange(min, max);
-//  auto axisx = chart_->axisX();
-//  axisx->hide();
-
-  chart_->setAxisY(axisy, series_);
-  // chart_->setAxisY(&axis, series_);
+  chart_->AddPoint(dist, cnt);
 }
