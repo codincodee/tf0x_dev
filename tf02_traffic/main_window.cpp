@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
   chart_ = new tf0x_common::DistanceOverTimeChart();
   chart_->legend()->hide();
   chart_->addSeries(series_);
-  // chart_->createDefaultAxes();
+  chart_->createDefaultAxes();
   // chart->setTitle("Simple line chart example");
 
   QChartView *chartView = new QChartView(chart_);
@@ -97,9 +97,11 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   }
   min = 0;
   chart_->removeSeries(series_);
-  QValueAxis axis;
-  axis.setMax(max);
-  axis.setMin(min);
   chart_->addSeries(series_);
-  chart_->setAxisY(&axis, series_);
+  auto axisy = chart_->axisY();
+  axisy->setRange(min, max);
+  auto axisx = chart_->axisX();
+  axisx->hide();
+  chart_->setAxisY(axisy, series_);
+  // chart_->setAxisY(&axis, series_);
 }
