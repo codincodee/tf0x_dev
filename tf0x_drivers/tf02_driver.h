@@ -12,7 +12,7 @@ namespace tf02_driver {
 class API Driver : public tf0x_driver::Driver {
  public:
   bool Initialize();
-  bool ReadDistance(double& distance);
+  bool ReadDistance(double& distance) override;
  private:
   std::shared_ptr<tf0x_driver::QtSerialPort> serial_port_;
 };
