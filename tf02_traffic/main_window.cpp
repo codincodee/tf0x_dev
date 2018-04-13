@@ -4,6 +4,7 @@
 #include <QtCharts/QLineSeries>
 #include <QCameraViewfinder>
 #include <QCameraInfo>
+#include <QDebug>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -50,9 +51,24 @@ MainWindow::MainWindow(QWidget *parent) :
   // camera_view->setMinimumWidth(800);
 //  ui->gridLayout_2->addWidget(camera_view);
 //  ui->gridLayout_2->addWidget(chartView);
+
+  timer_id_ = startTimer(10);
+
+  driver_.Initialize();
 }
 
 MainWindow::~MainWindow()
 {
   delete ui;
+}
+
+void MainWindow::timerEvent(QTimerEvent *event) {
+  if (event->timerId() != timer_id_) {
+    return QMainWindow::timerEvent(event);
+  }
+  double dist;
+  if (!driver_.ReadDistance(dist)) {
+    return;
+  }
+  qDebug() << dist;
 }

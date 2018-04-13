@@ -1,11 +1,21 @@
-
 #pragma once
-#ifndef FOOBAR_FOO_H
-#define FOOBAR_FOO_H
+#ifndef TF0X_DRIVERS_TF02_DRIVER_H_
+#define TF0X_DRIVERS_TF02_DRIVER_H_
 
 #include <tf02_driver/config.h>
 #include "export.h"
+#include "tf0x_driver.h"
+#include <memory>
+#include "qt_serial_port.h"
 
-void API tf02_driver(void);
+namespace tf02_driver {
+class API Driver : public tf0x_driver::Driver {
+ public:
+  bool Initialize();
+  bool ReadDistance(double& distance);
+ private:
+  std::shared_ptr<tf0x_driver::QtSerialPort> serial_port_;
+};
+} // namespace tf02_driver
 
-#endif
+#endif // TF0X_DRIVERS_TF02_DRIVER_H_

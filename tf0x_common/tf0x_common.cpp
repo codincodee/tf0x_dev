@@ -6,5 +6,5 @@
 
 void tf0x_common(void)
 {
-  tf02_driver();
+
 }
