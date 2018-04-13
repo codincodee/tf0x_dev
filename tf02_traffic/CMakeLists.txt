@@ -13,6 +13,9 @@ add_executable(
     main_window.h
     main_window.cpp
     main_window.ui
+    camera_window.h
+    camera_window.cpp
+    camera_window.ui
 )
 
 target_link_libraries(

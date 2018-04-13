@@ -20,6 +20,9 @@ bool Driver::ReadDistance(double &distance) {
   short dist;
   memcpy(&dist, &buffer[0] + 2, 2);
   distance = dist / 100.0;
+  if (distance > 30.0 || distance < 0.0) {
+    return false;
+  }
   return true;
 }
 
