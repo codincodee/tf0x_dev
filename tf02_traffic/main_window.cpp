@@ -34,14 +34,15 @@ MainWindow::MainWindow(QWidget *parent) :
 //  chartView->setMinimumSize(400, 400);
   // chartView->setVisible(false);
 
-  QCameraViewfinder* camera_view = new QCameraViewfinder;
-  QCamera* camera = new QCamera(QCameraInfo::defaultCamera());
-  camera->setViewfinder(camera_view);
-  camera->start();
+//  QCameraViewfinder* camera_view = new QCameraViewfinder;
+//  QCamera* camera = new QCamera(QCameraInfo::defaultCamera());
+//  camera->setViewfinder(camera_view);
+//  camera->start();
   // ui->VideoVerticalLayout->addWidget(camera_view);
-  camera_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  camera_view->setMaximumSize(400, 400);
-  camera_view->setMinimumSize(400, 400);
+//  ui->ChartVerticalLayout->addWidget(camera_view);
+//  camera_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+//  camera_view->setMaximumSize(400, 400);
+//  camera_view->setMinimumSize(400, 400);
   // camera_view->setMinimumWidth(800);
 //  ui->gridLayout_2->addWidget(camera_view);
 //  ui->gridLayout_2->addWidget(chartView);
