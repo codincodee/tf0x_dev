@@ -17,6 +17,8 @@ add_library(
       export.h
       tf02_traffic_count.cpp
       tf02_traffic_count.h
+      tf02_traffic_count_core.cpp
+      tf02_traffic_count_core.h
 )
 
 target_link_libraries(

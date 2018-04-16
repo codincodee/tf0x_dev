@@ -73,5 +73,6 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   chart_->AddPoint(dist, elapsed_timer_.elapsed());
   if (traffic_count_) {
     qDebug() << traffic_count_->Probe(dist);
+    qDebug() << traffic_count_->Total();
   }
 }
