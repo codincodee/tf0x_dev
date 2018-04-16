@@ -47,6 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //  ui->gridLayout_2->addWidget(camera_view);
 //  ui->gridLayout_2->addWidget(chartView);
 
+  traffic_count_.reset(new tf02_common::TrafficCount);
+  traffic_count_->Initialize();
+
   timer_id_ = startTimer(10);
 
   driver_.Initialize();
@@ -68,4 +71,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     return;
   }
   chart_->AddPoint(dist, elapsed_timer_.elapsed());
+  if (traffic_count_) {
+    qDebug() << traffic_count_->Probe(dist);
+  }
 }

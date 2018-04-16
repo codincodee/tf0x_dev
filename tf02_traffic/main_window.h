@@ -6,6 +6,7 @@
 #include <QtCharts/qchart.h>
 #include "tf0x_common/distance_over_time_chart.h"
 #include <QElapsedTimer>
+#include "tf0x_common/tf02_traffic_count.h"
 
 namespace Ui {
   class MainWindow;
@@ -29,6 +30,7 @@ private:
   tf0x_common::DistanceOverTimeChart* chart_;
   QElapsedTimer elapsed_timer_;
   int i;
+  std::shared_ptr<tf02_common::TrafficCount> traffic_count_;
 };
 
 #endif // MAIN_WINDOW_H
