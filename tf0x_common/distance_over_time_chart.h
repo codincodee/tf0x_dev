@@ -13,8 +13,12 @@ public:
   virtual ~DistanceOverTimeChart();
   bool AddPoint(const float& meter, const int& millisecond);
   void SetTimeWindow(const int& millisecond);
+  float GetMin() const;
+  float GetMax() const;
 private:
   QtCharts::QLineSeries* line_series_;
+  float min_;
+  float max_;
 };
 } // namespace tf0x_common
 

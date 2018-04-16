@@ -58,6 +58,8 @@ bool DistanceOverTimeChart::AddPoint(
 
   auto axis_y = this->axisY();
   axis_y->setRange(min, max);
+  min_ = min;
+  max_ = max;
   this->setAxisY(axis_y, line_series_);
 }
 
@@ -70,5 +72,13 @@ DistanceOverTimeChart::DistanceOverTimeChart() {
   axis_y->setGridLineVisible(true);
   axis_y->setTickCount(20);
   this->addAxis(axis_y, Qt::AlignLeft);
+}
+
+float DistanceOverTimeChart::GetMax() const {
+  return max_;
+}
+
+float DistanceOverTimeChart::GetMin() const {
+  return min_;
 }
 } // namespace tf0x_common
