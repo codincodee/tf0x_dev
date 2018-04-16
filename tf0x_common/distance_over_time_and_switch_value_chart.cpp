@@ -16,7 +16,7 @@ bool DistanceOverTimeAndSwitchValueChart::AddSwitchValuePoint(
     const bool &on, const int &msec) {
   if (on) {
     return
-        AddPoint(GetMin() + (GetMax() - GetMin()) / 2.0f, msec, line_series_);
+        AddPoint(4.0f, msec, line_series_);
   } else {
     return AddPoint(GetMin(), msec, line_series_);
   }

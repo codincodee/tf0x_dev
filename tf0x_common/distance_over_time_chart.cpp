@@ -56,11 +56,14 @@ bool DistanceOverTimeChart::AddPoint(
   this->removeSeries(line_series);
   this->addSeries(line_series);
 
-  auto axis_y = this->axisY();
-  axis_y->setRange(min, max);
-  min_ = min;
-  max_ = max;
-  this->setAxisY(axis_y, line_series);
+  if (line_series_ == line_series) {
+    auto axis_y = this->axisY();
+    axis_y->setRange(min, max);
+    min_ = min;
+    max_ = max;
+    this->setAxisY(axis_y, line_series);
+  }
+  return true;
 }
 
 bool DistanceOverTimeChart::AddPoint(
