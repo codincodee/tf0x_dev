@@ -23,6 +23,9 @@ public:
 protected:
   void timerEvent(QTimerEvent *event);
 
+private slots:
+  void on_ResetPushButton_clicked();
+
 private:
   Ui::MainWindow *ui;
   int timer_id_;

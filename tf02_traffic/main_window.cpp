@@ -73,6 +73,13 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   chart_->AddPoint(dist, elapsed_timer_.elapsed());
   if (traffic_count_) {
     qDebug() << traffic_count_->Probe(dist);
-    qDebug() << traffic_count_->Total();
+    ui->TotalCountLabel->setText(QString::number(traffic_count_->Total()));
+  }
+}
+
+void MainWindow::on_ResetPushButton_clicked()
+{
+  if (traffic_count_) {
+    traffic_count_->Reset();
   }
 }
