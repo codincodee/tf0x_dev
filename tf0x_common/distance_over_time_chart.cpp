@@ -22,7 +22,7 @@ bool DistanceOverTimeChart::AddPoint(
   *line_series_ << QPointF(millisecond, meter);
 
   while (line_series_->count()) {
-    if ((line_series_->at(0).x() + 500) < millisecond) {
+    if ((line_series_->at(0).x() + 4000) < millisecond) {
       line_series_->removePoints(0, 1);
     } else {
       break;

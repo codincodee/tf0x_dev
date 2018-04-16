@@ -5,7 +5,9 @@
 
 CameraWindow::CameraWindow(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::CameraWindow)
+  ui(new Ui::CameraWindow),
+  camera_(nullptr),
+  camera_view_(nullptr)
 {
   ui->setupUi(this);
   this->resize(1000, 800);
@@ -88,6 +90,9 @@ void CameraWindow::on_PreviousToolButton_clicked()
 }
 
 void CameraWindow::UseCamera(const QString &name) {
+  if (!camera_view_) {
+    return;
+  }
   auto info = QCameraInfo(name.toLocal8Bit());
   if (camera_) {
     delete camera_;

@@ -2,6 +2,7 @@
 #include "main_window.h"
 #include <QApplication>
 #include "camera_window.h"
+#include <QDebug>
 
 int main(int argc, char* argv[])
 {

@@ -5,6 +5,7 @@
 #include "tf0x_drivers/tf02_driver.h"
 #include <QtCharts/qchart.h>
 #include "tf0x_common/distance_over_time_chart.h"
+#include <QElapsedTimer>
 
 namespace Ui {
   class MainWindow;
@@ -26,6 +27,8 @@ private:
   int timer_id_;
   tf02_driver::Driver driver_;
   tf0x_common::DistanceOverTimeChart* chart_;
+  QElapsedTimer elapsed_timer_;
+  int i;
 };
 
 #endif // MAIN_WINDOW_H

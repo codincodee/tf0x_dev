@@ -15,6 +15,8 @@ add_library(
       distance_over_time_chart.h
       config.h.in
       export.h
+      tf02_traffic_count.cpp
+      tf02_traffic_count.h
 )
 
 target_link_libraries(

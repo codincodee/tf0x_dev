@@ -50,6 +50,7 @@ MainWindow::MainWindow(QWidget *parent) :
   timer_id_ = startTimer(10);
 
   driver_.Initialize();
+  elapsed_timer_.start();
 }
 
 MainWindow::~MainWindow()
@@ -66,7 +67,5 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (!driver_.ReadDistance(dist)) {
     return;
   }
-  static int cnt = 0;
-  ++cnt;
-  chart_->AddPoint(dist, cnt);
+  chart_->AddPoint(dist, elapsed_timer_.elapsed());
 }
