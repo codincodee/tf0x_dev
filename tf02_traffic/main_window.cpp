@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   this->setWindowTitle("TF02 Traffic");
   this->resize(1000, 800);
-  chart_ = new tf0x_common::DistanceOverTimeChart();
+  chart_ = new tf0x_common::DistanceOverTimeAndSwitchValueChart();
 
   // chart_->createDefaultAxes();
   // chart->setTitle("Simple line chart example");
@@ -70,9 +70,14 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (!driver_.ReadDistance(dist)) {
     return;
   }
-  chart_->AddPoint(dist, elapsed_timer_.elapsed());
+  auto elapsed = elapsed_timer_.elapsed();
+  chart_->AddPoint(dist, elapsed);
   if (traffic_count_) {
-    qDebug() << traffic_count_->Probe(dist);
+    if (traffic_count_->Probe(dist)) {
+      chart_->AddSwitchValuePoint(true, elapsed);
+    } else {
+      chart_->AddSwitchValuePoint(false, elapsed);
+    }
     ui->TotalCountLabel->setText(QString::number(traffic_count_->Total()));
   }
 }

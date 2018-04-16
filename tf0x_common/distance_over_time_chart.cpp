@@ -10,37 +10,37 @@ DistanceOverTimeChart::~DistanceOverTimeChart() {
 }
 
 bool DistanceOverTimeChart::AddPoint(
-    const float &meter, const int &millisecond) {
-  if (!line_series_) {
+    const float &meter, const int &millisecond, QtCharts::QLineSeries* line_series) {
+  if (!line_series) {
     return false;
   }
-  if (line_series_->count() > 0) {
-    if (millisecond <= line_series_->at(line_series_->count() - 1).x()) {
+  if (line_series->count() > 0) {
+    if (millisecond <= line_series->at(line_series->count() - 1).x()) {
       return false;
     }
   }
-  *line_series_ << QPointF(millisecond, meter);
+  *line_series << QPointF(millisecond, meter);
 
-  while (line_series_->count()) {
-    if ((line_series_->at(0).x() + 4000) < millisecond) {
-      line_series_->removePoints(0, 1);
+  while (line_series->count()) {
+    if ((line_series->at(0).x() + 4000) < millisecond) {
+      line_series->removePoints(0, 1);
     } else {
       break;
     }
   }
 
-  if (!line_series_->count()) {
+  if (!line_series->count()) {
     return false;
   }
 
-  float min = line_series_->at(0).y();
+  float min = line_series->at(0).y();
   float max = min;
-  for (auto i = 0; i < line_series_->count(); ++i) {
-    if (line_series_->at(i).y() > max) {
-      max = line_series_->at(i).y();
+  for (auto i = 0; i < line_series->count(); ++i) {
+    if (line_series->at(i).y() > max) {
+      max = line_series->at(i).y();
     }
-    if (line_series_->at(i).y() < min) {
-      min = line_series_->at(i).y();
+    if (line_series->at(i).y() < min) {
+      min = line_series->at(i).y();
     }
   }
   if (max > 20.0f) {
@@ -53,14 +53,19 @@ bool DistanceOverTimeChart::AddPoint(
   // To make the plot look nicer, we currently set MIN to 0.0f;
   min = 0.0f;
 
-  this->removeSeries(line_series_);
-  this->addSeries(line_series_);
+  this->removeSeries(line_series);
+  this->addSeries(line_series);
 
   auto axis_y = this->axisY();
   axis_y->setRange(min, max);
   min_ = min;
   max_ = max;
-  this->setAxisY(axis_y, line_series_);
+  this->setAxisY(axis_y, line_series);
+}
+
+bool DistanceOverTimeChart::AddPoint(
+    const float &meter, const int &millisecond) {
+  return AddPoint(meter, millisecond, line_series_);
 }
 
 DistanceOverTimeChart::DistanceOverTimeChart() {

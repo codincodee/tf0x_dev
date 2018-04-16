@@ -15,6 +15,11 @@ public:
   void SetTimeWindow(const int& millisecond);
   float GetMin() const;
   float GetMax() const;
+protected:
+  bool AddPoint(
+      const float &meter,
+      const int &millisecond,
+      QtCharts::QLineSeries* series);
 private:
   QtCharts::QLineSeries* line_series_;
   float min_;

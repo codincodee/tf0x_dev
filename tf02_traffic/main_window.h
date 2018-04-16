@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "tf0x_drivers/tf02_driver.h"
 #include <QtCharts/qchart.h>
-#include "tf0x_common/distance_over_time_chart.h"
+#include "tf0x_common/distance_over_time_and_switch_value_chart.h"
 #include <QElapsedTimer>
 #include "tf0x_common/tf02_traffic_count.h"
 
@@ -30,7 +30,7 @@ private:
   Ui::MainWindow *ui;
   int timer_id_;
   tf02_driver::Driver driver_;
-  tf0x_common::DistanceOverTimeChart* chart_;
+  tf0x_common::DistanceOverTimeAndSwitchValueChart* chart_;
   QElapsedTimer elapsed_timer_;
   int i;
   std::shared_ptr<tf02_common::TrafficCount> traffic_count_;
