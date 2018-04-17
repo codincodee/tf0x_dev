@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
   traffic_count_.reset(new tf02_common::TrafficCount);
   traffic_count_->Initialize();
+  traffic_count_->Reset();
+
+  rate_elapsed_timer_.start();
 
   timer_id_ = startTimer(10);
 
@@ -79,6 +82,9 @@ void MainWindow::timerEvent(QTimerEvent *event) {
       chart_->AddSwitchValuePoint(false, elapsed);
     }
     ui->TotalCountLabel->setText(QString::number(traffic_count_->Total()));
+    auto rate = traffic_count_->Total() / (rate_elapsed_timer_.elapsed() / 60000.0);
+    rate = std::floor(rate);
+    ui->RateLabel->setText(QString::number(int(rate)) + " / Min");
   }
 }
 
@@ -87,4 +93,5 @@ void MainWindow::on_ResetPushButton_clicked()
   if (traffic_count_) {
     traffic_count_->Reset();
   }
+  rate_elapsed_timer_.restart();
 }

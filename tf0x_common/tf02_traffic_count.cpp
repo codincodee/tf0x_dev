@@ -3,7 +3,7 @@
 
 namespace tf02_common {
 bool TrafficCount::Initialize() {
-  return Reset();
+  return true;
 }
 
 bool TrafficCount::Probe(const double &dist) {

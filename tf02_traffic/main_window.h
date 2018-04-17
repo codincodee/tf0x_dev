@@ -32,6 +32,7 @@ private:
   tf02_driver::Driver driver_;
   tf0x_common::DistanceOverTimeAndSwitchValueChart* chart_;
   QElapsedTimer elapsed_timer_;
+  QElapsedTimer rate_elapsed_timer_;
   int i;
   std::shared_ptr<tf02_common::TrafficCount> traffic_count_;
 };
