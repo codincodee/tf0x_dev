@@ -29,6 +29,7 @@ bool Driver::ReadDistance(double &distance) {
 
 bool Driver::SetPortName(const std::string &name) {
   port_name_ = name;
+  return true;
 }
 
 bool Driver::Initialize() {
@@ -37,6 +38,6 @@ bool Driver::Initialize() {
   serial_port_->SetDataBits(8);
   serial_port_->SetStopBits(1);
   serial_port_->SetPortName(port_name_);
-  serial_port_->Initialize();
+  return serial_port_->Initialize();
 }
 } // namespace tf02_driver

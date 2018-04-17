@@ -2,7 +2,7 @@
 #ifndef TF0X_DRIVERS_TF02_DRIVER_H_
 #define TF0X_DRIVERS_TF02_DRIVER_H_
 
-#include <tf02_driver/config.h>
+#include <tf0x_drivers/config.h>
 #include "export.h"
 #include "tf0x_driver.h"
 #include <memory>
