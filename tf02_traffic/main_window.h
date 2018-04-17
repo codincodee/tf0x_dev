@@ -26,7 +26,12 @@ protected:
 private slots:
   void on_ResetPushButton_clicked();
 
+  void on_SerialPortComboBox_activated(const QString &arg1);
+
+  void on_SettingsSwitchToolButton_clicked();
+
 private:
+  void SetSettingsVisable(const bool& visable);
   Ui::MainWindow *ui;
   int timer_id_;
   tf02_driver::Driver driver_;

@@ -34,6 +34,9 @@ bool QtSerialPort::ReadBuffer(std::string &buffer) {
   if (!q_serial_port_) {
     return false;
   }
+  if (!q_serial_port_->isOpen()) {
+    return false;
+  }
   buffer = q_serial_port_->readAll().toStdString();
   return true;
 }

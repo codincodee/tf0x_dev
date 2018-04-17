@@ -7,6 +7,7 @@
 #include <QDebug>
 #include "tf0x_common/distance_over_time_chart.h"
 #include <QValueAxis>
+#include <QSerialPortInfo>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -35,7 +36,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
   timer_id_ = startTimer(10);
 
+  auto ports = QSerialPortInfo::availablePorts();
+  for (auto& port : ports) {
+    ui->SerialPortComboBox->addItem(port.portName());
+  }
+  if (!ports.isEmpty()) {
+    driver_.SetPortName(ports[0].portName().toStdString());
+  }
   driver_.Initialize();
+
+  SetSettingsVisable(
+      ui->SettingsSwitchToolButton->arrowType() == Qt::ArrowType::UpArrow);
+
   elapsed_timer_.start();
 }
 
@@ -74,4 +86,26 @@ void MainWindow::on_ResetPushButton_clicked()
     traffic_count_->Reset();
   }
   rate_elapsed_timer_.restart();
+}
+
+void MainWindow::on_SerialPortComboBox_activated(const QString &arg1)
+{
+  driver_.SetPortName(arg1.toStdString());
+  driver_.Initialize();
+}
+
+void MainWindow::on_SettingsSwitchToolButton_clicked()
+{
+  if (ui->SettingsSwitchToolButton->arrowType() == Qt::ArrowType::UpArrow) {
+    ui->SettingsSwitchToolButton->setArrowType(Qt::ArrowType::DownArrow);
+  } else {
+    ui->SettingsSwitchToolButton->setArrowType(Qt::ArrowType::UpArrow);
+  }
+  SetSettingsVisable(
+      ui->SettingsSwitchToolButton->arrowType() == Qt::ArrowType::UpArrow);
+}
+
+void MainWindow::SetSettingsVisable(const bool &visable) {
+  ui->SerialPortComboBox->setVisible(visable);
+  ui->SerialPortLabel->setVisible(visable);
 }

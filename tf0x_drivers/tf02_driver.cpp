@@ -1,5 +1,6 @@
 #include "tf02_driver.h"
 #include <iostream>
+#include <QSerialPortInfo>
 
 namespace tf02_driver {
 bool Driver::ReadDistance(double &distance) {
@@ -26,12 +27,16 @@ bool Driver::ReadDistance(double &distance) {
   return true;
 }
 
+bool Driver::SetPortName(const std::string &name) {
+  port_name_ = name;
+}
+
 bool Driver::Initialize() {
   serial_port_.reset(new tf0x_driver::QtSerialPort);
   serial_port_->SetBaudRate(115200);
   serial_port_->SetDataBits(8);
   serial_port_->SetStopBits(1);
-  serial_port_->SetPortName("COM3");
+  serial_port_->SetPortName(port_name_);
   serial_port_->Initialize();
 }
 } // namespace tf02_driver
