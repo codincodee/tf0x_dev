@@ -20,32 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
   this->resize(1000, 800);
   chart_ = new tf0x_common::DistanceOverTimeAndSwitchValueChart();
 
-  // chart_->createDefaultAxes();
-  // chart->setTitle("Simple line chart example");
-
   QChartView *chartView = new QChartView(chart_);
   chartView->setRenderHint(QPainter::Antialiasing);
 
   QChartView* chartview = new QChartView;
 
   ui->ChartVerticalLayout->addWidget(chartView);
-//  chartView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-//  chartView->setMaximumSize(400, 400);
-//  chartView->setMinimumSize(400, 400);
-  // chartView->setVisible(false);
-
-//  QCameraViewfinder* camera_view = new QCameraViewfinder;
-//  QCamera* camera = new QCamera(QCameraInfo::defaultCamera());
-//  camera->setViewfinder(camera_view);
-//  camera->start();
-  // ui->VideoVerticalLayout->addWidget(camera_view);
-//  ui->ChartVerticalLayout->addWidget(camera_view);
-//  camera_view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-//  camera_view->setMaximumSize(400, 400);
-//  camera_view->setMinimumSize(400, 400);
-  // camera_view->setMinimumWidth(800);
-//  ui->gridLayout_2->addWidget(camera_view);
-//  ui->gridLayout_2->addWidget(chartView);
 
   traffic_count_.reset(new tf02_common::TrafficCount);
   traffic_count_->Initialize();
