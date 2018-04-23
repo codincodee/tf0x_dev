@@ -147,6 +147,7 @@ void MainWindow::WriteCacheRecordsToDisk() {
       QDateTime::currentDateTime().toString("yy_MM_dd_hh_mm_ss").toStdString() +
       "_log.txt");
   if (!os.is_open()) {
+    recording_data_.clear();
     return;
   }
   int i = 0;
