@@ -13,15 +13,19 @@ class TrafficCountCore {
   int max(int*value);
   int min(int* value);
 
-  int threshold;
   int k;
-  int Count_1s;
-  int Count_60s;
-  int* D;
-  int X;
-  int* T;
-  int STATE;
-  int DIFF;
+  int count_cont;
+  int flag_exceed;
+  int threshold;
+  int threshold_last;
+  int state;
+  int state_last;
+  int* dist_buf = nullptr;
+  int dist_med;
+  int* dist_cnt = nullptr;
+  int count_buf;
+  int count_fix;
+  int idx_buf;
   int mid_filt_flag;
 };
 } // namespace tf02_common
