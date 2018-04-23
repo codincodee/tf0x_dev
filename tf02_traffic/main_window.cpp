@@ -9,6 +9,7 @@
 #include <QValueAxis>
 #include <QSerialPortInfo>
 #include <fstream>
+#include <QApplication>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -50,6 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
       ui->SettingsSwitchToolButton->arrowType() == Qt::ArrowType::UpArrow);
 
   elapsed_timer_.start();
+
+  ui->WritingLogToDiskProgressBar->setVisible(false);
+  ui->WritingLogToDiskLabel->setVisible(false);
 }
 
 MainWindow::~MainWindow()
@@ -129,13 +133,32 @@ void MainWindow::RecordToCache(const DataFormat& data) {
 }
 
 void MainWindow::WriteCacheRecordsToDisk() {
+  ui->WritingLogToDiskProgressBar->setVisible(true);
+  ui->WritingLogToDiskLabel->setVisible(true);
+  ui->RecordRadioButton->setChecked(false);
+  qApp->processEvents();
   std::ofstream os;
-  os.open("log.txt");
+  os.open(
+      QDateTime::currentDateTime().toString("yy_MM_dd_hh_mm_ss").toStdString() +
+      "_log.txt");
+  if (!os.is_open()) {
+    return;
+  }
+  int i = 0;
+  auto total = recording_data_.size();
   for (auto& record : recording_data_) {
+    if (i % 100 == 0) {
+      ui->WritingLogToDiskProgressBar->setValue(i * 100 / total);
+      qApp->processEvents();
+    }
     os
         << record.dist << " " << record.high << " " << record.total
         << " " << record.rate << " " << record.ts << "\n";
+    ++i;
   }
+  ui->WritingLogToDiskProgressBar->setValue(0);
   os.close();
   recording_data_.clear();
+  ui->WritingLogToDiskProgressBar->setVisible(false);
+  ui->WritingLogToDiskLabel->setVisible(false);
 }
