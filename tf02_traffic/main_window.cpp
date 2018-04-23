@@ -10,6 +10,7 @@
 #include <QSerialPortInfo>
 #include <fstream>
 #include <QApplication>
+#include <QMessageBox>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -67,6 +68,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::timerEvent(QTimerEvent *event) {
   if (event->timerId() != timer_id_) {
+    return QMainWindow::timerEvent(event);
+  }
+  if (ui->WritingLogToDiskProgressBar->isVisible()) {
     return QMainWindow::timerEvent(event);
   }
   double dist;
@@ -138,6 +142,7 @@ void MainWindow::RecordToCache(const DataFormat& data) {
 }
 
 void MainWindow::WriteCacheRecordsToDisk() {
+  ui->RecordRadioButton->setDisabled(true);
   ui->WritingLogToDiskProgressBar->setVisible(true);
   ui->WritingLogToDiskLabel->setVisible(true);
   ui->RecordRadioButton->setChecked(false);
@@ -146,25 +151,27 @@ void MainWindow::WriteCacheRecordsToDisk() {
   os.open(
       QDateTime::currentDateTime().toString("yy_MM_dd_hh_mm_ss").toStdString() +
       "_log.txt");
-  if (!os.is_open()) {
-    recording_data_.clear();
-    return;
-  }
-  int i = 0;
-  auto total = recording_data_.size();
-  for (auto& record : recording_data_) {
-    if (i % 100 == 0) {
-      ui->WritingLogToDiskProgressBar->setValue(i * 100 / total);
-      qApp->processEvents();
+  if (os.is_open()) {
+    int i = 0;
+    auto total = recording_data_.size();
+    for (auto& record : recording_data_) {
+      if (i % 1000 == 0) {
+        ui->WritingLogToDiskProgressBar->setValue(i * 100 / total);
+        qApp->processEvents();
+      }
+      os
+          << record.dist << " " << record.high << " " << record.total
+          << " " << record.rate << " " << record.ts << "\n";
+      ++i;
     }
-    os
-        << record.dist << " " << record.high << " " << record.total
-        << " " << record.rate << " " << record.ts << "\n";
-    ++i;
+  } else {
+    QMessageBox::warning(
+        this, "Warning", "Unable to open disk file.", QMessageBox::Ok);
   }
   ui->WritingLogToDiskProgressBar->setValue(0);
   os.close();
   recording_data_.clear();
   ui->WritingLogToDiskProgressBar->setVisible(false);
   ui->WritingLogToDiskLabel->setVisible(false);
+  ui->RecordRadioButton->setDisabled(false);
 }
