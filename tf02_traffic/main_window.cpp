@@ -8,6 +8,7 @@
 #include "tf0x_common/distance_over_time_chart.h"
 #include <QValueAxis>
 #include <QSerialPortInfo>
+#include <fstream>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -68,15 +69,17 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   auto elapsed = elapsed_timer_.elapsed();
   chart_->AddPoint(dist, elapsed);
   if (traffic_count_) {
-    if (traffic_count_->Probe(dist)) {
-      chart_->AddSwitchValuePoint(true, elapsed);
-    } else {
-      chart_->AddSwitchValuePoint(false, elapsed);
-    }
-    ui->TotalCountLabel->setText(QString::number(traffic_count_->Total()));
+    bool high = traffic_count_->Probe(dist);
+    chart_->AddSwitchValuePoint(high, elapsed);
+    auto total = traffic_count_->Total();
+    ui->TotalCountLabel->setText(QString::number(total));
     auto rate = traffic_count_->Total() / (rate_elapsed_timer_.elapsed() / 60000.0);
     rate = std::floor(rate);
     ui->RateLabel->setText(QString::number(int(rate)) + " / Min");
+    if (ui->RecordRadioButton->isChecked()) {
+      RecordToCache(
+          {(float)dist, high, total, (float)rate, QDateTime::currentDateTime().toString("hh:mm:ss.zzz").toStdString()});
+    }
   }
 }
 
@@ -117,5 +120,22 @@ void MainWindow::on_RecordRadioButton_clicked(bool checked)
     emit StartRecord();
   } else {
     emit StopRecord();
+    WriteCacheRecordsToDisk();
   }
+}
+
+void MainWindow::RecordToCache(const DataFormat& data) {
+  recording_data_.push_back(data);
+}
+
+void MainWindow::WriteCacheRecordsToDisk() {
+  std::ofstream os;
+  os.open("log.txt");
+  for (auto& record : recording_data_) {
+    os
+        << record.dist << " " << record.high << " " << record.total
+        << " " << record.rate << " " << record.ts << "\n";
+  }
+  os.close();
+  recording_data_.clear();
 }
