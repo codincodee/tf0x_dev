@@ -1060,6 +1060,13 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QRadioButton" name="RecordRadioButton">
+          <property name="text">
+           <string>Record</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>

@@ -20,6 +20,10 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+signals:
+  void StartRecord();
+  void StopRecord();
+
 protected:
   void timerEvent(QTimerEvent *event);
 
@@ -29,6 +33,8 @@ private slots:
   void on_SerialPortComboBox_activated(const QString &arg1);
 
   void on_SettingsSwitchToolButton_clicked();
+
+  void on_RecordRadioButton_clicked(bool checked);
 
 private:
   void SetSettingsVisable(const bool& visable);

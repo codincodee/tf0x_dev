@@ -10,6 +10,8 @@ add_library(
     SHARED
       tf02_driver.cpp
       tf02_driver.h
+      tf02_traffic_driver.cpp
+      tf02_traffic_driver.h
       tf0x_driver.cpp
       tf0x_driver.h
       abstract_serial_port.cpp

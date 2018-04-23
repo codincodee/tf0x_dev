@@ -108,4 +108,14 @@ void MainWindow::on_SettingsSwitchToolButton_clicked()
 void MainWindow::SetSettingsVisable(const bool &visable) {
   ui->SerialPortComboBox->setVisible(visable);
   ui->SerialPortLabel->setVisible(visable);
+  ui->RecordRadioButton->setVisible(visable);
+}
+
+void MainWindow::on_RecordRadioButton_clicked(bool checked)
+{
+  if (checked) {
+    emit StartRecord();
+  } else {
+    emit StopRecord();
+  }
 }

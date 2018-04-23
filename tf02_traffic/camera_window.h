@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QCamera>
 #include <QCameraViewfinder>
+#include <memory>
+#include <QMediaRecorder>
 
 namespace Ui {
   class CameraWindow;
@@ -16,6 +18,13 @@ class CameraWindow : public QMainWindow
 public:
   explicit CameraWindow(QWidget *parent = 0);
   ~CameraWindow();
+
+  bool StartRecord();
+  bool StopRecord();
+
+public slots:
+  void OnStartRecord();
+  void OnStopRecord();
 
 protected:
   void closeEvent(QCloseEvent* event);
@@ -31,6 +40,7 @@ private:
   QCameraViewfinder* camera_view_;
   QCamera* camera_;
   QString current_camera_name_;
+  std::shared_ptr<QMediaRecorder> recorder_;
 };
 
 #endif // CAMERA_WINDOW_H

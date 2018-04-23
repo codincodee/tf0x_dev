@@ -2,6 +2,9 @@
 #include "ui_camera_window.h"
 #include <QCameraViewfinder>
 #include <QCameraInfo>
+#include <QUrl>
+#include <QDateTime>
+#include <QMessageBox>
 
 CameraWindow::CameraWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -100,4 +103,47 @@ void CameraWindow::UseCamera(const QString &name) {
   camera_ = new QCamera(info);
   camera_->setViewfinder(camera_view_);
   camera_->start();
+
+  recorder_.reset(new QMediaRecorder(camera_));
+  QAudioEncoderSettings settings;
+  settings.setCodec("audio/amr");
+  settings.setQuality(QMultimedia::HighQuality);
+  recorder_->setAudioSettings(settings);
+  recorder_->setOutputLocation(
+      QUrl::fromLocalFile(QDateTime::currentDateTime().toString() + ".mp4"));
+}
+
+bool CameraWindow::StartRecord() {
+  if (!recorder_) {
+    return false;
+  }
+  recorder_->record();
+  ui->PreviousToolButton->setDisabled(true);
+  ui->NextCameraToolButton->setDisabled(true);
+  this->setWindowTitle("Camera (recording...)");
+  return true;
+}
+
+bool CameraWindow::StopRecord() {
+  if (!recorder_) {
+    return false;
+  }
+  recorder_->stop();
+  ui->PreviousToolButton->setDisabled(false);
+  ui->NextCameraToolButton->setDisabled(false);
+  this->setWindowTitle("Camera");
+  return true;
+}
+
+void CameraWindow::OnStartRecord() {
+  if (!StartRecord()) {
+    QMessageBox::warning(this, "Warning", "Unable to record", QMessageBox::Ok);
+  }
+}
+
+void CameraWindow::OnStopRecord() {
+  if (!StopRecord()) {
+    QMessageBox::warning(
+        this, "Warning", "Unable to stop recording", QMessageBox::Ok);
+  }
 }
