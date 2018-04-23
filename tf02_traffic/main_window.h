@@ -56,6 +56,7 @@ private:
   QElapsedTimer rate_elapsed_timer_;
   std::shared_ptr<tf02_common::TrafficCount> traffic_count_;
   std::list<DataFormat> recording_data_;
+  QString window_title_;
 };
 
 #endif // MAIN_WINDOW_H

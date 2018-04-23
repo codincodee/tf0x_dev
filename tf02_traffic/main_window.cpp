@@ -54,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
   ui->WritingLogToDiskProgressBar->setVisible(false);
   ui->WritingLogToDiskLabel->setVisible(false);
+
+  window_title_ = "TF02 Traffic";
+  this->setWindowTitle(window_title_);
 }
 
 MainWindow::~MainWindow()
@@ -122,9 +125,11 @@ void MainWindow::on_RecordRadioButton_clicked(bool checked)
 {
   if (checked) {
     emit StartRecord();
+    this->setWindowTitle(window_title_ + " (recording...)");
   } else {
     emit StopRecord();
     WriteCacheRecordsToDisk();
+    this->setWindowTitle(window_title_);
   }
 }
 
