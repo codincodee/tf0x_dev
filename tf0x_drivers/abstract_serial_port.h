@@ -17,6 +17,7 @@ class API AbstractSerialPort {
   void SetPortName(const std::string& port_name);
   std::string GetPortName() const;
   virtual bool ReadBuffer(std::string& buffer) = 0;
+  virtual bool WriteBuffer(const std::string& buffer) = 0;
  private:
   int baud_rate_;
   int data_bits_;

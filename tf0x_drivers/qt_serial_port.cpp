@@ -40,4 +40,16 @@ bool QtSerialPort::ReadBuffer(std::string &buffer) {
   buffer = q_serial_port_->readAll().toStdString();
   return true;
 }
+
+bool QtSerialPort::WriteBuffer(const std::string &buffer) {
+  if (!q_serial_port_) {
+    return false;
+  }
+  if (!q_serial_port_->isOpen()) {
+    return false;
+  }
+  // Ingoring return value
+  q_serial_port_->write(buffer.c_str(), buffer.size());
+  return true;
+}
 } // namespace tf0x_driver

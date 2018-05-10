@@ -6,6 +6,12 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5Charts)
 
+if("${TRAFFIC_COUNT_CORE_VERSION}" STREQUAL "")
+  set(TRAFFIC_COUNT_CORE_VERSION "v1")
+endif()
+
+add_definitions(-DTRAFFIC_COUNT_CORE_${TRAFFIC_COUNT_CORE_VERSION})
+
 add_library(
   tf0x_common
     SHARED

@@ -10,6 +10,7 @@ class QtSerialPort : public AbstractSerialPort {
  public:
   bool Initialize();
   bool ReadBuffer(std::string &buffer) override;
+  bool WriteBuffer(const std::string &buffer) override;
   static QSerialPort::StopBits ConvertToQtStopBits(const int& integer);
   static QSerialPort::DataBits ConvertToQtDataBits(const int& integer);
 private:
