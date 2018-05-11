@@ -17,6 +17,13 @@ struct Measurement {
   }
 };
 
+enum class OutputFormat {
+  ascii = 0x00,
+  binary = 0x01,
+  pix = 0x02,
+  primitive = 0x03
+};
+
 class Driver: public tf0x_driver::Driver
 {
  public:
@@ -24,6 +31,18 @@ class Driver: public tf0x_driver::Driver
   void SetSerialPort(std::shared_ptr<tf0x_driver::AbstractSerialPort> port);
   bool ReadDistance(double &distance) override;
   bool ReadMeasurement(Measurement& measurement);
+
+  // Operations
+  std::string GetVersion();
+  bool ResetDevice();
+  bool SetFrequency(const int& frequency);
+  bool MeasureOnce(Measurement& Measurement);
+  bool SetOutputFormat(const OutputFormat& format);
+  bool SetBaudRate(const int& baud_rate);
+  bool Enable(const bool& enable);
+  bool EnableCheckSum(const bool& enable);
+  bool RestoreFactory();
+  bool SaveSettings();
  private:
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
 };

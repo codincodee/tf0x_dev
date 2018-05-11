@@ -37,13 +37,21 @@ include_directories(
 add_subdirectory(tf0x_drivers)
 add_subdirectory(tf0x_common)
 add_subdirectory(tf02_traffic)
+add_subdirectory(tf03_test)
 
 # The interesting stuff goes here
 # ===============================
 
 # Add all targets to the build-tree export set
-export(TARGETS tf0x_drivers tf02_traffic tf0x_common
-  FILE "${PROJECT_BINARY_DIR}/tf0x_devTargets.cmake")
+export(
+  TARGETS
+    tf0x_drivers
+    tf02_traffic
+    tf0x_common
+    tf03_test
+  FILE
+    "${PROJECT_BINARY_DIR}/tf0x_devTargets.cmake"
+)
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
