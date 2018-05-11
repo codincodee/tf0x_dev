@@ -27,6 +27,8 @@ add_library(
       tf02_traffic_count_core.h
       distance_over_time_and_switch_value_chart.cpp
       distance_over_time_and_switch_value_chart.h
+      distance_over_time_multi_series_chart.cpp
+      distance_over_time_multi_series_chart.h
 )
 
 target_link_libraries(
