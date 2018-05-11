@@ -10,6 +10,7 @@ add_executable(
     main.cpp
     main_window.h
     main_window.cpp
+    main_window_settings.cpp
     main_window.ui
 )
 

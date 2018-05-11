@@ -20,6 +20,7 @@ public:
 protected:
   void timerEvent(QTimerEvent *event);
 private:
+  bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;

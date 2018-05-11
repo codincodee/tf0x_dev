@@ -3,7 +3,7 @@
 
 #include <string>
 #include "export.h"
-
+#include <vector>
 namespace tf0x_driver {
 class API AbstractSerialPort {
  public:
@@ -18,6 +18,7 @@ class API AbstractSerialPort {
   std::string GetPortName() const;
   virtual bool ReadBuffer(std::string& buffer) = 0;
   virtual bool WriteBuffer(const std::string& buffer) = 0;
+  static std::vector<int> BaudRateLists();
  private:
   int baud_rate_;
   int data_bits_;

@@ -33,4 +33,8 @@ void AbstractSerialPort::SetPortName(const std::string &port_name) {
 std::string AbstractSerialPort::GetPortName() const {
   return port_name_;
 }
+
+std::vector<int> AbstractSerialPort::BaudRateLists() {
+  return {};
+}
 } // namespace tf0x_driver
