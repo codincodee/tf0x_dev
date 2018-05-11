@@ -24,7 +24,7 @@ enum class OutputFormat {
   primitive = 0x03
 };
 
-class Driver: public tf0x_driver::Driver
+class API Driver: public tf0x_driver::Driver
 {
  public:
   bool Initialize();

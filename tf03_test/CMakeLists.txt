@@ -16,6 +16,7 @@ add_executable(
 target_link_libraries(
   tf03_test
     tf0x_common
+    tf0x_drivers
     Qt5::Widgets
     Qt5::Charts
 )
