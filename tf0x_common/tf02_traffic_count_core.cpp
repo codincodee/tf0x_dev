@@ -307,11 +307,12 @@ TrafficCountCore::~TrafficCountCore() {
   }
 }
 
-bool TrafficCountCore::Probe(const double &dist) {
+bool TrafficCountCore::Probe(const double &distance) {
+  unsigned short dist = distance * 100.0;
   k++;
   Count_1s++;
   Count_60s++;
-  D[k % 10] = unsigned short(dist * 100.0);
+  D[k % 10] = dist;
 
   if(dist == LIST_MAX_DIST)
   {
