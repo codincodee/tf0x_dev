@@ -10,9 +10,10 @@ add_executable(
     main.cpp
     main_window.h
     main_window.cpp
-    main_window_settings.cpp
+    main_window_settings_page.cpp
     main_window_timer_event.cpp
     main_window_readings_page.cpp
+    main_window_debug_page.cpp
     main_window.ui
 )
 

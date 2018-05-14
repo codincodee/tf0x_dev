@@ -43,3 +43,23 @@ QString QtHelpers::SystemHomeFolderPath() {
           QStandardPaths::LocateDirectory);
 }
 
+void QtHelpers::UpdateComboBoxWithoutCurrentChanged(
+    QComboBox &combo, QStringList &new_list) {
+  auto current = combo.currentText();
+  if (new_list.contains(current)) {
+    new_list.removeOne(current);
+  } else {
+    combo.clear();
+  }
+  for (int i = 0; i < combo.count(); ++i) {
+    if (combo.itemText(i) == current) {
+      continue;
+    } else {
+      combo.removeItem(i);
+    }
+  }
+  for (auto& item : new_list) {
+    combo.addItem(item);
+  }
+}
+

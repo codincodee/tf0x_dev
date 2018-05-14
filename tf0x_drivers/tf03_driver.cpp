@@ -20,12 +20,17 @@ bool Driver::ReadDistance(double &dist0) {
   return true;
 }
 
-bool Driver::ReadMeasurement(Measurement& measurement) {
+bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
   if (!serial_port_) {
     return false;
   }
   // TODO: Implementations
   return true;
+}
+
+bool Driver::ReadMeasurement(Measurement &measurement) {
+  std::string buffer;
+  return ReadMeasurement(measurement, buffer);
 }
 
 void Driver::SetSerialPort(

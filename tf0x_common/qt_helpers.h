@@ -4,6 +4,7 @@
 #include <QString>
 #include <QWidget>
 #include "export.h"
+#include <QComboBox>
 
 class API QtHelpers
 {
@@ -14,6 +15,8 @@ class API QtHelpers
   static QString ChooseFile(QWidget* parent, QString& from);
   static QString SystemDocumentFolderPath();
   static QString SystemHomeFolderPath();
+  static void UpdateComboBoxWithoutCurrentChanged(
+      QComboBox& combo, QStringList& new_list);
  private:
   static QString SelectFileFrom();
 };

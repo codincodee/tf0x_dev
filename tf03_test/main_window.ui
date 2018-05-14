@@ -600,10 +600,10 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="DebugSendLineEdit"/>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_2">
+             <widget class="QPushButton" name="DebugSendPushButton">
               <property name="text">
                <string>Send</string>
               </property>
@@ -612,7 +612,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit"/>
+           <widget class="QPlainTextEdit" name="DebugReceivePlainTextEdit"/>
           </item>
           <item>
            <spacer name="verticalSpacer_6">
