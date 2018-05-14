@@ -24,4 +24,5 @@ MainWindow::~MainWindow()
     delete main_chart_view_;
     main_chart_view_ = nullptr;
   }
+  SaveSettingsToConfigFile();
 }

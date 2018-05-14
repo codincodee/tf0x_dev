@@ -30,6 +30,9 @@ private:
   void InitializeSettingsPage();
   void InitializeTimerEvent();
   void InitializeReadingsPage();
+  void LoadSettingsFromConfigFile();
+  void SaveSettingsToConfigFile();
+  static QString ConfigFilePath();
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;

@@ -12,6 +12,8 @@ class API QtHelpers
   static QString SelectFolder(QWidget* parent, QString& from);
   static QString ChooseFile(QWidget* parent);
   static QString ChooseFile(QWidget* parent, QString& from);
+  static QString SystemDocumentFolderPath();
+  static QString SystemHomeFolderPath();
  private:
   static QString SelectFileFrom();
 };

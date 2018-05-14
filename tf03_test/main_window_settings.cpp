@@ -3,6 +3,7 @@
 #include <tf0x_drivers/abstract_serial_port.h>
 #include <tf0x_drivers/qt_serial_port.h>
 #include <tf0x_common/qt_helpers.h>
+#include <QSettings>
 
 void MainWindow::FillComboBoxWithBaudRate(QComboBox *combo_box) {
   auto rates = tf0x_driver::AbstractSerialPort::BaudRateLists();
@@ -22,6 +23,7 @@ void MainWindow::InitializeSettingsPage() {
   FillComboBoxWithBaudRate(ui->SensorSerialBaudRateComboBox);
   FillSerialPortComboBox(ui->SensorSerialPortComboBox);
   ui->LogPathLineEdit->setReadOnly(true);
+  LoadSettingsFromConfigFile();
 }
 
 void MainWindow::FillSerialPortComboBox(QComboBox *combo_box) {
@@ -33,6 +35,27 @@ void MainWindow::FillSerialPortComboBox(QComboBox *combo_box) {
 
 void MainWindow::on_LogPathPushButton_clicked()
 {
-  ui->LogPathLineEdit->setText(QtHelpers::SelectFolder(this));
+  auto folder = QtHelpers::SelectFolder(this);
+  if (!folder.isEmpty()) {
+    ui->LogPathLineEdit->setText(folder);
+  }
 }
 
+const QString kSettingsKeyLogPath = "log_path";
+
+void MainWindow::LoadSettingsFromConfigFile() {
+  QSettings settings(ConfigFilePath(), QSettings::IniFormat);
+  ui->LogPathLineEdit->setText(
+      settings.value(
+          kSettingsKeyLogPath,
+          QtHelpers::SystemDocumentFolderPath()).toString());
+}
+
+void MainWindow::SaveSettingsToConfigFile() {
+  QSettings settings(ConfigFilePath(), QSettings::IniFormat);
+  settings.setValue(kSettingsKeyLogPath, ui->LogPathLineEdit->text());
+}
+
+QString MainWindow::ConfigFilePath() {
+  return QtHelpers::SystemDocumentFolderPath() + "/tf03_test.config.ini";
+}
