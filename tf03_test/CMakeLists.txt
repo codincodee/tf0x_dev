@@ -11,6 +11,8 @@ add_executable(
     main_window.h
     main_window.cpp
     main_window_settings.cpp
+    main_window_timer_event.cpp
+    main_window_readings_page.cpp
     main_window.ui
 )
 

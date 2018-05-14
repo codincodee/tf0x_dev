@@ -27,7 +27,10 @@ private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   void FillComboBoxWithBaudRate(QComboBox* combo_box);
   void FillSerialPortComboBox(QComboBox* combo_box);
-  void SetSettingsPage();
+  void InitializeSettingsPage();
+  void InitializeTimerEvent();
+  void InitializeReadingsPage();
+
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;

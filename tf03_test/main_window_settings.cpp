@@ -18,7 +18,7 @@ bool MainWindow::SetSensorSerialPort(tf0x_driver::AbstractSerialPort &port) {
   return true;
 }
 
-void MainWindow::SetSettingsPage() {
+void MainWindow::InitializeSettingsPage() {
   FillComboBoxWithBaudRate(ui->SensorSerialBaudRateComboBox);
   FillSerialPortComboBox(ui->SensorSerialPortComboBox);
   ui->LogPathLineEdit->setReadOnly(true);
