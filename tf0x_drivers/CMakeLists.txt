@@ -22,6 +22,8 @@ add_library(
       qt_serial_port.h
       config.h.in
       export.h
+      utils.cpp
+      utils.h
 )
 
 target_link_libraries(tf0x_drivers Qt5::SerialPort)

@@ -9,8 +9,9 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   }
   std::string buffer;
   tf03_driver::Measurement measurement;
-  sensor_driver_->ReadMeasurement(measurement, buffer);
-
+  // sensor_driver_->ReadMeasurement(measurement, buffer);
+  sensor_serial_->ReadBuffer(buffer);
+  HandleIncomingStream(buffer);
 }
 
 void MainWindow::InitializeTimerEvent() {
