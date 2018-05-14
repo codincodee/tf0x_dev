@@ -1,4 +1,5 @@
 #include "qt_serial_port.h"
+#include <QSerialPortInfo>
 
 namespace tf0x_driver {
 bool QtSerialPort::Initialize() {
@@ -28,6 +29,15 @@ QSerialPort::DataBits QtSerialPort::ConvertToQtDataBits(const int &integer) {
   case 8: return QSerialPort::Data8;
   default: return QSerialPort::Data8;
   }
+}
+
+std::vector<std::string> QtSerialPort::ScanAllPorts() {
+  std::vector<std::string> ports;
+  auto qt_ports = QSerialPortInfo::availablePorts();
+  for (auto& port : qt_ports) {
+    ports.push_back(port.portName().toStdString());
+  }
+  return ports;
 }
 
 bool QtSerialPort::ReadBuffer(std::string &buffer) {

@@ -6,13 +6,14 @@
 #include <memory>
 
 namespace tf0x_driver {
-class QtSerialPort : public AbstractSerialPort {
+class API QtSerialPort : public AbstractSerialPort {
  public:
   bool Initialize();
   bool ReadBuffer(std::string &buffer) override;
   bool WriteBuffer(const std::string &buffer) override;
   static QSerialPort::StopBits ConvertToQtStopBits(const int& integer);
   static QSerialPort::DataBits ConvertToQtDataBits(const int& integer);
+  static std::vector<std::string> ScanAllPorts();
 private:
   std::unique_ptr<QSerialPort> q_serial_port_;
 };

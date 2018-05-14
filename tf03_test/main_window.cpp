@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
   //serial->s
   driver_.reset(new tf03_driver::Driver);
 
+  SetSettingsPage();
   startTimer(10);
 }
 
