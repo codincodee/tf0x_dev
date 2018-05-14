@@ -2,6 +2,7 @@
 #include "ui_main_window.h"
 #include <tf0x_drivers/abstract_serial_port.h>
 #include <tf0x_drivers/qt_serial_port.h>
+#include <tf0x_common/qt_helpers.h>
 
 void MainWindow::FillComboBoxWithBaudRate(QComboBox *combo_box) {
   auto rates = tf0x_driver::AbstractSerialPort::BaudRateLists();
@@ -20,7 +21,7 @@ bool MainWindow::SetSensorSerialPort(tf0x_driver::AbstractSerialPort &port) {
 void MainWindow::SetSettingsPage() {
   FillComboBoxWithBaudRate(ui->SensorSerialBaudRateComboBox);
   FillSerialPortComboBox(ui->SensorSerialPortComboBox);
-  ui->LogPathLineEdit->setDisabled(true);
+  ui->LogPathLineEdit->setReadOnly(true);
 }
 
 void MainWindow::FillSerialPortComboBox(QComboBox *combo_box) {
@@ -29,3 +30,9 @@ void MainWindow::FillSerialPortComboBox(QComboBox *combo_box) {
     combo_box->addItem(QString::fromStdString(port));
   }
 }
+
+void MainWindow::on_LogPathPushButton_clicked()
+{
+  ui->LogPathLineEdit->setText(QtHelpers::SelectFolder(this));
+}
+

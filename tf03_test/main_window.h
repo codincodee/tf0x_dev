@@ -20,6 +20,9 @@ public:
   ~MainWindow();
 protected:
   void timerEvent(QTimerEvent *event);
+private slots:
+  void on_LogPathPushButton_clicked();
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   void FillComboBoxWithBaudRate(QComboBox* combo_box);

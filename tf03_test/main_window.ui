@@ -717,7 +717,7 @@
                  <widget class="QLineEdit" name="LogPathLineEdit"/>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pushButton_14">
+                 <widget class="QPushButton" name="LogPathPushButton">
                   <property name="text">
                    <string>Browse</string>
                   </property>
