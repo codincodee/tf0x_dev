@@ -20,7 +20,6 @@ void MainWindow::InitializeTimerEvent() {
 }
 
 void MainWindow::ResetSensorDriver() {
-  qDebug() << __LINE__;
   sensor_serial_.reset(new tf0x_driver::QtSerialPort);
   sensor_serial_->SetPortName(
       ui->SensorSerialPortComboBox->currentText().toStdString());

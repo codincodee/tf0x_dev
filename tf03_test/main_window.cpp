@@ -31,6 +31,12 @@ MainWindow::~MainWindow()
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
   if (index == 3) {
-    SettingsPageClicked();
+    EnteringSettingsPage();
   }
+  if (previous_page_ != index) {
+    if (previous_page_ == 3) {
+      LeavingSettingsPage();
+    }
+  }
+  previous_page_ = index;
 }

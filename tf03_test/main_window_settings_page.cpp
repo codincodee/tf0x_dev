@@ -28,28 +28,11 @@ void MainWindow::InitializeSettingsPage() {
 }
 
 void MainWindow::FillSerialPortComboBox(QComboBox& combo_box) {
-  qDebug() << __LINE__;
+  combo_box.clear();
   auto ports = tf0x_driver::QtSerialPort::ScanAllPorts();
-  qDebug() << __LINE__;
-  QStringList ports_sl;
-  qDebug() << __LINE__;
   for (auto& port : ports) {
-    ports_sl.push_back(QString::fromStdString(port));
+    combo_box.addItem(QString::fromStdString(port));
   }
-  qDebug() << __LINE__;
-  QtHelpers::UpdateComboBoxWithoutCurrentChanged(
-      combo_box, ports_sl);
-  qDebug() << __LINE__;
-}
-
-void MainWindow::on_SensorSerialPortComboBox_currentTextChanged(const QString &arg1)
-{
-  ResetSensorDriver();
-}
-
-void MainWindow::on_SensorSerialBaudRateComboBox_currentTextChanged(const QString &arg1)
-{
-  ResetSensorDriver();
 }
 
 void MainWindow::on_LogPathPushButton_clicked()
@@ -79,6 +62,25 @@ QString MainWindow::ConfigFilePath() {
   return QtHelpers::SystemDocumentFolderPath() + "/tf03_test.config.ini";
 }
 
-void MainWindow::SettingsPageClicked() {
+QString gSettingsPreviousLogPath;
+QString gSettingsPreviousSensorSerialPort;
+QString gSettingsPreviousSensorBaudRate;
+
+void MainWindow::EnteringSettingsPage() {
+  gSettingsPreviousLogPath = ui->LogPathLineEdit->text();
+  gSettingsPreviousSensorSerialPort =
+      ui->SensorSerialPortComboBox->currentText();
+  gSettingsPreviousSensorBaudRate =
+      ui->SensorSerialBaudRateComboBox->currentText();
+
   FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
+}
+
+void MainWindow::LeavingSettingsPage() {
+  if (ui->SensorSerialBaudRateComboBox->currentText() !=
+          gSettingsPreviousSensorBaudRate ||
+      ui->SensorSerialPortComboBox->currentText() !=
+          gSettingsPreviousSensorSerialPort) {
+    ResetSensorDriver();
+  }
 }

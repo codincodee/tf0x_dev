@@ -24,10 +24,6 @@ protected:
 private slots:
   void on_LogPathPushButton_clicked();
 
-  void on_SensorSerialPortComboBox_currentTextChanged(const QString &arg1);
-
-  void on_SensorSerialBaudRateComboBox_currentTextChanged(const QString &arg1);
-
   void on_tabWidget_currentChanged(int index);
 
 private:
@@ -42,13 +38,15 @@ private:
   static QString ConfigFilePath();
   void ResetSensorDriver();
   void HandleIncomingStream(const std::string& buffer);
-  void SettingsPageClicked();
+  void EnteringSettingsPage();
+  void LeavingSettingsPage();
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;
   std::shared_ptr<tf03_driver::Driver> sensor_driver_;
   std::shared_ptr<tf0x_driver::QtSerialPort> sensor_serial_;
+  int previous_page_;
 };
 
 #endif // MAIN_WINDOW_H
