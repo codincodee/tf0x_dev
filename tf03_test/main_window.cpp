@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
   this->resize(800, 800);
+  ui->tabWidget->setCurrentIndex(0);
 
   InitializeSettingsPage();
   InitializeReadingsPage();

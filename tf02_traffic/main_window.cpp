@@ -74,7 +74,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     return QMainWindow::timerEvent(event);
   }
   double dist;
-  if (!driver_.ReadDistance(dist)) {
+  short amp;
+  if (!driver_.ReadMeasurement(dist, amp)) {
     return;
   }
   auto elapsed = elapsed_timer_.elapsed();
@@ -89,7 +90,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     ui->RateLabel->setText(QString::number(int(rate)) + " / Min");
     if (ui->RecordRadioButton->isChecked()) {
       RecordToCache(
-          {(float)dist, high, total, (float)rate, QDateTime::currentDateTime().toString("hh:mm:ss.zzz").toStdString()});
+          {(float)dist, amp, high, total, (float)rate, QDateTime::currentDateTime().toString("hh:mm:ss.zzz").toStdString()});
     }
   }
 }
@@ -160,7 +161,7 @@ void MainWindow::WriteCacheRecordsToDisk() {
         qApp->processEvents();
       }
       os
-          << record.dist << " " << record.high << " " << record.total
+          << record.dist << " " << record.amp << " " << record.high << " " << record.total
           << " " << record.rate << " " << record.ts << "\n";
       ++i;
     }

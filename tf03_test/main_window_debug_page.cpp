@@ -32,9 +32,17 @@ void MainWindow::on_DebugSendPushButton_clicked()
 
 void MainWindow::PrintInDebugWindow(
     const QString &title, const QString &content) {
-  ui->DebugReceivePlainTextEdit->appendPlainText(
+  auto text_edit = ui->DebugReceivePlainTextEdit;
+  text_edit->appendPlainText(
       "[" + title + " at " +
         QDateTime::currentDateTime().toString("hh:mm:ss.zzz") + "] " + content);
+  const int reserved = 100000;
+  auto buffer = text_edit->toPlainText();
+  if (buffer.size() > reserved) {
+    buffer = buffer.right(reserved);
+    text_edit->setPlainText(buffer);
+    text_edit->moveCursor(QTextCursor::End);
+  }
 }
 
 void MainWindow::PrintInDebugWindow(

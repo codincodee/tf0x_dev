@@ -4,6 +4,11 @@
 
 namespace tf02_driver {
 bool Driver::ReadDistance(double &distance) {
+  short amplitude;
+  return ReadMeasurement(distance, amplitude);
+}
+
+bool Driver::ReadMeasurement(double &distance, short& amplitude) {
   if (!serial_port_) {
     return false;
   }
@@ -24,6 +29,7 @@ bool Driver::ReadDistance(double &distance) {
   if (distance > 22.0 || distance < 0.0) {
     return false;
   }
+  memcpy(&amplitude, &buffer[0] + 4, 2);
   return true;
 }
 

@@ -40,6 +40,7 @@ private slots:
 private:
   struct DataFormat {
     float dist;
+    short amp;
     bool high;
     int total;
     float rate;
