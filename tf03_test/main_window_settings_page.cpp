@@ -85,3 +85,8 @@ void MainWindow::LeavingSettingsPage() {
     ResetSensorDriver();
   }
 }
+
+void MainWindow::on_SettingsRefreshPushButton_clicked()
+{
+  FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
+}
