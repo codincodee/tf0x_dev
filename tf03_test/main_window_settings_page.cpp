@@ -27,12 +27,13 @@ void MainWindow::InitializeSettingsPage() {
   LoadSettingsFromConfigFile();
 }
 
-void MainWindow::FillSerialPortComboBox(QComboBox& combo_box) {
-  combo_box.clear();
+void MainWindow::FillSerialPortComboBox(QComboBox &combo_box) {
   auto ports = tf0x_driver::QtSerialPort::ScanAllPorts();
+  QStringList ports_sl;
   for (auto& port : ports) {
-    combo_box.addItem(QString::fromStdString(port));
+    ports_sl.push_back(QString::fromStdString(port));
   }
+  QtHelpers::UpdateComboBoxWithoutCurrentChanged(combo_box, ports_sl);
 }
 
 void MainWindow::on_LogPathPushButton_clicked()
