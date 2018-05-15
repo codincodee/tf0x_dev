@@ -31,6 +31,8 @@ add_library(
       distance_over_time_multi_series_chart.h
       qt_helpers.cpp
       qt_helpers.h
+      utils.cpp
+      utils.h
 )
 
 target_link_libraries(

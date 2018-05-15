@@ -42,6 +42,8 @@ private:
   void HandleIncomingStream(const std::string& buffer);
   void EnteringSettingsPage();
   void LeavingSettingsPage();
+  void PrintInDebugWindow(const std::string& title, const std::string& content);
+  void PrintInDebugWindow(const QString &title, const QString& content);
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
