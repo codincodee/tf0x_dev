@@ -37,6 +37,7 @@ private:
   void InitializeSettingsPage();
   void InitializeTimerEvent();
   void InitializeReadingsPage();
+  void InitializeCommandPageCartSection();
   void LoadSettingsFromConfigFile();
   void SaveSettingsToConfigFile();
   static QString ConfigFilePath();

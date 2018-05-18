@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   InitializeSettingsPage();
   InitializeReadingsPage();
+  InitializeCommandPageCartSection();
   InitializeTimerEvent();
 }
 
