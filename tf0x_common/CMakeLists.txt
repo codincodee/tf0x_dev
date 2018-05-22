@@ -29,6 +29,8 @@ add_library(
       distance_over_time_and_switch_value_chart.h
       distance_over_time_multi_series_chart.cpp
       distance_over_time_multi_series_chart.h
+      distance_over_distance_chart.cpp
+      distance_over_distance_chart.h
       qt_helpers.cpp
       qt_helpers.h
       utils.cpp

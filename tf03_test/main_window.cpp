@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
   InitializeReadingsPage();
   InitializeCommandPageCartSection();
   InitializeTimerEvent();
+  InitializeCartPage();
 }
 
 MainWindow::~MainWindow()

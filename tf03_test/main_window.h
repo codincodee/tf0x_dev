@@ -8,6 +8,7 @@
 #include <tf0x_drivers/qt_serial_port.h>
 #include <QComboBox>
 #include <tf0x_drivers/cart_driver.h>
+#include <tf0x_common/distance_over_distance_chart.h>
 
 namespace Ui {
   class MainWindow;
@@ -39,6 +40,7 @@ private:
   void InitializeTimerEvent();
   void InitializeReadingsPage();
   void InitializeCommandPageCartSection();
+  void InitializeCartPage();
   void LoadSettingsFromConfigFile();
   void SaveSettingsToConfigFile();
   static QString ConfigFilePath();
@@ -55,7 +57,9 @@ private:
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
+  QtCharts::QChartView* cart_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;
+  tf0x_common::FixedDistanceOverDistanceChart* cart_chart_;
   std::shared_ptr<tf03_driver::Driver> sensor_driver_;
   std::shared_ptr<tf0x_driver::QtSerialPort> sensor_serial_;
   std::shared_ptr<cart_driver::Driver> cart_driver_;
