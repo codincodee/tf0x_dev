@@ -32,11 +32,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-  if (index == 3) {
+  constexpr int kSettingsPageIndex = 4;
+  if (index == kSettingsPageIndex) {
     EnteringSettingsPage();
   }
   if (previous_page_ != index) {
-    if (previous_page_ == 3) {
+    if (previous_page_ == kSettingsPageIndex) {
       LeavingSettingsPage();
     }
   }
