@@ -1,6 +1,7 @@
 #include "main_window.h"
 #include "ui_main_window.h"
-#include <qDebug>
+#include <QDebug>
+#include <QMessageBox>
 
 void MainWindow::InitializeCartPage() {
   cart_chart_ = new tf0x_common::FixedDistanceOverDistanceChart();
@@ -9,7 +10,6 @@ void MainWindow::InitializeCartPage() {
 
   cart_chart_->SetXRange(0, 150);
   cart_chart_->SetYRange(0, 150);
-  cart_driver_->StartMultiStopsTesting(100, 0.01);
 }
 
 void MainWindow::HandleCartInstruction(
@@ -27,7 +27,25 @@ void MainWindow::HandleCartInstruction(
       if (!last_measurement_.dists.empty()) {
         auto current_pose = last.x() + cart_driver_->StopInterval();
         cart_chart_->AddPoint(current_pose, last_measurement_.dists[0]);
+        ui->CartInfoLabel->setText("Collected " + QString::number(series->count()) + " Points.");
       }
     }
+  } else if (instruction.type == cart_driver::Instruction::Type::reach_end_point) {
+    ui->CartInfoLabel->setText("Finished.");
   }
+}
+
+void MainWindow::on_CartStartTestPushButton_clicked()
+{
+  cart_chart_->Clear();
+  if (!cart_driver_) {
+    return;
+  }
+  bool distance_ok, interval_ok;
+  auto distance = ui->SettingsCartDistanceLineEdit->text().toFloat(&distance_ok);
+  auto interval = ui->SettingsCartIntervalLineEdit->text().toFloat(&interval_ok);
+  if (!distance_ok || !interval_ok) {
+    return;
+  }
+  cart_driver_->StartMultiStopsTesting(distance, interval);
 }

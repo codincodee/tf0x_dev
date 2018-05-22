@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -654,6 +654,17 @@
            </layout>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <widget class="QPushButton" name="CartStartTestPushButton">
+              <property name="text">
+               <string>Start</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <spacer name="verticalSpacer_7">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -776,27 +787,20 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_8">
+              <item row="10" column="1">
+               <widget class="QLineEdit" name="SettingsCartDistanceLineEdit"/>
+              </item>
+              <item row="10" column="0">
+               <widget class="QLabel" name="label_24">
+                <property name="text">
+                 <string>Distance</string>
+                </property>
+               </widget>
+              </item>
               <item row="9" column="0">
                <widget class="QLabel" name="CartSerialBaudRateLabel">
                 <property name="text">
                  <string>Baud Rate</string>
-                </property>
-               </widget>
-              </item>
-              <item row="9" column="1">
-               <widget class="QComboBox" name="CartSerialBaudRateComboBox"/>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_16">
-                <property name="text">
-                 <string>Log Path</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_17">
-                <property name="text">
-                 <string>Port</string>
                 </property>
                </widget>
               </item>
@@ -807,19 +811,27 @@
                 </item>
                </layout>
               </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_19">
-                <property name="font">
-                 <font>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="frameShape">
-                 <enum>QFrame::NoFrame</enum>
-                </property>
+              <item row="9" column="1">
+               <widget class="QComboBox" name="CartSerialBaudRateComboBox"/>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_17">
                 <property name="text">
-                 <string>Sensor Serial</string>
+                 <string>Port</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_16">
+                <property name="text">
+                 <string>Log Path</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
               </item>
@@ -837,17 +849,43 @@
                 </item>
                </layout>
               </item>
-              <item row="0" column="1">
-               <widget class="Line" name="line_2">
+              <item row="3" column="1">
+               <widget class="Line" name="line">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
-               <widget class="Line" name="line">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_19">
+                <property name="font">
+                 <font>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::NoFrame</enum>
+                </property>
+                <property name="text">
+                 <string>Sensor Serial</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QComboBox" name="SensorSerialBaudRateComboBox"/>
+              </item>
+              <item row="8" column="0">
+               <widget class="QLabel" name="label_22">
+                <property name="text">
+                 <string>Port</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_20">
+                <property name="text">
+                 <string>Baud Rate</string>
                 </property>
                </widget>
               </item>
@@ -867,23 +905,6 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0">
-               <widget class="QLabel" name="label_20">
-                <property name="text">
-                 <string>Baud Rate</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QComboBox" name="SensorSerialBaudRateComboBox"/>
-              </item>
-              <item row="8" column="0">
-               <widget class="QLabel" name="label_22">
-                <property name="text">
-                 <string>Port</string>
-                </property>
-               </widget>
-              </item>
               <item row="7" column="1">
                <widget class="Line" name="line_5">
                 <property name="orientation">
@@ -900,14 +921,11 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Cart Serial</string>
+                 <string>Cart</string>
                 </property>
                </widget>
               </item>
-              <item row="8" column="1">
-               <widget class="QComboBox" name="CartSerialPortComboBox"/>
-              </item>
-              <item row="10" column="1">
+              <item row="12" column="1">
                <spacer name="verticalSpacer_10">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -919,6 +937,19 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="8" column="1">
+               <widget class="QComboBox" name="CartSerialPortComboBox"/>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="label_25">
+                <property name="text">
+                 <string>Interval</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <widget class="QLineEdit" name="SettingsCartIntervalLineEdit"/>
               </item>
              </layout>
             </item>

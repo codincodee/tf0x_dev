@@ -16,6 +16,7 @@ class API FixedDistanceOverDistanceChart : public QtCharts::QChart
   void SetYRange(const float& from, const float& to);
   void AddPoint(const float& x, const float& y);
   QtCharts::QLineSeries*  Series();
+  void Clear();
  private:
   float x_min_;
   float x_max_;
