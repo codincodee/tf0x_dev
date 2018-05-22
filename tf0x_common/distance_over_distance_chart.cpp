@@ -56,4 +56,8 @@ void FixedDistanceOverDistanceChart::AddPoint(const float &x, const float &y) {
   }
   *line_series_ << QPointF(x, y);
 }
+
+QtCharts::QLineSeries* FixedDistanceOverDistanceChart::Series() {
+  return line_series_;
+}
 } // namespace tf0x_common

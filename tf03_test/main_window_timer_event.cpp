@@ -12,6 +12,7 @@ void MainWindow::HandleSensorTimerEvent() {
   // sensor_driver_->ReadMeasurement(measurement, buffer);
   sensor_serial_->ReadBuffer(buffer);
   HandleIncomingStream(buffer);
+  last_measurement_ = measurement;
 }
 
 void MainWindow::HandleCartTimerEvent() {

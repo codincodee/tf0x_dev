@@ -65,6 +65,8 @@ private:
   std::shared_ptr<cart_driver::Driver> cart_driver_;
   std::shared_ptr<tf0x_driver::QtSerialPort> cart_serial_;
   int previous_page_;
+
+  tf03_driver::Measurement last_measurement_;
 };
 
 #endif // MAIN_WINDOW_H

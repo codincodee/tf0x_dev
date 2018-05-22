@@ -5,6 +5,9 @@
 #include <memory>
 #include "export.h"
 
+// Just for simulation
+#include <QElapsedTimer>
+
 namespace cart_driver {
 struct Instruction {
  enum class Type {read_sensor, reach_end_point, reach_start_point};
@@ -16,8 +19,17 @@ class API Driver {
   bool Initialize();
   void SetSerialPort(std::shared_ptr<tf0x_driver::AbstractSerialPort> serial);
   bool ReadInstruction(Instruction& instruction);
+  bool StartMultiStopsTesting(const float& distance, const float& delta);
+  float TotalDistance();
+  float StopInterval();
  private:
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
+
+  // Just for simulation
+  float distance_;
+  float delta_;
+  float current_;
+  QElapsedTimer timer_;
 };
 } // namespace cart_driver
 
