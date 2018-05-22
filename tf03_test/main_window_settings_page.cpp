@@ -47,6 +47,8 @@ void MainWindow::on_LogPathPushButton_clicked()
 }
 
 const QString kSettingsKeyLogPath = "log_path";
+const QString kSettingsCartDistance = "cart_distance";
+const QString kSettingsCartInterval = "cart_interval";
 
 void MainWindow::LoadSettingsFromConfigFile() {
   QSettings settings(ConfigFilePath(), QSettings::IniFormat);
@@ -54,11 +56,19 @@ void MainWindow::LoadSettingsFromConfigFile() {
       settings.value(
           kSettingsKeyLogPath,
           QtHelpers::SystemDocumentFolderPath()).toString());
+  ui->SettingsCartDistanceLineEdit->setText(
+      settings.value(kSettingsCartDistance, 150).toString());
+  ui->SettingsCartIntervalLineEdit->setText(
+      settings.value(kSettingsCartInterval, 0.01).toString());
 }
 
 void MainWindow::SaveSettingsToConfigFile() {
   QSettings settings(ConfigFilePath(), QSettings::IniFormat);
   settings.setValue(kSettingsKeyLogPath, ui->LogPathLineEdit->text());
+  settings.setValue(
+      kSettingsCartDistance, ui->SettingsCartDistanceLineEdit->text());
+  settings.setValue(
+      kSettingsCartInterval, ui->SettingsCartIntervalLineEdit->text());
 }
 
 QString MainWindow::ConfigFilePath() {
