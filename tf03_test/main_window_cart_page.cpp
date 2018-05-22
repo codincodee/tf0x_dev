@@ -31,7 +31,7 @@ void MainWindow::HandleCartInstruction(
       }
     }
   } else if (instruction.type == cart_driver::Instruction::Type::reach_end_point) {
-    ui->CartInfoLabel->setText("Finished.");
+    ui->CartStartTestPushButton->setText("Start");
   }
 }
 
@@ -48,4 +48,5 @@ void MainWindow::on_CartStartTestPushButton_clicked()
     return;
   }
   cart_driver_->StartMultiStopsTesting(distance, interval);
+  ui->CartStartTestPushButton->setText("Reset");
 }
