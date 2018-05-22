@@ -16,6 +16,8 @@ add_library(
       tf0x_driver.h
       tf03_driver.cpp
       tf03_driver.h
+      cart_driver.cpp
+      cart_driver.h
       abstract_serial_port.cpp
       abstract_serial_port.h
       qt_serial_port.cpp

@@ -710,14 +710,14 @@
             <item>
              <layout class="QGridLayout" name="gridLayout_8">
               <item row="9" column="0">
-               <widget class="QLabel" name="label_26">
+               <widget class="QLabel" name="CartSerialBaudRateLabel">
                 <property name="text">
-                 <string>TextLabel</string>
+                 <string>Baud Rate</string>
                 </property>
                </widget>
               </item>
               <item row="9" column="1">
-               <widget class="QComboBox" name="comboBox_4"/>
+               <widget class="QComboBox" name="CartSerialBaudRateComboBox"/>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_16">
@@ -838,7 +838,7 @@
                </widget>
               </item>
               <item row="8" column="1">
-               <widget class="QComboBox" name="comboBox_3"/>
+               <widget class="QComboBox" name="CartSerialPortComboBox"/>
               </item>
               <item row="10" column="1">
                <spacer name="verticalSpacer_10">

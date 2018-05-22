@@ -23,6 +23,8 @@ bool MainWindow::SetSensorSerialPort(tf0x_driver::AbstractSerialPort &port) {
 void MainWindow::InitializeSettingsPage() {
   FillComboBoxWithBaudRate(*ui->SensorSerialBaudRateComboBox);
   FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
+  FillComboBoxWithBaudRate(*ui->CartSerialBaudRateComboBox);
+  FillSerialPortComboBox(*ui->CartSerialPortComboBox);
   ui->LogPathLineEdit->setReadOnly(true);
   LoadSettingsFromConfigFile();
 }
@@ -66,6 +68,8 @@ QString MainWindow::ConfigFilePath() {
 QString gSettingsPreviousLogPath;
 QString gSettingsPreviousSensorSerialPort;
 QString gSettingsPreviousSensorBaudRate;
+QString gSettingsPreviousCartSerialPort;
+QString gSettingsPreviousCartBaudRate;
 
 void MainWindow::EnteringSettingsPage() {
   gSettingsPreviousLogPath = ui->LogPathLineEdit->text();
@@ -73,8 +77,11 @@ void MainWindow::EnteringSettingsPage() {
       ui->SensorSerialPortComboBox->currentText();
   gSettingsPreviousSensorBaudRate =
       ui->SensorSerialBaudRateComboBox->currentText();
+  gSettingsPreviousCartSerialPort = ui->CartSerialPortComboBox->currentText();
+  gSettingsPreviousCartBaudRate = ui->CartSerialBaudRateComboBox->currentText();
 
   FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
+  FillSerialPortComboBox(*ui->CartSerialPortComboBox);
 }
 
 void MainWindow::LeavingSettingsPage() {
@@ -84,9 +91,17 @@ void MainWindow::LeavingSettingsPage() {
           gSettingsPreviousSensorSerialPort) {
     ResetSensorDriver();
   }
+
+  if (ui->CartSerialBaudRateComboBox->currentText() !=
+          gSettingsPreviousCartBaudRate ||
+      ui->CartSerialPortComboBox->currentText() !=
+      gSettingsPreviousCartSerialPort) {
+    ResetCartDriver();
+  }
 }
 
 void MainWindow::on_SettingsRefreshPushButton_clicked()
 {
   FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
+  FillSerialPortComboBox(*ui->CartSerialPortComboBox);
 }
