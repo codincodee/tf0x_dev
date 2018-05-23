@@ -43,11 +43,11 @@ bool DistanceOverTimeChart::AddPoint(
       min = line_series->at(i).y();
     }
   }
-  if (max > 20.0f) {
-    max = 20.0f;
+  if (max > ceiling_) {
+    max = ceiling_;
   }
-  if (max < 5.0f) {
-    max = 5.0f;
+  if (max < floor_) {
+    max = floor_;
   }
 
   // To make the plot look nicer, we currently set MIN to 0.0f;
@@ -71,7 +71,8 @@ bool DistanceOverTimeChart::AddPoint(
   return AddPoint(meter, millisecond, line_series_);
 }
 
-DistanceOverTimeChart::DistanceOverTimeChart() {
+DistanceOverTimeChart::DistanceOverTimeChart()
+    : ceiling_(20.0f), floor_(5.0f) {
   line_series_ = new QtCharts::QLineSeries;
   this->addSeries(line_series_);
   this->setTitle("Distance (m) - Time Elapse (ms)");
@@ -88,5 +89,41 @@ float DistanceOverTimeChart::GetMax() const {
 
 float DistanceOverTimeChart::GetMin() const {
   return min_;
+}
+
+void DistanceOverTimeChart::SetCeiling(const float &ceiling) {
+  ceiling_ = ceiling;
+}
+
+void DistanceOverTimeChart::SetFloor(const float &floor) {
+  floor_ = floor;
+}
+
+QtCharts::QLineSeries* DistanceOverTimeChart::Series() {
+  return line_series_;
+}
+
+float DistanceOverTimeChart::CurrentStandardDeviation() {
+  if (!line_series_) {
+    return 0.0f;
+  }
+  if (!line_series_->count()) {
+    return 0.0f;
+  }
+  std::vector<float> v;
+  v.reserve(line_series_->count());
+  for (int i = 0; i < line_series_->count(); ++i) {
+    v.push_back(line_series_->at(i).y());
+  }
+
+  auto sum = std::accumulate(std::begin(v), std::end(v), 0.0);
+  auto m =  sum / v.size();
+
+  float accum = 0.0f;
+  std::for_each (std::begin(v), std::end(v), [&](const float d) {
+      accum += (d - m) * (d - m);
+  });
+
+  return std::sqrt(accum / (v.size()-1));
 }
 } // namespace tf0x_common

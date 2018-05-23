@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
   InitializeCommandPageCartSection();
   InitializeTimerEvent();
   InitializeCartPage();
+
+  elapsed_timer_.start();
 }
 
 MainWindow::~MainWindow()

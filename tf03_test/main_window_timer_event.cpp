@@ -10,7 +10,11 @@ void MainWindow::HandleSensorTimerEvent() {
   std::string buffer;
   tf03_driver::Measurement measurement;
   // sensor_driver_->ReadMeasurement(measurement, buffer);
-  sensor_serial_->ReadBuffer(buffer);
+//  sensor_serial_->ReadBuffer(buffer);
+  if (!sensor_driver_->ReadMeasurement(measurement)) {
+    return;
+  }
+  HandleIncomingMeasurement(measurement);
   HandleIncomingStream(buffer);
   last_measurement_ = measurement;
 }

@@ -29,8 +29,20 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
 }
 
 bool Driver::ReadMeasurement(Measurement &measurement) {
-  std::string buffer;
-  return ReadMeasurement(measurement, buffer);
+//  std::string buffer;
+//  return ReadMeasurement(measurement, buffer);
+
+  static float dist = 10.0f;
+  static float sign = 1.0f;
+  if (dist > 150.0f) {
+    sign *= -1.0f;
+  }
+  if (dist < 1.0f) {
+    sign *= -1.0f;
+  }
+  dist += sign * 1;
+  measurement.dists.push_back(dist);
+  return true;
 }
 
 void Driver::SetSerialPort(

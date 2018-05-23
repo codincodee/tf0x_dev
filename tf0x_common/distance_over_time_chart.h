@@ -15,6 +15,10 @@ public:
   void SetTimeWindow(const int& millisecond);
   float GetMin() const;
   float GetMax() const;
+  void SetCeiling(const float& ceiling);
+  void SetFloor(const float& floor);
+  QtCharts::QLineSeries* Series();
+  float CurrentStandardDeviation();
 protected:
   bool AddPoint(
       const float &meter,
@@ -24,6 +28,8 @@ private:
   QtCharts::QLineSeries* line_series_;
   float min_;
   float max_;
+  float ceiling_;
+  float floor_;
 };
 } // namespace tf0x_common
 

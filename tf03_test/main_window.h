@@ -9,6 +9,7 @@
 #include <QComboBox>
 #include <tf0x_drivers/cart_driver.h>
 #include <tf0x_common/distance_over_distance_chart.h>
+#include <QElapsedTimer>
 
 namespace Ui {
   class MainWindow;
@@ -57,6 +58,7 @@ private:
   void HandleCartTimerEvent();
   void HandleCartInstruction(const cart_driver::Instruction& instruction);
   void SaveCartTestLog();
+  void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
@@ -68,8 +70,9 @@ private:
   std::shared_ptr<cart_driver::Driver> cart_driver_;
   std::shared_ptr<tf0x_driver::QtSerialPort> cart_serial_;
   int previous_page_;
-
   tf03_driver::Measurement last_measurement_;
+  QElapsedTimer elapsed_timer_;
+  QElapsedTimer numeric_display_timer_;
 };
 
 #endif // MAIN_WINDOW_H
