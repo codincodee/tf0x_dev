@@ -56,6 +56,7 @@ private:
   void HandleSensorTimerEvent();
   void HandleCartTimerEvent();
   void HandleCartInstruction(const cart_driver::Instruction& instruction);
+  void SaveCartTestLog();
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;

@@ -17,6 +17,8 @@ FixedDistanceOverDistanceChart::FixedDistanceOverDistanceChart()
   axis_x->setGridLineVisible(true);
   axis_x->setTickCount(20);
   this->addAxis(axis_x, Qt::AlignBottom);
+  this->setAxisY(this->axisY(), line_series_);
+  this->setAxisX(this->axisX(), line_series_);
 }
 
 FixedDistanceOverDistanceChart::~FixedDistanceOverDistanceChart() {
@@ -35,7 +37,6 @@ void FixedDistanceOverDistanceChart::SetXRange(
   }
   auto axis = this->axisX();
   axis->setRange(x_min_, x_max_);
-  this->setAxisX(axis, line_series_);
 }
 
 void FixedDistanceOverDistanceChart::SetYRange(
@@ -47,7 +48,6 @@ void FixedDistanceOverDistanceChart::SetYRange(
   }
   auto axis = this->axisY();
   axis->setRange(y_min_, y_max_);
-  this->setAxisY(axis, line_series_);
 }
 
 void FixedDistanceOverDistanceChart::AddPoint(const float &x, const float &y) {

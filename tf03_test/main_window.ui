@@ -656,6 +656,19 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
+             <spacer name="horizontalSpacer_16">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QPushButton" name="CartStartTestPushButton">
               <property name="text">
                <string>Start</string>
@@ -868,7 +881,7 @@
                  <enum>QFrame::NoFrame</enum>
                 </property>
                 <property name="text">
-                 <string>Sensor Serial</string>
+                 <string>Sensor</string>
                 </property>
                </widget>
               </item>
