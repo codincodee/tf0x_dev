@@ -13,93 +13,119 @@
 #define INVALID 32760
 
 namespace tf02_common {
-TrafficCountCore::TrafficCountCore()
-  : dist_t(nullptr),
-    dist_m_1s(nullptr),
-    dist_m_5s(nullptr),
-    state_5s(nullptr),
-    s_c_5s(nullptr),
-    d_c_5s(nullptr),
-    idxArr(nullptr) {}
+  TrafficCountCore::TrafficCountCore() {}
+//  : dist_t(nullptr),
+//    dist_m_1s(nullptr),
+//    dist_m_5s(nullptr),
+//    state_5s(nullptr),
+//    s_c_5s(nullptr),
+//    d_c_5s(nullptr),
+//    idxArr(nullptr) {}
 
 bool TrafficCountCore::Initialize() {
-  count = 0;
-  count_1s = 0;
-  count_5s = 0;
-  count_m = 0;
-  count_60s = 0;
-  thres_over_fix = 15;
-  thres_over = 15;
-  thres_renew = 30;
-  thres_step = 100;
-  thres_state = 0;
-  thres_dist = 0;
-  if (dist_t) {
-    delete [] dist_t;
-  }
-  dist_t = new int16_t[MED_NUM]{0};
-  dist_m;
-  if (dist_m_1s) {
-    delete [] dist_m_1s;
-  }
-  dist_m_1s = new int16_t[COUNT_1S_MAX];
-  if (dist_m_5s) {
-    delete [] dist_m_5s;
-  }
-  dist_m_5s = new int16_t[COUNT_5S_MAX];
-  state_now = 0;
-  if (state_5s) {
-    delete [] state_5s;
-  }
-  state_5s = new int16_t[COUNT_5S_MAX];
-  stat_std = 0.0;
-  d_m = 0;
-  d_t = 0;
-  if (s_c_5s) {
-    delete [] s_c_5s;
-  }
-  s_c_5s = new int16_t[COUNT_5S_MAX];
-  if (d_c_5s) {
-    delete [] d_c_5s;
-  }
-  d_c_5s = new int16_t[COUNT_5S_MAX];
-  if (idxArr) {
-    delete [] idxArr;
-  }
-  idxArr = new int16_t[COUNT_5S_MAX];
-  d_t_5s = 0;
-  len_buf = 0;
+//  count = 0;
+//  count_1s = 0;
+//  count_5s = 0;
+//  count_m = 0;
+//  count_60s = 0;
+//  thres_over_fix = 15;
+//  thres_over = 15;
+//  thres_renew = 30;
+//  thres_step = 100;
+//  thres_state = 0;
+//  thres_dist = 0;
+//  if (dist_t) {
+//    delete [] dist_t;
+//  }
+//  dist_t = new int16_t[MED_NUM]{0};
+//  dist_m;
+//  if (dist_m_1s) {
+//    delete [] dist_m_1s;
+//  }
+//  dist_m_1s = new int16_t[COUNT_1S_MAX];
+//  if (dist_m_5s) {
+//    delete [] dist_m_5s;
+//  }
+//  dist_m_5s = new int16_t[COUNT_5S_MAX];
+//  state_now = 0;
+//  if (state_5s) {
+//    delete [] state_5s;
+//  }
+//  state_5s = new int16_t[COUNT_5S_MAX];
+//  stat_std = 0.0;
+//  d_m = 0;
+//  d_t = 0;
+//  if (s_c_5s) {
+//    delete [] s_c_5s;
+//  }
+//  s_c_5s = new int16_t[COUNT_5S_MAX];
+//  if (d_c_5s) {
+//    delete [] d_c_5s;
+//  }
+//  d_c_5s = new int16_t[COUNT_5S_MAX];
+//  if (idxArr) {
+//    delete [] idxArr;
+//  }
+//  idxArr = new int16_t[COUNT_5S_MAX];
+//  d_t_5s = 0;
+//  len_buf = 0;
   return true;
 }
 
 TrafficCountCore::~TrafficCountCore() {
-  if (dist_t) {
-    delete [] dist_t;
-  }
-  if (dist_m_1s) {
-    delete [] dist_m_1s;
-  }
-  if (dist_m_5s) {
-    delete [] dist_m_5s;
-  }
-  if (state_5s) {
-    delete [] state_5s;
-  }
-  if (s_c_5s) {
-    delete [] s_c_5s;
-  }
-  if (d_c_5s) {
-    delete [] d_c_5s;
-  }
-  if (idxArr) {
-    delete [] idxArr;
-  }
+//  if (dist_t) {
+//    delete [] dist_t;
+//  }
+//  if (dist_m_1s) {
+//    delete [] dist_m_1s;
+//  }
+//  if (dist_m_5s) {
+//    delete [] dist_m_5s;
+//  }
+//  if (state_5s) {
+//    delete [] state_5s;
+//  }
+//  if (s_c_5s) {
+//    delete [] s_c_5s;
+//  }
+//  if (d_c_5s) {
+//    delete [] d_c_5s;
+//  }
+//  if (idxArr) {
+//    delete [] idxArr;
+//  }
 }
 
 bool TrafficCountCore::Probe(const double &distance) {
   int16_t rawdist = distance * 100;
-  int16_t i = 0;
+
+  static int count = 0;
+  static int16_t count_1s = 0;
+  static int16_t count_5s = 0;
+  static int16_t count_m = 0;
+  static int16_t count_60s = 0;
+  static int16_t thres_over_fix = 15;
+  static int16_t thres_over = 15;
+  static int16_t thres_renew = 30;
+  static int16_t thres_step = 100;
+  static int16_t thres_state = 0;
+  static int16_t thres_dist = 0;
+  static int16_t dist_t[MED_NUM] = { 0 };
+  static int16_t dist_m;
+  static int16_t dist_m_1s[COUNT_1S_MAX];
+  static int16_t dist_m_5s[COUNT_5S_MAX];
+  static int16_t state_now = 0;
+  static int16_t state_5s[COUNT_5S_MAX];
+  static double stat_std = 0.0;
+  static int16_t d_m = 0;
+  static int16_t d_t = 0;
+  static int16_t s_c_5s[COUNT_5S_MAX];
+  static int16_t d_c_5s[COUNT_5S_MAX];
+  static int16_t idxArr[COUNT_5S_MAX];
   int16_t stateLen = 0;
+  static int16_t d_t_5s = 0;
+  int16_t i = 0;
+  static int16_t len_buf = 0;
 
   if (0 == count)
   {
@@ -130,7 +156,10 @@ bool TrafficCountCore::Probe(const double &distance) {
 
   if (count >= MED_NUM)
   {
+    std::cout << __LINE__ << std::endl;
+    std::cout << sizeof(dist_t) << std::endl;
     dist_m = (int16_t)floor((double)median(dist_t, sizeof(dist_t)/2, 0));
+    std::cout << __LINE__ << std::endl;
   }
   else
   {
@@ -276,7 +305,7 @@ int16_t TrafficCountCore::median(int16_t *value, uint8_t length, uint8_t startIn
 
     for (i = 0; i < length; i++)
     {
-      if (value[j] != INVALID)
+      if (value[i] != INVALID)
       {
         value_med[i] = value[i];
       }

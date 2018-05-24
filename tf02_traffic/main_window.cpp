@@ -58,6 +58,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
   window_title_ = "TF02 Traffic";
   this->setWindowTitle(window_title_);
+
+  ui->ResetPushButton->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
