@@ -1,206 +1,263 @@
 #include "tf02_traffic_count_core.h"
 #include <string.h>
+#include <math.h>
+#include <iostream>
 
-#define LIST_MAX_DIST 2200
+#define THRES_LENGTH 500
+#define PCL_MEDIAN_ROW_SIZE 30
+#define COUNT_1S_MAX 100
+#define COUNT_5S_MAX 500
+#define COUNT_60S_MAX 2000
+#define JUDGE_NUM 100
+#define MED_NUM 10
+#define INVALID 32760
 
 namespace tf02_common {
-#ifdef TRAFFIC_COUNT_CORE_v2
-int TrafficCountCore::median(int *value)
-{
-    int tmpValue[10];
-    int i = 0, j = 0;
-    int mid_filt_value = 0;
-
-    memcpy((void *)&tmpValue, (void *)value, 10 * sizeof(int));
-
-    for(i = 0; i < 10 - 1; i++)
-    {
-        for(j = i; j < 10 - 1; j++)
-        {
-            int tmp;
-            if(tmpValue[i] > tmpValue[j + 1])
-            {
-                tmp = tmpValue[j + 1];
-                tmpValue[j + 1] = tmpValue[i];
-                tmpValue[i] = tmp;
-            }
-        }
-    }
-    mid_filt_value = tmpValue[5];
-    return mid_filt_value;
-}
-
-int TrafficCountCore::mean(int *value)
-{
-    int i = 0;
-    long long sum = 0;
-    int mean_value = 0;
-    for(i = 0; i < 50; i++)
-    {
-        sum += value[i];
-    }
-    mean_value = sum / 50;
-    return mean_value;
-}
-
-int TrafficCountCore::max(int *value)
-{
-    int i = 0;
-    int max_value = value[0];
-    for(i = 0; i < 50; i++)
-    {
-        if(max_value < value[i])
-        {
-            max_value = value[i];
-        }
-    }
-    return max_value;
-}
-
-int TrafficCountCore::min(int *value)
-{
-    int i = 0;
-    int min_value = value[0];
-    for(i = 0; i < 50; i++)
-    {
-        if(min_value > value[i])
-        {
-            min_value = value[i];
-        }
-    }
-    return min_value;
-}
+TrafficCountCore::TrafficCountCore()
+  : dist_t(nullptr),
+    dist_m_1s(nullptr),
+    dist_m_5s(nullptr),
+    state_5s(nullptr),
+    s_c_5s(nullptr),
+    d_c_5s(nullptr),
+    idxArr(nullptr) {}
 
 bool TrafficCountCore::Initialize() {
-  k = 0;
-  count_cont=0;
-  flag_exceed=0;
-  threshold=0;
-  threshold_last=0;
-  state=0;
-  state_last=0;
-  dist_buf = new int[10]{0};
-  dist_med=0;
-  dist_cnt = new int[50]{0};
-  count_buf= 0;
-  count_fix= 0;
-  idx_buf= 0;
-  mid_filt_flag = 0;
+  count = 0;
+  count_1s = 0;
+  count_5s = 0;
+  count_m = 0;
+  count_60s = 0;
+  thres_over_fix = 15;
+  thres_over = 15;
+  thres_renew = 30;
+  thres_step = 100;
+  thres_state = 0;
+  thres_dist = 0;
+  if (dist_t) {
+    delete [] dist_t;
+  }
+  dist_t = new int16_t[MED_NUM]{0};
+  dist_m;
+  if (dist_m_1s) {
+    delete [] dist_m_1s;
+  }
+  dist_m_1s = new int16_t[COUNT_1S_MAX];
+  if (dist_m_5s) {
+    delete [] dist_m_5s;
+  }
+  dist_m_5s = new int16_t[COUNT_5S_MAX];
+  state_now = 0;
+  if (state_5s) {
+    delete [] state_5s;
+  }
+  state_5s = new int16_t[COUNT_5S_MAX];
+  stat_std = 0.0;
+  d_m = 0;
+  d_t = 0;
+  if (s_c_5s) {
+    delete [] s_c_5s;
+  }
+  s_c_5s = new int16_t[COUNT_5S_MAX];
+  if (d_c_5s) {
+    delete [] d_c_5s;
+  }
+  d_c_5s = new int16_t[COUNT_5S_MAX];
+  if (idxArr) {
+    delete [] idxArr;
+  }
+  idxArr = new int16_t[COUNT_5S_MAX];
+  d_t_5s = 0;
+  len_buf = 0;
   return true;
 }
 
 TrafficCountCore::~TrafficCountCore() {
-  if (dist_buf) {
-    delete [] dist_buf;
-    dist_buf = nullptr;
+  if (dist_t) {
+    delete [] dist_t;
   }
-
-  if (dist_cnt) {
-    delete [] dist_cnt;
-    dist_cnt = nullptr;
+  if (dist_m_1s) {
+    delete [] dist_m_1s;
+  }
+  if (dist_m_5s) {
+    delete [] dist_m_5s;
+  }
+  if (state_5s) {
+    delete [] state_5s;
+  }
+  if (s_c_5s) {
+    delete [] s_c_5s;
+  }
+  if (d_c_5s) {
+    delete [] d_c_5s;
+  }
+  if (idxArr) {
+    delete [] idxArr;
   }
 }
 
-bool TrafficCountCore::Probe(const double& dist)
-{
-  unsigned short corrdist = dist * 100.0;
+bool TrafficCountCore::Probe(const double &distance) {
+  int16_t rawdist = distance * 100;
+  int16_t i = 0;
+  int16_t stateLen = 0;
 
-  count_cont+=1;
-  k++;
-  count_buf = k % 50;
-  count_fix = k % 300;
-  idx_buf   = k % 10;
-  dist_buf[idx_buf] = corrdist;
-
-
-  if(dist_buf[idx_buf] == 2200)
+  if (0 == count)
   {
-    int i = 0;
-    int find = 0;
-    for(i = k % 10; i > -1; i--)
-    {
-      if(dist_buf[i] != 2200)
-      {
-        dist_buf[k % 10] = dist_buf[i];
-        find = 1;
-        break;
-      }
-    }
-    if(mid_filt_flag == 1 && find == 0)
-    {
-      for(i = 9; i > k % 10; i--)
-      {
-        if(dist_buf[i] != 2200)
-        {
-          dist_buf[k % 10] = dist_buf[i];
-          break;
-        }
-      }
-    }
+    thres_dist = rawdist;
   }
 
-    if(mid_filt_flag == 1)
-    {
-    k = k % 300;
-    state = state_last;
-    threshold = threshold_last;
-    dist_med = median(dist_buf);
-    }
-    else
-    {
-    state = 0;
-    threshold = 0;
-    dist_med = dist_buf[idx_buf];
-        if(k >= 9)
-        {
-            mid_filt_flag = 1;
-        }
-    }
+  //printf("%d\n", count);
+  count++;
 
-  dist_cnt[count_buf] = dist_med;
+  count_m = count % MED_NUM;
+  count_1s = count % COUNT_1S_MAX;
+  count_5s = count % COUNT_5S_MAX;
+  count_60s = count % COUNT_60S_MAX;
 
-  if((dist_med > threshold + 5) && (threshold != 0))
+  if (2200 == rawdist)
   {
-    flag_exceed = 1;
+    rawdist = 0;
   }
+  dist_t[count_m] = rawdist;
 
-  if((flag_exceed == 1) || (threshold == 0 && count_buf == 49) || (count_fix == 299))
+//	int16_t testArr[100] = {0};
+//	for(i = 0;i <100;i++)
+//	{
+//		testArr[i] = i;
+//	}
+
+//	medianblur_row(testArr, 1, 100);
+
+  if (count >= MED_NUM)
   {
-    if(((max(dist_cnt) - min(dist_cnt)) < 5) && (mean(dist_cnt) > (threshold - 50)))
-    {
-      threshold = mean(dist_cnt);
-      flag_exceed = 0;
-    }
+    dist_m = (int16_t)floor((double)median(dist_t, sizeof(dist_t)/2, 0));
   }
-
-  if(threshold != 0)
+  else
   {
-    if(count_cont >= 100)
+    dist_m = dist_t[count_m];
+  }
+  dist_m_1s[count_1s] = dist_m;
+  dist_m_5s[count_5s] = dist_m;
+
+  if (0 == count_60s || (0 == count_1s && thres_state == 0))
+  {
+    if (state_now == 0)
     {
-      if(dist_med <= (threshold - 15))
+      d_m = mean(dist_m_1s, 100);
+      d_t = max(dist_m_1s, 100) - min(dist_m_1s, 100);
+      if ((d_t < thres_renew) && floor(abs(d_m - thres_dist) < thres_step))
       {
-        state = 1;
+        thres_dist = d_m;
+        thres_state = 1;
       }
       else
       {
-        state = 0;
+        thres_state = 0;
       }
     }
     else
     {
-      state = state_last;
+      thres_state = 0;
+    }
+  }
+  if (0 == count_5s)
+  {
+    for (i = 0; i < COUNT_5S_MAX; i++)   //count---N/A
+    {
+      idxArr[i] = state_5s[i];
+      s_c_5s[i] = state_5s[i];
+    }
+    for (i = 0; i < COUNT_5S_MAX; i++)
+    {
+      d_c_5s[i] = dist_m_5s[i];
+    }
+    stateLen = COUNT_5S_MAX - 1;
+    diffArr(idxArr, COUNT_5S_MAX, 0);
+    len_buf = stateLen;
+    stateLen = findArr(idxArr, len_buf); // OK
+    len_buf = stateLen;
+    if(stateLen != 0)
+    {
+      idxArr[COUNT_5S_MAX - 1] = INVALID;
+      int16_t offset = 0, idxValue = 0;
+      for (offset = -10; offset <= 10; offset++)
+      {
+        for (i = 0; i <= stateLen; i++)
+        {
+          if (idxArr[i] != INVALID)
+          {
+            idxValue = idxArr[i] + offset;
+            if (idxValue >= 0 && idxValue < COUNT_5S_MAX-1)
+            {
+              d_c_5s[idxValue+1] = INVALID;
+            }
+          }
+        }
+      }
+    }
+
+    removeData(d_c_5s, s_c_5s, sizeof(s_c_5s) / 2, 1);
+    removeData(d_c_5s, d_c_5s, sizeof(d_c_5s) / 2, 0);
+    d_c_5s[0] = INVALID;//ok
+    d_c_5s[COUNT_5S_MAX-1] = INVALID;//ok
+    int j = 0, length_medfilt = 0;
+    for (i = 0; i < COUNT_5S_MAX; i++)
+    {
+      if (d_c_5s[i] != INVALID)
+      {
+        d_c_5s[j] = d_c_5s[i];
+        j++;
+      }
+
+    }
+    length_medfilt = j;
+    if (length_medfilt > 30)
+    {
+      d_t_5s = max(d_c_5s, length_medfilt) - min(d_c_5s, length_medfilt);//ok
+      if (d_t_5s < 50)
+      {
+        medianblur_row(d_c_5s, 1, length_medfilt);
+        stat_std = stdArrErr(d_c_5s, length_medfilt);
+        //printf("stat_std = %.2f\r\n",stat_std);
+        if (stat_std < 1)
+        {
+          stat_std = 0.0;
+        }
+        else if (stat_std < 2)
+        {
+          stat_std = 5;
+        }
+        else if (stat_std < 3)
+        {
+          stat_std = 10;
+        }
+        else if (stat_std < 5)
+        {
+          stat_std = 30;
+        }
+        else
+        {
+          stat_std = 50;
+        }
+      }
     }
   }
 
-  if(state != state_last)
+  thres_over = thres_over_fix + stat_std;
+  if (count > JUDGE_NUM)
   {
-    count_cont = 0;
+    if (thres_dist - dist_m > thres_over)
+    {
+      state_now = 1;
+    }
+    else
+    {
+      state_now = 0;
+    }
   }
+  state_5s[count_5s] = state_now;
 
-  state_last = state;
-  threshold_last = threshold;
-
-  if(state == 1)
+  if(state_now == 1)
   {
     return true;
   }
@@ -209,194 +266,252 @@ bool TrafficCountCore::Probe(const double& dist)
     return false;
   }
 }
-#endif
 
-#ifdef TRAFFIC_COUNT_CORE_v1
-int TrafficCountCore::median(int *value)
+int16_t TrafficCountCore::median(int16_t *value, uint8_t length, uint8_t startIndex)
 {
-    int tmpValue[10];
-    int i = 0, j = 0;
-    int mid_filt_value = 0;
+  int i, j;
+  int16_t temp;
+  int mid_filt_value = 0;
+  int16_t value_med[30] = {0};
 
-    memcpy((void *)&tmpValue, (void *)value, 10 * sizeof(int));
-
-    for(i = 0; i < 10 - 1; i++)
+    for (i = 0; i < length; i++)
     {
-        for(j = i; j < 10 - 1; j++)
+      if (value[j] != INVALID)
+      {
+        value_med[i] = value[i];
+      }
+    }
+
+  if (0 == length)
+  {
+    return 0;
+  }
+  for (i = startIndex; i < length - 1; ++i)
+  {
+    for (j = startIndex; j < length - i - 1; ++j)
+    {
+      if (value_med[j] > value_med[j + 1])
+      {
+        temp = value_med[j];
+        value_med[j] = value_med[j + 1];
+        value_med[j + 1] = temp;
+      }
+    }
+  }
+  //odd
+  if (length & 0x1)
+  {
+    mid_filt_value = value_med[length / 2];
+  }
+  else    //even
+  {
+    mid_filt_value = (value_med[length / 2 - 1] + value_med[length / 2]) / 2;
+  }
+  return mid_filt_value;
+}
+
+int16_t TrafficCountCore::mean(int16_t *value, int length)
+{
+  int i = 0;
+  long long sum = 0;
+  int mean_value = 0;
+
+    for (i = 0; i < length; i++)
+    {
+      if (value[i] != INVALID)
+      {
+      sum += value[i];
+      }
+    }
+    mean_value = sum / length;
+  //	printf("--------------mean_value = %d\r\n",mean_value);
+  return mean_value;
+}
+
+int16_t TrafficCountCore::max(int16_t *value, int length)
+{
+  int i = 0;
+
+  int16_t max_value = value[0];
+
+    for (i = 0; i < length; i++)
+    {
+      if (value[i] != INVALID)
+      {
+      if (max_value < value[i])
+      {
+        max_value = value[i];
+      }
+      }
+    }
+  //	printf("--------------max = %d\r\n",max_value);
+  return max_value;
+}
+
+int16_t TrafficCountCore::min(int16_t *value, int length)
+{
+  int i = 0;
+  int16_t min_value = value[0];
+
+    for (i = 0; i < length; i++)
+    {
+      if (value[i] != INVALID)
+      {
+      if (min_value > value[i])
+      {
+        min_value = value[i];
+      }
+    }
+  }
+  //	printf("--------------min_value = %d\r\n",min_value);
+  return min_value;
+}
+
+void TrafficCountCore::diffArr(int16_t *value, int length, int startIndex)
+{
+  int i = 0, j = 0;
+  for (i = startIndex; i < length-1; i++)
+  {
+    if (value[i] != INVALID)
+    {
+    j = i + 1;
+    value[i] = value[j] - value[i];
+    }
+  }
+}
+
+int16_t TrafficCountCore::findArr(int16_t *value, int16_t length)
+{
+  int i = 0, j = 0;
+  for (i = 0; i < length; i++)
+  {
+    if (value[i] != INVALID)
+    {
+    if (value[i] != 0)
+    {
+      value[j] = i;
+      j++;
+    }
+    }
+  }
+  for (i = j; i < length; i++)
+  {
+    value[i] = INVALID;
+  }
+  length = j;
+  return length;
+}
+
+void TrafficCountCore::removeData(int16_t *value, int16_t *marker, int length, int data)
+{
+  int i = 0;
+  for (i = 0; i < length; i++)
+  {
+    if (value[i] != INVALID)
+    {
+    if (data == marker[i])
+    {
+      value[i] = INVALID;
+    }
+    }
+  }
+}
+
+int16_t TrafficCountCore::medianblur_row(int16_t *distance, int row, int colum)
+{
+  int j,k;
+  int16_t data[PCL_MEDIAN_ROW_SIZE];
+  int16_t distance_copy[500];
+
+  for(k = 0;k<colum;k++)
+  {
+    if (distance[k] != INVALID)
+    {
+      distance_copy[k] = distance[k];
+    }
+  }
+
+  if (NULL == distance)
+  {
+    return -1;
+  }
+
+    for (j = 0; j < colum ; ++j)
+    {
+
+      if (j < PCL_MEDIAN_ROW_SIZE / 2)
+      {
+        for(k = 0; k< (PCL_MEDIAN_ROW_SIZE/2 + j);k++)
         {
-            int tmp;
-            if(tmpValue[i] > tmpValue[j + 1])
-            {
-                tmp = tmpValue[j + 1];
-                tmpValue[j + 1] = tmpValue[i];
-                tmpValue[i] = tmp;
-            }
+           data[k] = distance_copy[k];
         }
-    }
-    mid_filt_value = tmpValue[5];
-    return mid_filt_value;
-}
-
-int TrafficCountCore::mean(int *value)
-{
-    int i = 0;
-    long long sum = 0;
-    int mean_value = 0;
-    for(i = 0; i < 100; i++)
-    {
-        sum += value[i];
-    }
-    mean_value = int(sum / 100);
-    return mean_value;
-}
-
-int TrafficCountCore::max(int *value)
-{
-    int i = 0;
-    int max_value = value[0];
-    for(i = 0; i < 100; i++)
-    {
-        if(max_value < value[i])
+      //	memcpy(data, &distance[0], (PCL_MEDIAN_ROW_SIZE/2 + j) * sizeof(int16_t));
+        for (k = (PCL_MEDIAN_ROW_SIZE / 2 + j); k < PCL_MEDIAN_ROW_SIZE; k++)
         {
-            max_value = value[i];
+          data[k] = 0;
         }
-    }
-    return max_value;
-}
-
-int TrafficCountCore::min(int *value)
-{
-    int i = 0;
-    int min_value = value[0];
-    for(i = 0; i < 100; i++)
-    {
-        if(min_value > value[i])
+      }
+      else if (j >= (colum - PCL_MEDIAN_ROW_SIZE / 2))
+      {
+        for(k = 0; k< (colum - j + PCL_MEDIAN_ROW_SIZE / 2);k++)
         {
-            min_value = value[i];
+           data[k] = distance_copy[j - PCL_MEDIAN_ROW_SIZE / 2 +k];
         }
-    }
-    return min_value;
+        //memcpy(data, &distance[j - PCL_MEDIAN_ROW_SIZE / 2], (colum - j + PCL_MEDIAN_ROW_SIZE / 2) * sizeof(int16_t));
+        for (k = (colum - j + PCL_MEDIAN_ROW_SIZE/2); k < PCL_MEDIAN_ROW_SIZE; k++)
+        {
+          data[k] = 0;
+        }
+      }
+      else
+      {
+        for(k = 0 ; k< PCL_MEDIAN_ROW_SIZE;k++)
+        {
+           data[k] = distance_copy[j - PCL_MEDIAN_ROW_SIZE / 2 +k];
+        }
+        //memcpy(data, &distance[j - PCL_MEDIAN_ROW_SIZE / 2], PCL_MEDIAN_ROW_SIZE * sizeof(int16_t));
+      }
+      distance[j] = median(data, PCL_MEDIAN_ROW_SIZE, 0);
+      //distance_copy[j] = distance[j];
+  }
+    distance[0] = INVALID;
+
+
+  return 0;
 }
 
-void SwitchingOutput_2(unsigned short dist)
+double TrafficCountCore::stdArrErr(int16_t *array, int length)
 {
+  double stdarrerr = 0.0;
 
-}
-
-bool TrafficCountCore::Initialize() {
-  threshold = 0;
-  k = 0;
-  Count_1s = 0;
-  Count_60s = 0;
-  D = new int[10];
-  X = 0;
-  T = new int[100];
-  STATE = 0;
-  DIFF = 0;
-  mid_filt_flag = 0;
-
-  return true;
-}
-
-TrafficCountCore::~TrafficCountCore() {
-  if (D) {
-    delete [] D;
-  }
-  if (T) {
-    delete [] T;
-  }
-}
-
-bool TrafficCountCore::Probe(const double &distance) {
-  unsigned short dist = distance * 100.0;
-  k++;
-  Count_1s++;
-  Count_60s++;
-  D[k % 10] = dist;
-
-  if(dist == LIST_MAX_DIST)
+  int16_t i = 0;
+  double sum = 0.0,averageArr = 0.0;
+  double sumCorr = 0.0;
+  int16_t backArr[500] = {0};
+  for( i =0;i<length;i++)
   {
-      int i = 0;
-      int find = 0;
-      for(i = k % 10; i > -1; i--)
+    backArr[i] = array[i];
+  }
+
+    for (i = 0; i < length; i++)
+    {
+      if (backArr[i] != INVALID)
       {
-          if(D[i] != 2200)
-          {
-              D[k % 10] = D[i];
-              find = 1;
-              break;
-          }
+        sum += backArr[i];
       }
-      if(mid_filt_flag == 1 && find == 0)
+
+    }
+    averageArr = sum / (length-1);
+
+    for (i = 0; i < length; i++)
+    {
+      if (backArr[i] != INVALID)
       {
-          for(i = 9; i > k % 10; i--)
-          {
-              if(D[i] != 2200)
-              {
-                  D[k % 10] = D[i];
-                  break;
-              }
-          }
+        sumCorr += (double)(backArr[i] - averageArr) * (double)(backArr[i] - averageArr);
       }
-  }
+    }
 
-  if(mid_filt_flag == 1)
-  {
-      k = k % 10;
-      X = median(D);
-  }
-  else
-  {
-      X = D[k];
-      if(k >= 9)
-      {
-          mid_filt_flag = 1;
-      }
-  }
-
-  if(Count_1s > 100)
-  {
-      Count_1s = 1;
-  }
-  T[Count_1s - 1] = X;
-
-  if(Count_60s > 6000)
-  {
-      Count_60s = 1;
-  }
-
-  if((threshold == 0 && Count_1s == 100) || (Count_60s == 6000))
-  {
-      DIFF = max(T) - min(T);
-      if(DIFF < 30)
-      {
-          threshold = mean(T);
-      }
-  }
-
-  if((threshold != 0) && (X >= (threshold + 50)))
-  {
-      threshold = 0;
-      Count_1s = 0;
-      Count_60s = 0;
-  }
-
-  if((threshold != 0) && (X <= (threshold - 15)))
-  {
-      STATE = 1;
-  }
-  else
-  {
-      STATE = 0;
-  }
-  if(STATE == 1)
-  {
-      return true;
-  }
-  else if(STATE == 0)
-  {
-      return false;
-  }
+    stdarrerr = sqrt((double)sumCorr/(length-1));
+  return stdarrerr;
 }
-#endif
 } // namespace tf02_common
