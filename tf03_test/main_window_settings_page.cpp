@@ -27,10 +27,10 @@ void MainWindow::InitializeSettingsPage() {
   FillSerialPortComboBox(*ui->CartSerialPortComboBox);
   ui->LogPathLineEdit->setReadOnly(true);
   LoadSettingsFromConfigFile();
-  ui->SettingsCartDistanceLineEdit->setValidator(
-      new QDoubleValidator(0, 200, 2, this));
-  ui->SettingsCartIntervalLineEdit->setValidator(
-      new QDoubleValidator(0, 200, 2, this));
+  auto validator = new QDoubleValidator(0, 200, 2, this);
+  ui->SettingsCartDistanceLineEdit->setValidator(validator);
+  ui->CartPageDistanceLineEdit->setValidator(validator);
+  ui->SettingsCartIntervalLineEdit->setValidator(validator);
 }
 
 void MainWindow::FillSerialPortComboBox(QComboBox &combo_box) {
