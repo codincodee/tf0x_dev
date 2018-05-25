@@ -1,6 +1,7 @@
 #include "tf03_driver.h"
 #include <iostream>
 #include "utils.h"
+#include <QElapsedTimer>
 
 constexpr char kHead = 0x5A;
 using utils = tf0x_driver::Utils;
@@ -10,6 +11,7 @@ bool Driver::Initialize() {
   if (!serial_port_) {
     return false;
   }
+  timer_.start();
   return true;
 }
 
@@ -47,6 +49,7 @@ bool Driver::ReadMeasurement(Measurement &measurement) {
   }
   dist += sign * 1;
   measurement.dists.push_back(dist);
+  measurement.ts = timer_.elapsed();
   return true;
 }
 

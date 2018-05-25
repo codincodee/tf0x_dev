@@ -15,7 +15,13 @@ void MainWindow::HandleSensorTimerEvent() {
   if (!sensor_driver_->ReadMeasurement(measurement)) {
     return;
   }
-  HandleIncomingMeasurement(measurement);
+  measurement_cache_.push_back(measurement);
+  if (measurement_cache_.size() > 10) {
+    for (auto& mea : measurement_cache_) {
+      HandleIncomingMeasurement(measurement);
+    }
+    measurement_cache_.clear();
+  }
   last_measurement_ = measurement;
 }
 

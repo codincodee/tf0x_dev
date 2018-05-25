@@ -6,6 +6,7 @@
 #include <memory>
 #include "abstract_serial_port.h"
 #include <vector>
+#include <QElapsedTimer>
 
 namespace tf03_driver {
 struct Measurement {
@@ -15,6 +16,7 @@ struct Measurement {
   inline unsigned short DistanceMax() const {
     return 18000;
   }
+  long ts;
 };
 
 enum class OutputFormat {
@@ -48,6 +50,7 @@ class API Driver: public tf0x_driver::Driver
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
   static std::string Head();
   static std::string AppendCheckSum(const std::string& buffer);
+  QElapsedTimer timer_;
 };
 } // namespace tf03_driver
 

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QDateTime>
+#include <QDesktopServices>
 
 void MainWindow::InitializeCartPage() {
   cart_chart_ = new tf0x_common::FixedDistanceOverDistanceChart();
@@ -46,6 +47,12 @@ void MainWindow::HandleCartInstruction(
 
 void MainWindow::on_CartStartTestPushButton_clicked()
 {
+  if (ui->CartPageLogFileLineEdit->text().isEmpty()) {
+    QMessageBox::warning(
+        this, "Warning",
+        "Please enter a valid log file name.", QMessageBox::Abort);
+    return;
+  }
   if (ui->CartStartTestPushButton->text() == kCartStartButtonReset) {
     if (QMessageBox::information(
           this, "Alert",
@@ -74,10 +81,15 @@ void MainWindow::on_CartStartTestPushButton_clicked()
 }
 
 void MainWindow::SaveCartTestLog() {
+  QString file_name = ui->CartPageLogFileLineEdit->text();
+  if (file_name.isEmpty()) {
+    QMessageBox::warning(
+        this, "Warning",
+        "Please enter a valid log file name.", QMessageBox::Abort);
+    return;
+  }
   QFile file(
-      ui->LogPathLineEdit->text() +
-      "/cart_test_" +
-      QDateTime::currentDateTime().toString("yy_MM_dd_HH_mm_ss") + ".txt");
+      ui->LogPathLineEdit->text() + "/" + file_name + ".txt");
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream stream(&file);
     auto series = cart_chart_->Series();
@@ -88,5 +100,18 @@ void MainWindow::SaveCartTestLog() {
       auto point = series->at(i);
       stream << point.x() << " " << point.y() << "\n";
     }
+  } else {
+    QMessageBox::warning(
+        this, "Error", "Fail to write log.", QMessageBox::Abort);
   }
+}
+
+void MainWindow::on_CartPageBrowsePushButton_clicked()
+{
+  QDesktopServices::openUrl(ui->LogPathLineEdit->text());
+}
+
+void MainWindow::on_CartPageDistanceLineEdit_textEdited(const QString &arg1)
+{
+  ui->SettingsCartDistanceLineEdit->setText(arg1);
 }

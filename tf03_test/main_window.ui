@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -203,7 +203,40 @@
            </layout>
           </item>
           <item>
+           <spacer name="verticalSpacer_12">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>10</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Log File</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="ReadingsPageLogFileLineEdit"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="ReadingsPageBrowsePushButton">
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
@@ -218,7 +251,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_13">
+             <widget class="QPushButton" name="ReadingsPageRecordPushButton">
               <property name="text">
                <string>Record</string>
               </property>
@@ -578,6 +611,13 @@
             </item>
             <item>
              <widget class="QLineEdit" name="CartPageLogFileLineEdit"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="CartPageBrowsePushButton">
+              <property name="text">
+               <string>Browse</string>
+              </property>
+             </widget>
             </item>
             <item>
              <spacer name="horizontalSpacer_7">

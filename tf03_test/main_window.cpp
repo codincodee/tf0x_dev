@@ -46,8 +46,3 @@ void MainWindow::on_tabWidget_currentChanged(int index)
   }
   previous_page_ = index;
 }
-
-void MainWindow::on_CartPageDistanceLineEdit_textEdited(const QString &arg1)
-{
-  ui->SettingsCartDistanceLineEdit->setText(arg1);
-}

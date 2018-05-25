@@ -39,7 +39,16 @@ private slots:
 
   void on_CartPageDistanceLineEdit_textEdited(const QString &arg1);
 
+  void on_CartPageBrowsePushButton_clicked();
+
+  void on_ReadingsPageRecordPushButton_clicked();
+
+  void on_ReadingsPageBrowsePushButton_clicked();
+
 private:
+  struct ReadingsLog {
+    float dist;
+  };
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
   static void FillSerialPortComboBox(QComboBox& combo_box);
@@ -63,6 +72,8 @@ private:
   void HandleCartInstruction(const cart_driver::Instruction& instruction);
   void SaveCartTestLog();
   void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
+  bool SaveReadingsLog();
+  void CacheReadingsLog(const ReadingsLog& readings);
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
@@ -77,6 +88,9 @@ private:
   tf03_driver::Measurement last_measurement_;
   QElapsedTimer elapsed_timer_;
   QElapsedTimer numeric_display_timer_;
+  std::list<ReadingsLog> readings_log_;
+
+  std::vector<tf03_driver::Measurement> measurement_cache_;
 };
 
 #endif // MAIN_WINDOW_H
