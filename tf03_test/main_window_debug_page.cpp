@@ -25,10 +25,10 @@ void MainWindow::on_DebugSendPushButton_clicked()
   if (!sensor_driver_) {
     return;
   }
-  auto version = sensor_driver_->GetVersion();
-  if (!version.empty()) {
-    std::cout << version << std::endl;
-  }
+//  auto version = sensor_driver_->GetVersion();
+//  if (!version.empty()) {
+//    std::cout << version << std::endl;
+//  }
   auto cmd = ui->DebugSendLineEdit->text().toStdString();
   if (cmd.empty()) {
     return;
