@@ -35,6 +35,10 @@ private slots:
 
   void on_CartStartTestPushButton_clicked();
 
+  void on_SettingsCartDistanceLineEdit_textEdited(const QString &arg1);
+
+  void on_CartPageDistanceLineEdit_textEdited(const QString &arg1);
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);

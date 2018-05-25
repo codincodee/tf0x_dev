@@ -62,6 +62,8 @@ void MainWindow::LoadSettingsFromConfigFile() {
           QtHelpers::SystemDocumentFolderPath()).toString());
   ui->SettingsCartDistanceLineEdit->setText(
       settings.value(kSettingsCartDistance, 150).toString());
+  ui->CartPageDistanceLineEdit->setText(
+      ui->SettingsCartDistanceLineEdit->text());
   ui->SettingsCartIntervalLineEdit->setText(
       settings.value(kSettingsCartInterval, 0.01).toString());
 }
@@ -118,4 +120,9 @@ void MainWindow::on_SettingsRefreshPushButton_clicked()
 {
   FillSerialPortComboBox(*ui->SensorSerialPortComboBox);
   FillSerialPortComboBox(*ui->CartSerialPortComboBox);
+}
+
+void MainWindow::on_SettingsCartDistanceLineEdit_textEdited(const QString &arg1)
+{
+  ui->CartPageDistanceLineEdit->setText(arg1);
 }
