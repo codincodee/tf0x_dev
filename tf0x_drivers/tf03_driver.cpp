@@ -1,4 +1,9 @@
 #include "tf03_driver.h"
+#include <iostream>
+#include "utils.h"
+
+constexpr char kHead = 0x5A;
+using utils = tf0x_driver::Utils;
 
 namespace tf03_driver {
 bool Driver::Initialize() {
@@ -48,5 +53,54 @@ bool Driver::ReadMeasurement(Measurement &measurement) {
 void Driver::SetSerialPort(
     std::shared_ptr<tf0x_driver::AbstractSerialPort> port) {
   serial_port_ = port;
+}
+
+std::string Driver::GetVersion() {
+  if (!serial_port_) {
+    return std::string();
+  }
+  std::string buffer = Head() + std::string(1, 4) + std::string(1, 1);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  serial_port_->WriteBuffer(AppendCheckSum(buffer));
+  int cnt = 0;
+  std::string echo;
+  while (!serial_port_->ReadBuffer(echo)) {
+    if (++cnt > 10) {
+      return std::string();
+    }
+  }
+  if (echo.size() < 6) {
+    return std::string();
+  }
+  if (echo[0] != kHead) {
+    return std::string();
+  }
+  if (echo[1] != 7)  {
+    return std::string();
+  }
+  if (echo[2] != 1) {
+    return std::string();
+  }
+  std::string version;
+  version =
+      utils::ToDecimalString(echo[5]) + "." +
+      utils::ToDecimalString(echo[4]) + "." +
+      utils::ToDecimalString(echo[3]);
+  return version;
+}
+
+std::string Driver::Head() {
+  return std::string(1, kHead);
+}
+
+std::string Driver::AppendCheckSum(const std::string &buffer) {
+  int sum = 0;
+  for (auto& c : buffer) {
+    sum += c;
+  }
+  sum &= 0xFF;
+  return buffer + std::string(1, (char)sum);
 }
 }

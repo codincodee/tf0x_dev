@@ -9,6 +9,7 @@ class API Utils
 {
  public:
   static std::string CommandLineInputToBuffer(const std::string& input);
+  static std::string ToDecimalString(const char& i);
 };
 }
 

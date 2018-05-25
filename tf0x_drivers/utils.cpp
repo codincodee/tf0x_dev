@@ -12,4 +12,10 @@ std::string Utils::CommandLineInputToBuffer(const std::string& input) {
   }
   return result;
 }
+
+std::string Utils::ToDecimalString(const char &integer) {
+  std::stringstream ss;
+  ss << (short)integer;
+  return ss.str();
+}
 }

@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <tf0x_common/utils.h>
 #include <QDateTime>
+#include <iostream>
 
 void MainWindow::HandleIncomingStream(const std::string &buffer) {
   if (buffer.empty()) {
@@ -20,6 +21,13 @@ void MainWindow::on_DebugSendPushButton_clicked()
 {
   if (!sensor_serial_) {
     return;
+  }
+  if (!sensor_driver_) {
+    return;
+  }
+  auto version = sensor_driver_->GetVersion();
+  if (!version.empty()) {
+    std::cout << version << std::endl;
   }
   auto cmd = ui->DebugSendLineEdit->text().toStdString();
   if (cmd.empty()) {
