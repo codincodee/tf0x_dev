@@ -22,14 +22,14 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
   delete ui;
-  if (main_chart_) {
-    delete main_chart_;
-    main_chart_ = nullptr;
-  }
-  if (main_chart_view_) {
-    delete main_chart_view_;
-    main_chart_view_ = nullptr;
-  }
+//  if (main_chart_) {
+//    delete main_chart_;
+//    main_chart_ = nullptr;
+//  }
+//  if (main_chart_view_) {
+//    delete main_chart_view_;
+//    main_chart_view_ = nullptr;
+//  }
   SaveSettingsToConfigFile();
 }
 

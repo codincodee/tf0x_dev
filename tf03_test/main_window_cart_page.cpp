@@ -9,7 +9,12 @@ void MainWindow::InitializeCartPage() {
   cart_chart_ = new tf0x_common::FixedDistanceOverDistanceChart();
   cart_chart_->setTitle("Sensor Dist (m) - Cart Dist (m)");
   cart_chart_view_ = new QtCharts::QChartView(cart_chart_);
-  ui->CartChartVerticalLayout->addWidget(cart_chart_view_);
+  // ui->CartChartVerticalLayout->addWidget(cart_chart_view_);
+
+  for (int i = 0; i < 4000; ++i) {
+    ui->CartPageListWidget1->addItem(QString::number(i) + QString(10, ' ') + QString::number(i));
+    ui->CartPageListWidget2->addItem(QString::number(i) + QString(10, ' ') + QString::number(i));
+  }
 }
 
 const QString kCartStartButtonStart = "Start";
