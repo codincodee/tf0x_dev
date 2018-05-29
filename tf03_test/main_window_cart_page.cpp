@@ -6,11 +6,6 @@
 #include <QDesktopServices>
 
 void MainWindow::InitializeCartPage() {
-  cart_chart_ = new tf0x_common::FixedDistanceOverDistanceChart();
-  cart_chart_->setTitle("Sensor Dist (m) - Cart Dist (m)");
-  cart_chart_view_ = new QtCharts::QChartView(cart_chart_);
-  // ui->CartChartVerticalLayout->addWidget(cart_chart_view_);
-
   cart_results_.reset(new tf0x_common::CartTestMultiResultSheets);
   cart_results_->AddSheet(
       std::shared_ptr<tf0x_common::CartTestResultSheet>(
@@ -36,10 +31,6 @@ void MainWindow::HandleCartInstruction(
     if (sheet) {
       auto last = sheet->GetLastEntry();
       if (!last_measurement_.dists.empty()) {
-//        auto current_pose = last.x() + cart_driver_->StopInterval();
-//        cart_chart_->AddPoint(current_pose, last_measurement_.dists[0]);
-//        ui->CartInfoLabel->setText(
-//            "Collected " + QString::number(series->count()) + " Points.");
         tf0x_common::CartTestEntry entry;
         entry.id = ++last.id;
         entry.dist = last_measurement_.dists[0];
