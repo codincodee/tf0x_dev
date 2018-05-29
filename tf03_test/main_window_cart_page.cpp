@@ -77,7 +77,6 @@ void MainWindow::on_CartStartTestPushButton_clicked()
       return;
     }
   }
-  cart_chart_->Clear();
   if (!cart_driver_) {
     return;
   }
@@ -90,8 +89,6 @@ void MainWindow::on_CartStartTestPushButton_clicked()
          "Invalid parameters set, cart disabled", QMessageBox::Abort);
     return;
   }
-  cart_chart_->SetXRange(0, distance * 1.1f);
-  cart_chart_->SetYRange(0, distance * 1.1f);
   cart_driver_->StartMultiStopsTesting(distance, interval);
   ui->CartStartTestPushButton->setText(kCartStartButtonReset);
 }
@@ -108,18 +105,19 @@ void MainWindow::SaveCartTestLog() {
       ui->LogPathLineEdit->text() + "/" + file_name + ".txt");
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream stream(&file);
-    auto series = cart_chart_->Series();
-    if (!series) {
+    auto sheet = cart_results_->CurrentSheet();
+    if (!sheet) {
       return;
     }
-    for (int i = 0; i < series->count(); ++i) {
-      auto point = series->at(i);
-      stream << point.x() << " " << point.y() << "\n";
+    for (int i = 0; i < sheet->Size(); ++i) {
+      auto entry = sheet->At(i);
+      stream << entry.dist << " " << entry.pos << "\n";
     }
   } else {
     QMessageBox::warning(
         this, "Error", "Fail to write log.", QMessageBox::Abort);
   }
+  ui->CartPageLogFileLineEdit->clear();
 }
 
 void MainWindow::on_CartPageBrowsePushButton_clicked()

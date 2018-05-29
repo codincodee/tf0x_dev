@@ -64,6 +64,43 @@ void CartTestResultSheet::Clear() {
   }
 }
 
+CartTestEntry CartTestResultSheet::At(const int &index) {
+  CartTestEntry entry;
+  // ID
+  if (!id_widget_) {
+    return entry;
+  }
+  if (!id_widget_->count()) {
+    return entry;
+  }
+  auto item = id_widget_->item(index);
+  if (!item) {
+    return entry;
+  }
+  entry.id = item->text().toInt();
+
+  // Cart Position
+  if (cart_position_widget_) {
+    if (cart_position_widget_->count()) {
+      auto im = cart_position_widget_->item(index);
+      if (im) {
+        entry.pos = im->text().toFloat();
+      }
+    }
+  }
+
+  // Distance
+  if (distance_widget_) {
+    if (distance_widget_->count()) {
+      auto im = distance_widget_->item(index);
+      if (im) {
+        entry.dist = im->text().toFloat();
+      }
+    }
+  }
+  return entry;
+}
+
 CartTestEntry CartTestResultSheet::GetLastEntry() {
   CartTestEntry entry;
   // ID

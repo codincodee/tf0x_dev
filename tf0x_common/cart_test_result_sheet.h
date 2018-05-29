@@ -23,6 +23,7 @@ class API CartTestResultSheet : public QObject
   void AddEntry(const CartTestEntry& entry);
   virtual ~CartTestResultSheet();
   void Clear();
+  CartTestEntry At(const int& index);
  private slots:
   void OnCurrentRowChanged(int i);
   void OnScrollValueChanged(int i);
