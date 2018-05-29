@@ -11,7 +11,20 @@ CartTestMultiResultSheets::~CartTestMultiResultSheets() {
 }
 
 std::shared_ptr<CartTestResultSheet> CartTestMultiResultSheets::CurrentSheet() {
-  return nullptr;
+  if (current_index_ >= sheets_.size()) {
+    for (auto& sheet : sheets_) {
+      sheet->Clear();
+    }
+    if (sheets_.size()) {
+      current_index_ = 0;
+    } else {
+      current_index_ = -1;
+    }
+  }
+  if (current_index_ < 0) {
+    return nullptr;
+  }
+  return sheets_[current_index_];
 }
 
 void CartTestMultiResultSheets::AddSheet(
@@ -25,5 +38,9 @@ void CartTestMultiResultSheets::AddSheet(
     }
   }
   sheets_.push_back(sheet);
+}
+
+void CartTestMultiResultSheets::SheetDone() {
+  ++current_index_;
 }
 }

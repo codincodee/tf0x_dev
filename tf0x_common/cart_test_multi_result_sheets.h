@@ -14,6 +14,7 @@ class API CartTestMultiResultSheets
   void AddSheet(std::shared_ptr<CartTestResultSheet> sheet);
   std::shared_ptr<CartTestResultSheet> CurrentSheet();
   virtual ~CartTestMultiResultSheets();
+  void SheetDone();
  private:
   std::vector<std::shared_ptr<CartTestResultSheet>> sheets_;
   int current_index_;

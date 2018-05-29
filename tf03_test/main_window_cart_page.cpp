@@ -12,18 +12,18 @@ void MainWindow::InitializeCartPage() {
   // ui->CartChartVerticalLayout->addWidget(cart_chart_view_);
 
   cart_results_.reset(new tf0x_common::CartTestMultiResultSheets);
-  auto sheet = std::shared_ptr<tf0x_common::CartTestResultSheet>(new tf0x_common::CartTestResultSheet(ui->CartResult1IDListWidget, ui->CartResult1PositionListWidget, ui->CartResult1DistanceListWidget));
   cart_results_->AddSheet(
-      sheet);
-  for (int i = 1; i < 4000; ++i) {
-    tf0x_common::CartTestEntry entry;
-    entry.id = i;
-    entry.dist = i;
-    entry.pos = i;
-    sheet->AddEntry(entry);
-  }
-//  cart_results_->AddSheet(
-//      new tf0x_common::CartTestResultSheet(ui->CartPageListWidget2));
+      std::shared_ptr<tf0x_common::CartTestResultSheet>(
+          new tf0x_common::CartTestResultSheet(
+              ui->CartResult1IDListWidget,
+              ui->CartResult1PositionListWidget,
+              ui->CartResult1DistanceListWidget)));
+  cart_results_->AddSheet(
+      std::shared_ptr<tf0x_common::CartTestResultSheet>(
+          new tf0x_common::CartTestResultSheet(
+              ui->CartResult2IDListWidget,
+              ui->CartResult2PositionListWidget,
+              ui->CartResult2DistanceListWidget)));
 }
 
 const QString kCartStartButtonStart = "Start";
@@ -40,11 +40,19 @@ void MainWindow::HandleCartInstruction(
 //        cart_chart_->AddPoint(current_pose, last_measurement_.dists[0]);
 //        ui->CartInfoLabel->setText(
 //            "Collected " + QString::number(series->count()) + " Points.");
+        tf0x_common::CartTestEntry entry;
+        entry.id = ++last.id;
+        entry.dist = last_measurement_.dists[0];
+        entry.pos = last.pos + cart_driver_->StopInterval();
+        sheet->AddEntry(entry);
+        ui->CartInfoLabel->setText(
+            "Collected " + QString::number(sheet->Size()) + " Points.");
       }
     }
   } else if (instruction.type ==
              cart_driver::Instruction::Type::reach_end_point) {
     SaveCartTestLog();
+    cart_results_->SheetDone();
     ui->CartStartTestPushButton->setText(kCartStartButtonStart);
     ui->CartInfoLabel->setText("Returning");
   } else if (instruction.type ==

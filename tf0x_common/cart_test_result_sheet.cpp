@@ -22,7 +22,9 @@ CartTestResultSheet::CartTestResultSheet(
         this, SLOT(OnCurrentRowChanged(int)));
     auto scroll = id_widget_->verticalScrollBar();
     if (scroll) {
-      connect(scroll, SIGNAL(valueChanged(int)), this, SLOT(OnScrollValueChanged(int)));
+      connect(
+          scroll, SIGNAL(valueChanged(int)),
+          this, SLOT(OnScrollValueChanged(int)));
     }
   }
 }
@@ -54,6 +56,12 @@ int CartTestResultSheet::Size() {
     return 0;
   }
   return id_widget_->count();
+}
+
+void CartTestResultSheet::Clear() {
+  for (auto& widget : widgets_) {
+    widget->clear();
+  }
 }
 
 CartTestEntry CartTestResultSheet::GetLastEntry() {
