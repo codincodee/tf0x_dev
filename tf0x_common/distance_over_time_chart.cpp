@@ -1,12 +1,18 @@
 #include "distance_over_time_chart.h"
 #include <QValueAxis>
+#include <QDebug>
 
 namespace tf0x_common {
 DistanceOverTimeChart::~DistanceOverTimeChart() {
-  if (line_series_) {
-    delete line_series_;
-    line_series_ = nullptr;
-  }
+//  qDebug() << __LINE__ << __FILE__;
+//  if (line_series_) {
+//    qDebug() << __LINE__ << __FILE__;
+//    delete line_series_;
+//    qDebug() << __LINE__ << __FILE__;
+//    line_series_ = nullptr;
+//    qDebug() << __LINE__ << __FILE__;
+//  }
+//  qDebug() << __LINE__ << __FILE__;
 }
 
 bool DistanceOverTimeChart::AddPoint(

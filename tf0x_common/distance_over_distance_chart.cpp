@@ -22,10 +22,10 @@ FixedDistanceOverDistanceChart::FixedDistanceOverDistanceChart()
 }
 
 FixedDistanceOverDistanceChart::~FixedDistanceOverDistanceChart() {
-  if (line_series_) {
-    delete line_series_;
-    line_series_ = nullptr;
-  }
+//  if (line_series_) {
+//    delete line_series_;
+//    line_series_ = nullptr;
+//  }
 }
 
 void FixedDistanceOverDistanceChart::SetXRange(

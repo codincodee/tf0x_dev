@@ -10,6 +10,7 @@
 #include <tf0x_drivers/cart_driver.h>
 #include <tf0x_common/distance_over_distance_chart.h>
 #include <QElapsedTimer>
+#include <tf0x_common/cart_test_multi_result_sheets.h>
 
 namespace Ui {
   class MainWindow;
@@ -89,8 +90,8 @@ private:
   QElapsedTimer elapsed_timer_;
   QElapsedTimer numeric_display_timer_;
   std::list<ReadingsLog> readings_log_;
-
   std::vector<tf03_driver::Measurement> measurement_cache_;
+  std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
 };
 
 #endif // MAIN_WINDOW_H

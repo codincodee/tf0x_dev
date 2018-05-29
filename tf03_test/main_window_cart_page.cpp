@@ -11,10 +11,19 @@ void MainWindow::InitializeCartPage() {
   cart_chart_view_ = new QtCharts::QChartView(cart_chart_);
   // ui->CartChartVerticalLayout->addWidget(cart_chart_view_);
 
-  for (int i = 0; i < 4000; ++i) {
-    ui->CartPageListWidget1->addItem(QString::number(i) + QString(10, ' ') + QString::number(i));
-    ui->CartPageListWidget2->addItem(QString::number(i) + QString(10, ' ') + QString::number(i));
+  cart_results_.reset(new tf0x_common::CartTestMultiResultSheets);
+  auto sheet = std::shared_ptr<tf0x_common::CartTestResultSheet>(new tf0x_common::CartTestResultSheet(ui->CartResult1IDListWidget, ui->CartResult1PositionListWidget, ui->CartResult1DistanceListWidget));
+  cart_results_->AddSheet(
+      sheet);
+  for (int i = 1; i < 4000; ++i) {
+    tf0x_common::CartTestEntry entry;
+    entry.id = i;
+    entry.dist = i;
+    entry.pos = i;
+    sheet->AddEntry(entry);
   }
+//  cart_results_->AddSheet(
+//      new tf0x_common::CartTestResultSheet(ui->CartPageListWidget2));
 }
 
 const QString kCartStartButtonStart = "Start";
@@ -23,20 +32,14 @@ const QString kCartStartButtonReset = "Reset";
 void MainWindow::HandleCartInstruction(
     const cart_driver::Instruction &instruction) {
   if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
-    auto series = cart_chart_->Series();
-    if (series) {
-      QPointF last;
-      if (series->count()) {
-        last = series->at(series->count() - 1);
-      } else {
-        last = QPointF(0, 0);
-      }
-      last_measurement_.dists.push_back(50);
+    auto sheet = cart_results_->CurrentSheet();
+    if (sheet) {
+      auto last = sheet->GetLastEntry();
       if (!last_measurement_.dists.empty()) {
-        auto current_pose = last.x() + cart_driver_->StopInterval();
-        cart_chart_->AddPoint(current_pose, last_measurement_.dists[0]);
-        ui->CartInfoLabel->setText(
-            "Collected " + QString::number(series->count()) + " Points.");
+//        auto current_pose = last.x() + cart_driver_->StopInterval();
+//        cart_chart_->AddPoint(current_pose, last_measurement_.dists[0]);
+//        ui->CartInfoLabel->setText(
+//            "Collected " + QString::number(series->count()) + " Points.");
       }
     }
   } else if (instruction.type ==
