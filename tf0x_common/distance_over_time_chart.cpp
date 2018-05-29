@@ -109,27 +109,36 @@ QtCharts::QLineSeries* DistanceOverTimeChart::Series() {
   return line_series_;
 }
 
-float DistanceOverTimeChart::CurrentStandardDeviation() {
+void DistanceOverTimeChart::CurrentAverageAndStandardDeviation(
+    float &average, float &stddev) {
+  average = 0.0f;
+  stddev = 0.0f;
   if (!line_series_) {
-    return 0.0f;
+    return;
   }
   if (!line_series_->count()) {
-    return 0.0f;
+    return;
   }
   std::vector<float> v;
   v.reserve(line_series_->count());
   for (int i = 0; i < line_series_->count(); ++i) {
     v.push_back(line_series_->at(i).y());
   }
-
   auto sum = std::accumulate(std::begin(v), std::end(v), 0.0);
-  auto m =  sum / v.size();
+  auto m = sum / v.size();
+  average = m;
 
   float accum = 0.0f;
   std::for_each (std::begin(v), std::end(v), [&](const float d) {
       accum += (d - m) * (d - m);
   });
 
-  return std::sqrt(accum / (v.size()-1));
+  stddev = std::sqrt(accum / (v.size()-1));
+}
+
+float DistanceOverTimeChart::CurrentStandardDeviation() {
+  float avg, stddev;
+  CurrentAverageAndStandardDeviation(avg, stddev);
+  return stddev;
 }
 } // namespace tf0x_common

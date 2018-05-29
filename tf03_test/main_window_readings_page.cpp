@@ -32,8 +32,11 @@ void MainWindow::HandleIncomingMeasurement(
   if (numeric_display_timer_.elapsed() > 100) {
     ui->ReadingsPageDistLabel->setText(
         QString::number(series->at(series->count() - 1).y(), 'f', 2));
+    float standard_deviation, average;
+    main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);
+    ui->ReadingPageAverageLabel->setText(QString::number(average, 'f', 2));
     ui->ReadingsPageSDLabel->setText(
-        QString::number(main_chart_->CurrentStandardDeviation(), 'f', 2));
+        QString::number(standard_deviation, 'f', 2));
     numeric_display_timer_.restart();
   }
 }

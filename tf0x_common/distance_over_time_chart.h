@@ -19,6 +19,7 @@ public:
   void SetFloor(const float& floor);
   QtCharts::QLineSeries* Series();
   float CurrentStandardDeviation();
+  void CurrentAverageAndStandardDeviation(float& average, float& stddev);
 protected:
   bool AddPoint(
       const float &meter,
