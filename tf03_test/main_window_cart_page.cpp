@@ -66,6 +66,13 @@ void MainWindow::on_CartStartTestPushButton_clicked()
           "Make sure the cart has been reset first.",
           QMessageBox::Cancel, QMessageBox::Apply) == QMessageBox::Cancel) {
       return;
+    } else {
+      auto sheet = cart_results_->CurrentSheet();
+      if (sheet) {
+        sheet->Clear();
+      }
+      ui->CartStartTestPushButton->setText(kCartStartButtonStart);
+      return;
     }
   }
   if (!cart_driver_) {

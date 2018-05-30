@@ -65,8 +65,9 @@ void MainWindow::ResetCartDriver() {
   cart_serial_.reset(new tf0x_driver::QtSerialPort);
   cart_serial_->SetPortName(
       ui->CartSerialPortComboBox->currentText().toStdString());
-  cart_serial_->SetBaudRate(
-      ui->SensorSerialBaudRateComboBox->currentText().toInt());
+//  cart_serial_->SetBaudRate(
+//      ui->SensorSerialBaudRateComboBox->currentText().toInt());
+  cart_serial_->SetBaudRate(460800);
   cart_serial_->Initialize();
 
   cart_driver_.reset(new cart_driver::Driver);
