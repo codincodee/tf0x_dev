@@ -37,6 +37,6 @@ std::string AbstractSerialPort::GetPortName() const {
 std::vector<int> AbstractSerialPort::BaudRateLists() {
   return
       {110, 300, 600, 1200, 2400, 4800, 9600, 14400,
-       19200, 38400, 57600, 115200, 128000, 256000};
+       19200, 38400, 57600, 115200, 128000, 256000, 460800};
 }
 } // namespace tf0x_driver

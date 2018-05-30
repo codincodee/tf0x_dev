@@ -65,6 +65,37 @@ void Driver::SetSerialPort(
   serial_port_ = serial;
 }
 
+bool Driver::ReadInstruction(Instruction &instruction, int &repetition) {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer;
+  if (!serial_port_->ReadBuffer(buffer)) {
+    return false;
+  }
+  if (buffer.size() < 5) {
+    return false;
+  }
+  std::string alpha(buffer.begin(), buffer.begin() + 4);
+  if (alpha != utils::ToBuffer(std::vector<unsigned char>{0x50, 0x4f, 0x53, 0x49})) {
+    return false;
+  }
+  switch (buffer[4]) {
+  case 0x11: instruction.type = Instruction::Type::read_sensor; break;
+  case 0x12: instruction.type = Instruction::Type::reach_end_point; break;
+  case 0x13: instruction.type = Instruction::Type::reach_start_point; break;
+  default: return false;
+  }
+  if (buffer.size() == 5) {
+    repetition = 1;
+    return true;
+  }
+  if (buffer.size() % 5 == 0) {
+    repetition = buffer.size() / 5;
+  }
+  return true;
+}
+
 bool Driver::ReadInstruction(Instruction &instruction) {
   if (!serial_port_) {
     return false;

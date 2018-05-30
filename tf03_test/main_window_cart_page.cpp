@@ -25,6 +25,37 @@ const QString kCartStartButtonStart = "Start";
 const QString kCartStartButtonReset = "Reset";
 
 void MainWindow::HandleCartInstruction(
+    const cart_driver::Instruction &instruction, const int &repetition) {
+  if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
+    auto sheet = cart_results_->CurrentSheet();
+    if (sheet) {
+      auto last = sheet->GetLastEntry();
+      if (!last_measurement_.dists.empty()) {
+        tf0x_common::CartTestEntry entry;
+        entry.id = last.id;
+        entry.dist = last_measurement_.dists[0];
+        entry.pos = last.pos + cart_driver_->StopInterval();
+        for (int i = 0; i < repetition; ++i) {
+          ++entry.id;
+          sheet->AddEntry(entry);
+        }
+        ui->CartInfoLabel->setText(
+            "Collected " + QString::number(sheet->Size()) + " Points.");
+      }
+    }
+  } else if (instruction.type ==
+             cart_driver::Instruction::Type::reach_end_point) {
+    SaveCartTestLog();
+    cart_results_->SheetDone();
+    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
+    ui->CartInfoLabel->setText("Returning");
+  } else if (instruction.type ==
+             cart_driver::Instruction::Type::reach_start_point) {
+    ui->CartInfoLabel->setText("");
+  }
+}
+
+void MainWindow::HandleCartInstruction(
     const cart_driver::Instruction &instruction) {
   if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
     auto sheet = cart_results_->CurrentSheet();

@@ -30,10 +30,11 @@ void MainWindow::HandleCartTimerEvent() {
     return;
   }
   cart_driver::Instruction instruction;
-  if (!cart_driver_->ReadInstruction(instruction)) {
+  int repetition;
+  if (!cart_driver_->ReadInstruction(instruction, repetition)) {
     return;
   }
-  HandleCartInstruction(instruction);
+  HandleCartInstruction(instruction, repetition);
 }
 
 void MainWindow::timerEvent(QTimerEvent *event) {
@@ -65,8 +66,8 @@ void MainWindow::ResetCartDriver() {
   cart_serial_.reset(new tf0x_driver::QtSerialPort);
   cart_serial_->SetPortName(
       ui->CartSerialPortComboBox->currentText().toStdString());
-//  cart_serial_->SetBaudRate(
-//      ui->SensorSerialBaudRateComboBox->currentText().toInt());
+  cart_serial_->SetBaudRate(
+      ui->SensorSerialBaudRateComboBox->currentText().toInt());
   cart_serial_->SetBaudRate(460800);
   cart_serial_->Initialize();
 

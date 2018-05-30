@@ -70,7 +70,10 @@ private:
   void PrintInDebugWindow(const QString &title, const QString& content);
   void HandleSensorTimerEvent();
   void HandleCartTimerEvent();
-  void HandleCartInstruction(const cart_driver::Instruction& instruction);
+  void HandleCartInstruction(
+      const cart_driver::Instruction& instruction);
+  void HandleCartInstruction(
+      const cart_driver::Instruction &instruction, const int& repetition);
   void SaveCartTestLog();
   void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
   bool SaveReadingsLog();

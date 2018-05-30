@@ -19,6 +19,7 @@ class API Driver {
   bool Initialize();
   void SetSerialPort(std::shared_ptr<tf0x_driver::AbstractSerialPort> serial);
   bool ReadInstruction(Instruction& instruction);
+  bool ReadInstruction(Instruction& instruction, int& repetition);
   bool StartMultiStopsTesting(const float& distance, const float& delta);
   float TotalDistance();
   float StopInterval();
