@@ -43,4 +43,17 @@ void CartTestMultiResultSheets::AddSheet(
 void CartTestMultiResultSheets::SheetDone() {
   ++current_index_;
 }
+
+void CartTestMultiResultSheets::Clear() {
+  for (auto& sheet : sheets_) {
+    if (sheet) {
+      sheet->Clear();
+    }
+  }
+  if (sheets_.size()) {
+    current_index_ = 0;
+  } else {
+    current_index_ = -1;
+  }
+}
 }

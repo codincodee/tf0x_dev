@@ -74,7 +74,7 @@ private:
       const cart_driver::Instruction& instruction);
   void HandleCartInstruction(
       const cart_driver::Instruction &instruction, const int& repetition);
-  void SaveCartTestLog();
+  void SaveCartTestLog(const QString& suffix = "");
   void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
   bool SaveReadingsLog();
   void CacheReadingsLog(const ReadingsLog& readings);
@@ -93,6 +93,7 @@ private:
   std::list<ReadingsLog> readings_log_;
   std::vector<tf03_driver::Measurement> measurement_cache_;
   std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
+  bool cart_test_started_ = false;
 };
 
 #endif // MAIN_WINDOW_H

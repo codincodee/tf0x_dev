@@ -53,6 +53,8 @@ void MainWindow::on_LogPathPushButton_clicked()
 const QString kSettingsKeyLogPath = "log_path";
 const QString kSettingsCartDistance = "cart_distance";
 const QString kSettingsCartInterval = "cart_interval";
+const QString kSettingsCartBaudRate = "cart_baud_rate";
+const QString kSettingsSensorBaudRate = "sensor_baud_rate";
 
 void MainWindow::LoadSettingsFromConfigFile() {
   QSettings settings(ConfigFilePath(), QSettings::IniFormat);
@@ -66,6 +68,10 @@ void MainWindow::LoadSettingsFromConfigFile() {
       ui->SettingsCartDistanceLineEdit->text());
   ui->SettingsCartIntervalLineEdit->setText(
       settings.value(kSettingsCartInterval, 0.01).toString());
+  ui->CartSerialBaudRateComboBox->setCurrentText(
+      settings.value(kSettingsCartBaudRate, 460800).toString());
+  ui->SensorSerialBaudRateComboBox->setCurrentText(
+      settings.value(kSettingsSensorBaudRate, 115200).toString());
 }
 
 void MainWindow::SaveSettingsToConfigFile() {
@@ -75,6 +81,10 @@ void MainWindow::SaveSettingsToConfigFile() {
       kSettingsCartDistance, ui->SettingsCartDistanceLineEdit->text());
   settings.setValue(
       kSettingsCartInterval, ui->SettingsCartIntervalLineEdit->text());
+  settings.setValue(
+      kSettingsCartBaudRate, ui->CartSerialBaudRateComboBox->currentText());
+  settings.setValue(
+      kSettingsSensorBaudRate, ui->SensorSerialBaudRateComboBox->currentText());
 }
 
 QString MainWindow::ConfigFilePath() {
