@@ -143,16 +143,45 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
   if (buffer[0] != kHead) {
     return false;
   }
-  unsigned char low = 0x00;
-  memcpy(&low, &buffer[10], 1);
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[10], 1);
 
-  unsigned char high = 0x00;
-  memcpy(&high, &buffer[11], 1);
-  uint16_t high16 = high;
-  high16 = high16 << 8;
-  high16 |= low;
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[11], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
 
-  uint16_t dist = high16;
+    uint16_t dist = high16;
+    measurement.dists.push_back(dist);
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[12], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[13], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    uint16_t dist = high16;
+    measurement.dists.push_back(dist);
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[14], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[15], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    uint16_t dist = high16;
+    measurement.dists.push_back(dist);
+  }
 //  memcpy(&dist, &buffer[11], 1);
 //  memcpy(&dist + 1, &buffer[10], 1);
 //  std::cout << std::hex << (short)buffer[11] << " " << (short)buffer[10] << " " << std::dec << dist << std::endl;
@@ -160,7 +189,6 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
 //    return false;
 //  }
   measurement.ts = timer_.elapsed();
-  measurement.dists.push_back(dist);
   return true;
 }
 
