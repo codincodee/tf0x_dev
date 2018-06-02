@@ -10,11 +10,12 @@ void MainWindow::HandleSensorTimerEvent() {
   std::string buffer;
   tf03_driver::Measurement measurement;
   // sensor_driver_->ReadMeasurement(measurement, buffer);
-  sensor_serial_->ReadBuffer(buffer);
-  HandleIncomingStream(buffer);
-  if (!sensor_driver_->ReadMeasurement(measurement)) {
+  // sensor_serial_->ReadBuffer(buffer);
+  if (!sensor_driver_->ReadMeasurement(measurement, buffer)) {
+    HandleIncomingStream(buffer);
     return;
   }
+//  qDebug() << measurement.dists[0];
   measurement_cache_.push_back(measurement);
   if (measurement_cache_.size() > 10) {
     for (auto& mea : measurement_cache_) {

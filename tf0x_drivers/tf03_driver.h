@@ -11,8 +11,7 @@
 namespace tf03_driver {
 struct Measurement {
   std::vector<unsigned short> dists; // cm
-  unsigned short amb;
-  short temp; // Celsius
+  unsigned short temp; // Celsius
   inline unsigned short DistanceMax() const {
     return 18000;
   }

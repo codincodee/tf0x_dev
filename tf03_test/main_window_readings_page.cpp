@@ -21,7 +21,7 @@ void MainWindow::HandleIncomingMeasurement(
     return;
   }
   CacheReadingsLog({measurement.dists[0] / 100.0f});
-  main_chart_->AddPoint(measurement.dists[0], measurement.ts);
+  main_chart_->AddPoint(measurement.dists[0] / 100.0f, measurement.ts);
   auto series = main_chart_->Series();
   if (!series) {
     return;
