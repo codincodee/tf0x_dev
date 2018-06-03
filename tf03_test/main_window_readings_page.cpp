@@ -20,7 +20,9 @@ void MainWindow::HandleIncomingMeasurement(
   if (measurement.dists.empty()) {
     return;
   }
-  CacheReadingsLog({measurement.dists[0] / 100.0f});
+  if (measurement.dists.size() >= 3) {
+    CacheReadingsLog({measurement.dists[0] / 100.0f, measurement.dists[1] / 100.0f, measurement.dists[2] / 100.0f});
+  }
   main_chart_->AddPoint(measurement.dists[0] / 100.0f, measurement.ts);
   auto series = main_chart_->Series();
   if (!series) {
@@ -75,8 +77,9 @@ void MainWindow::on_ReadingsPageRecordPushButton_clicked()
         ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt");
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QTextStream stream(&file);
+      stream << "# dist1 dist2 dist3\n";
       for (auto& entry : readings_log_) {
-        stream << entry.dist << "\n";
+        stream << entry.dist1 << " " << entry.dist2 << " " << entry.dist3 << "\n";
       }
     } else {
       QMessageBox::warning(this, "Error", "Unable to write log file.", QMessageBox::Abort);

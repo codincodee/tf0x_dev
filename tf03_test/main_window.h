@@ -48,7 +48,9 @@ private slots:
 
 private:
   struct ReadingsLog {
-    float dist;
+    float dist1;
+    float dist2;
+    float dist3;
   };
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
@@ -94,6 +96,8 @@ private:
   std::vector<tf03_driver::Measurement> measurement_cache_;
   std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
   bool cart_test_started_ = false;
+
+  std::vector<tf03_driver::Measurement> measurements_;
 };
 
 #endif // MAIN_WINDOW_H
