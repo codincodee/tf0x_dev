@@ -47,11 +47,6 @@ private slots:
   void on_ReadingsPageBrowsePushButton_clicked();
 
 private:
-  struct ReadingsLog {
-    float dist1;
-    float dist2;
-    float dist3;
-  };
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
   static void FillSerialPortComboBox(QComboBox& combo_box);
@@ -79,7 +74,7 @@ private:
   void SaveCartTestLog(const QString& suffix = "");
   void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
   bool SaveReadingsLog();
-  void CacheReadingsLog(const ReadingsLog& readings);
+  void CacheReadingsLog(const tf03_driver::Measurement& readings);
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
@@ -92,12 +87,10 @@ private:
   tf03_driver::Measurement last_measurement_;
   QElapsedTimer elapsed_timer_;
   QElapsedTimer numeric_display_timer_;
-  std::list<ReadingsLog> readings_log_;
+  std::list<tf03_driver::Measurement> readings_log_;
   std::vector<tf03_driver::Measurement> measurement_cache_;
   std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
   bool cart_test_started_ = false;
-
-  std::vector<tf03_driver::Measurement> measurements_;
 };
 
 #endif // MAIN_WINDOW_H

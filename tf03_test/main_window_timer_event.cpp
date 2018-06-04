@@ -15,10 +15,6 @@ void MainWindow::HandleSensorTimerEvent() {
     HandleIncomingStream(buffer);
     return;
   }
-  if (measurements_.size() > 4000) {
-    measurements_.clear();
-  }
-  measurements_.push_back(measurement);
 
 //  qDebug() << measurement.dists[0];
   measurement_cache_.push_back(measurement);

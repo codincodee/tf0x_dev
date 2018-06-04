@@ -17,13 +17,8 @@ void MainWindow::InitializeReadingsPage() {
 
 void MainWindow::HandleIncomingMeasurement(
     const tf03_driver::Measurement &measurement) {
-  if (measurement.dists.empty()) {
-    return;
-  }
-  if (measurement.dists.size() >= 3) {
-    CacheReadingsLog({measurement.dists[0] / 100.0f, measurement.dists[1] / 100.0f, measurement.dists[2] / 100.0f});
-  }
-  main_chart_->AddPoint(measurement.dists[0] / 100.0f, measurement.ts);
+  CacheReadingsLog(measurement);
+  main_chart_->AddPoint(measurement.dist1 / 100.0f, measurement.ts);
   auto series = main_chart_->Series();
   if (!series) {
     return;
@@ -34,10 +29,9 @@ void MainWindow::HandleIncomingMeasurement(
   if (numeric_display_timer_.elapsed() > 100) {
     ui->ReadingsPageDistLabel->setText(
         QString::number(series->at(series->count() - 1).y(), 'f', 2));
-    if (measurement.dists.size() >= 3) {
-      ui->ReadingsPageDistance2Label->setText(QString::number(measurement.dists[1] / 100.0f));
-      ui->ReadingsPageDistance3Label->setText(QString::number(measurement.dists[2] / 100.0f));
-    }
+    ui->ReadingsPageDistance2Label->setText(QString::number(measurement.dist2 / 100.0f));
+    ui->ReadingsPageDistance3Label->setText(QString::number(measurement.dist3 / 100.0f));
+
     float standard_deviation, average;
     main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);
     ui->ReadingPageAverageLabel->setText(QString::number(average, 'f', 2));
@@ -95,7 +89,7 @@ void MainWindow::on_ReadingsPageBrowsePushButton_clicked()
   QDesktopServices::openUrl(ui->LogPathLineEdit->text());
 }
 
-void MainWindow::CacheReadingsLog(const ReadingsLog &readings) {
+void MainWindow::CacheReadingsLog(const tf03_driver::Measurement &readings) {
   if (ui->ReadingsPageRecordPushButton->text() !=
       kReadingPageRecordButtonRecord) {
     return;

@@ -122,10 +122,7 @@ bool Driver::ReadDistance(double &dist0) {
   if (!ReadMeasurement(measurement)) {
     return false;
   }
-  if (measurement.dists.empty()) {
-    return false;
-  }
-  dist0 = measurement.dists[0] / 100.0;
+  dist0 = measurement.dist1;
   return true;
 }
 
@@ -153,8 +150,7 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
     high16 = high16 << 8;
     high16 |= low;
 
-    uint16_t dist = high16;
-    measurement.dists.push_back(dist);
+    measurement.dist1 = high16;
   }
   {
     unsigned char low = 0x00;
@@ -166,8 +162,7 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
     high16 = high16 << 8;
     high16 |= low;
 
-    uint16_t dist = high16;
-    measurement.dists.push_back(dist);
+    measurement.dist2 = high16;
   }
   {
     unsigned char low = 0x00;
@@ -179,8 +174,7 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
     high16 = high16 << 8;
     high16 |= low;
 
-    uint16_t dist = high16;
-    measurement.dists.push_back(dist);
+    measurement.dist3 = high16;
   }
 //  memcpy(&dist, &buffer[11], 1);
 //  memcpy(&dist + 1, &buffer[10], 1);
@@ -193,21 +187,8 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
 }
 
 bool Driver::ReadMeasurement(Measurement &measurement) {
-//  std::string buffer;
-//  return ReadMeasurement(measurement, buffer);
-
-  static float dist = 10.0f;
-  static float sign = 1.0f;
-  if (dist > 150.0f) {
-    sign *= -1.0f;
-  }
-  if (dist < 1.0f) {
-    sign *= -1.0f;
-  }
-  dist += sign * 1;
-  measurement.dists.push_back(dist);
-  measurement.ts = timer_.elapsed();
-  return true;
+  std::string buffer;
+  return ReadMeasurement(measurement, buffer);
 }
 
 void Driver::SetSerialPort(

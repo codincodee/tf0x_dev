@@ -30,18 +30,14 @@ void MainWindow::HandleCartInstruction(
     auto sheet = cart_results_->CurrentSheet();
     if (sheet) {
       auto last = sheet->GetLastEntry();
-      if (!last_measurement_.dists.empty()) {
-        tf0x_common::CartTestEntry entry;
-        entry.id = last.id;
-        entry.dist = last_measurement_.dists[0];
-        entry.pos = last.pos; // + cart_driver_->StopInterval();
-        for (int i = 0; i < repetition; ++i) {
-          ++entry.id;
-          entry.pos += cart_driver_->StopInterval();
-          sheet->AddEntry(entry);
-        }
-//        ui->CartInfoLabel->setText(
-//            "Collected " + QString::number(sheet->Size()) + " Points.");
+      tf0x_common::CartTestEntry entry;
+      entry.id = last.id;
+      entry.dist = last_measurement_.dist1;
+      entry.pos = last.pos; // + cart_driver_->StopInterval();
+      for (int i = 0; i < repetition; ++i) {
+        ++entry.id;
+        entry.pos += cart_driver_->StopInterval();
+        sheet->AddEntry(entry);
       }
     }
   } else if (instruction.type ==
