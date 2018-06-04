@@ -145,8 +145,8 @@ void MainWindow::on_CartStartTestPushButton_clicked()
     return;
   }
   bool distance_ok, interval_ok;
-  auto distance = ui->SettingsCartDistanceLineEdit->text().toFloat(&distance_ok);
-  auto interval = ui->SettingsCartIntervalLineEdit->text().toFloat(&interval_ok);
+  auto distance = ui->SettingsCartDistanceLineEdit->text().toInt(&distance_ok) / 100.0f;
+  auto interval = ui->SettingsCartIntervalLineEdit->text().toInt(&interval_ok) / 100.0f;
   if (!distance_ok || !interval_ok) {
     QMessageBox::warning(
         this, "Error",
@@ -169,14 +169,21 @@ void MainWindow::SaveCartTestLog(const QString& suffix) {
       ui->LogPathLineEdit->text() + "/cart_test_" + file_name + suffix + ".txt");
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream stream(&file);
-    auto sheet = cart_results_->CurrentSheet();
-    if (!sheet) {
-      return;
-    }
 //    for (int i = 0; i < sheet->Size(); ++i) {
 //      auto entry = sheet->At(i);
 //      stream << entry.dist << " " << entry.pos << "\n";
 //    }
+    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(v) Laser-Voltage(v) Temperature\n";
+    for (auto& entry : cart_log_) {
+      stream
+          << entry.pos << " "
+          << entry.measurement.dist1 << " "
+          << entry.measurement.dist2 << " "
+          << entry.measurement.dist3 << " "
+          << entry.measurement.apd << " "
+          << entry.measurement.volt << " "
+          << entry.measurement.temp << "\n";
+    }
   } else {
     QMessageBox::warning(
         this, "Error", "Fail to write log.", QMessageBox::Abort);

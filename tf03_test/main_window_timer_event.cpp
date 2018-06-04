@@ -15,14 +15,25 @@ void MainWindow::HandleSensorTimerEvent() {
     HandleIncomingStream(buffer);
     return;
   }
+  // qDebug() << measurement.dist1;
 
+  HandleIncomingMeasurement(measurement);
 //  qDebug() << measurement.dists[0];
-  measurement_cache_.push_back(measurement);
-  if (measurement_cache_.size() > 10) {
-    for (auto& mea : measurement_cache_) {
-      HandleIncomingMeasurement(measurement);
-    }
-    measurement_cache_.clear();
+//  measurement_cache_.push_back(measurement);
+//  if (measurement_cache_.size() > 10) {
+//    for (auto& mea : measurement_cache_) {
+//      HandleIncomingMeasurement(mea);
+//    }
+//    measurement_cache_.clear();
+//  }
+
+  static QElapsedTimer timer;
+  static int cnt = 0;
+  ++cnt;
+  if (timer.elapsed() > 1000) {
+    this->setWindowTitle("TF03 Test (" + QString::number(cnt) + ")");
+    timer.restart();
+    cnt = 0;
   }
   last_measurement_ = measurement;
 }
@@ -48,7 +59,7 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(10);
+  startTimer(0);
 }
 
 void MainWindow::ResetSensorDriver() {
