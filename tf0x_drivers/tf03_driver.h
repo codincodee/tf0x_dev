@@ -22,6 +22,13 @@ struct Measurement {
   long ts;
 };
 
+struct CartMeasurement {
+  CartMeasurement() : id(0), pos(0) {}
+  int id;
+  unsigned short pos;
+  Measurement measurement;
+};
+
 enum class OutputFormat {
   ascii = 0x00,
   binary = 0x01,

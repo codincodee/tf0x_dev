@@ -2,7 +2,7 @@
 #define TF0X_COMMON_CART_TEST_RESULT_SHEET_H_
 
 #include "export.h"
-#include <QListWidget>
+#include <QPlainTextEdit>
 #include <QObject>
 
 namespace tf0x_common {
@@ -17,7 +17,7 @@ class API CartTestResultSheet : public QObject
 {
   Q_OBJECT
  public:
-  CartTestResultSheet(QListWidget* id, QListWidget* cart_pos, QListWidget* dist);
+  CartTestResultSheet(QPlainTextEdit* id, QPlainTextEdit* cart_pos, QPlainTextEdit* dist);
   CartTestEntry GetLastEntry();
   int Size();
   void AddEntry(const CartTestEntry& entry);
@@ -30,10 +30,10 @@ class API CartTestResultSheet : public QObject
  private:
   void MoveCursorToLastItem();
 
-  QListWidget* id_widget_;
-  QListWidget* cart_position_widget_;
-  QListWidget* distance_widget_;
-  std::vector<QListWidget*> widgets_;
+  QPlainTextEdit* id_widget_;
+  QPlainTextEdit* cart_position_widget_;
+  QPlainTextEdit* distance_widget_;
+  std::vector<QPlainTextEdit*> widgets_;
 };
 }
 

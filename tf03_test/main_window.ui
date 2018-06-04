@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>504</width>
+    <width>564</width>
     <height>477</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -811,18 +811,15 @@
               </item>
               <item>
                <layout class="QGridLayout" name="gridLayout_10">
-                <item row="0" column="2">
-                 <widget class="QLabel" name="label_14">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_27">
                   <property name="text">
-                   <string>Distance</string>
+                   <string>ID</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
                   </property>
                  </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QListWidget" name="CartResult1DistanceListWidget"/>
                 </item>
                 <item row="0" column="1">
                  <widget class="QLabel" name="label_13">
@@ -834,10 +831,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_27">
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_14">
                   <property name="text">
-                   <string>ID</string>
+                   <string>Distance</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignCenter</set>
@@ -845,10 +842,13 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QListWidget" name="CartResult1IDListWidget"/>
+                 <widget class="QPlainTextEdit" name="CartResult1ID"/>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QListWidget" name="CartResult1PositionListWidget"/>
+                 <widget class="QPlainTextEdit" name="CartResult1Position"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPlainTextEdit" name="CartResult1Distance"/>
                 </item>
                </layout>
               </item>
@@ -877,12 +877,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="2">
-                 <widget class="QListWidget" name="CartResult2DistanceListWidget"/>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QListWidget" name="CartResult2PositionListWidget"/>
-                </item>
                 <item row="0" column="2">
                  <widget class="QLabel" name="label_26">
                   <property name="text">
@@ -904,7 +898,13 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="QListWidget" name="CartResult2IDListWidget"/>
+                 <widget class="QPlainTextEdit" name="CartResult2ID"/>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPlainTextEdit" name="CartResult2Position"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPlainTextEdit" name="CartResult2Distance"/>
                 </item>
                </layout>
               </item>
@@ -1408,7 +1408,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>504</width>
+     <width>564</width>
      <height>17</height>
     </rect>
    </property>

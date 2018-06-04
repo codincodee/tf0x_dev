@@ -10,15 +10,15 @@ void MainWindow::InitializeCartPage() {
   cart_results_->AddSheet(
       std::shared_ptr<tf0x_common::CartTestResultSheet>(
           new tf0x_common::CartTestResultSheet(
-              ui->CartResult1IDListWidget,
-              ui->CartResult1PositionListWidget,
-              ui->CartResult1DistanceListWidget)));
+              ui->CartResult1ID,
+              ui->CartResult1Position,
+              ui->CartResult1Distance)));
   cart_results_->AddSheet(
       std::shared_ptr<tf0x_common::CartTestResultSheet>(
           new tf0x_common::CartTestResultSheet(
-              ui->CartResult2IDListWidget,
-              ui->CartResult2PositionListWidget,
-              ui->CartResult2DistanceListWidget)));
+              ui->CartResult2ID,
+              ui->CartResult2Position,
+              ui->CartResult2Distance)));
 }
 
 const QString kCartStartButtonStart = "Start";
@@ -29,15 +29,37 @@ void MainWindow::HandleCartInstruction(
   if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
     auto sheet = cart_results_->CurrentSheet();
     if (sheet) {
-      auto last = sheet->GetLastEntry();
-      tf0x_common::CartTestEntry entry;
-      entry.id = last.id;
-      entry.dist = last_measurement_.dist1;
-      entry.pos = last.pos; // + cart_driver_->StopInterval();
+      tf03_driver::CartMeasurement cart_measure;
+      if (!cart_log_.empty()) {
+        cart_measure.id = (cart_log_.end() - 1)->id;
+        cart_measure.pos = (cart_log_.end() - 1)->pos;
+      }
+      cart_measure.measurement = last_measurement_;
       for (int i = 0; i < repetition; ++i) {
-        ++entry.id;
-        entry.pos += cart_driver_->StopInterval();
+        ++cart_measure.id;
+        cart_measure.pos += cart_driver_->StopInterval() * 100;
+
+        tf0x_common::CartTestEntry entry;
+        entry.id = cart_measure.id;
+        entry.pos = cart_measure.pos;
+        entry.dist = cart_measure.measurement.dist1;
         sheet->AddEntry(entry);
+        cart_log_.push_back(cart_measure);
+//        if (sheet->Size() > 30) {
+//          sheet->Clear();
+//          int i = 0;
+//          for (auto& it = cart_log_.rbegin(); it != cart_log_.rend(); ++it) {
+//            tf0x_common::CartTestEntry entry;
+//            entry.id = it->id;
+//            entry.pos = it->pos;
+//            entry.dist = it->measurement.dist1;
+//            // sheet->AddEntry(entry);
+//            ++i;
+//            if (i > 30) {
+//              break;
+//            }
+//          }
+//        }
       }
     }
   } else if (instruction.type ==
@@ -118,6 +140,7 @@ void MainWindow::on_CartStartTestPushButton_clicked()
     }
   }
   cart_results_->Clear();
+  cart_log_.clear();
   if (!cart_driver_) {
     return;
   }
@@ -150,10 +173,10 @@ void MainWindow::SaveCartTestLog(const QString& suffix) {
     if (!sheet) {
       return;
     }
-    for (int i = 0; i < sheet->Size(); ++i) {
-      auto entry = sheet->At(i);
-      stream << entry.dist << " " << entry.pos << "\n";
-    }
+//    for (int i = 0; i < sheet->Size(); ++i) {
+//      auto entry = sheet->At(i);
+//      stream << entry.dist << " " << entry.pos << "\n";
+//    }
   } else {
     QMessageBox::warning(
         this, "Error", "Fail to write log.", QMessageBox::Abort);

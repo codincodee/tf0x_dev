@@ -8,7 +8,7 @@ constexpr char kHead = 0x5A;
 using utils = tf0x_driver::Utils;
 
 namespace tf03_driver {
-#if 0
+#if 1
 bool Driver::Initialize() {
   if (!serial_port_) {
     return false;
@@ -22,19 +22,12 @@ bool Driver::ReadDistance(double &dist0) {
   if (!ReadMeasurement(measurement)) {
     return false;
   }
-  if (measurement.dists.empty()) {
-    return false;
-  }
-  dist0 = measurement.dists[0] / 100.0;
+  dist0 = measurement.dist1;
   return true;
 }
 
 bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
-  if (!serial_port_) {
-    return false;
-  }
-  // TODO: Implementations
-  return true;
+  return ReadMeasurement(measurement);
 }
 
 bool Driver::ReadMeasurement(Measurement &measurement) {
@@ -50,7 +43,7 @@ bool Driver::ReadMeasurement(Measurement &measurement) {
     sign *= -1.0f;
   }
   dist += sign * 1;
-  measurement.dists.push_back(dist);
+  measurement.dist1 = dist * 100;
   measurement.ts = timer_.elapsed();
   return true;
 }

@@ -17,6 +17,11 @@ void Driver::SetSerialPort(
   serial_port_ = serial;
 }
 
+bool Driver::ReadInstruction(Instruction &instruction, int &repetition) {
+  repetition = 1;
+  return ReadInstruction(instruction);
+}
+
 bool Driver::ReadInstruction(Instruction &instruction) {
   if (timer_.elapsed() < 10) {
     return false;
