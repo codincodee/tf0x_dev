@@ -28,9 +28,17 @@ void MainWindow::HandleIncomingMeasurement(
   }
   if (numeric_display_timer_.elapsed() > 100) {
     ui->ReadingsPageDistLabel->setText(
-        QString::number(series->at(series->count() - 1).y(), 'f', 2));
-    ui->ReadingsPageDistance2Label->setText(QString::number(measurement.dist2 / 100.0f));
-    ui->ReadingsPageDistance3Label->setText(QString::number(measurement.dist3 / 100.0f));
+        QString::number(measurement.dist1 / 100.0f));
+    ui->ReadingsPageDistance2Label->setText(
+        QString::number(measurement.dist2 / 100.0f));
+    ui->ReadingsPageDistance3Label->setText(
+        QString::number(measurement.dist3 / 100.0f));
+    ui->ReadingsPageAPDVoltageLabel->setText(
+        QString::number(measurement.apd));
+    ui->ReadingsPageLaserVoltageLabel->setText(
+        QString::number(measurement.volt));
+    ui->ReadingsPageTemperatureLabel->setText(
+        QString::number(measurement.temp));
 
     float standard_deviation, average;
     main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);

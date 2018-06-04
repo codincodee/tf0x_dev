@@ -176,6 +176,31 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
 
     measurement.dist3 = high16;
   }
+  measurement.apd = buffer[16];
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[17], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[18], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.volt = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[19], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[20], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.temp = high16;
+  }
 //  memcpy(&dist, &buffer[11], 1);
 //  memcpy(&dist + 1, &buffer[10], 1);
 //  std::cout << std::hex << (short)buffer[11] << " " << (short)buffer[10] << " " << std::dec << dist << std::endl;
