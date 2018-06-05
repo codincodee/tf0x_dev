@@ -192,7 +192,7 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
     high16 = high16 << 8;
     high16 |= low;
 
-    measurement.temp = high16;
+    measurement.temp = (high16 * 3300 / 4096 - 760) / 2.5 + 25;
   }
 //  memcpy(&dist, &buffer[11], 1);
 //  memcpy(&dist + 1, &buffer[10], 1);

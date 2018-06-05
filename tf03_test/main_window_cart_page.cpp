@@ -173,7 +173,7 @@ void MainWindow::SaveCartTestLog(const QString& suffix) {
 //      auto entry = sheet->At(i);
 //      stream << entry.dist << " " << entry.pos << "\n";
 //    }
-    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(v) Laser-Voltage(v) Temperature\n";
+    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
     for (auto& entry : cart_log_) {
       stream
           << entry.pos << " "

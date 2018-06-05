@@ -90,7 +90,6 @@ private:
   std::list<tf03_driver::Measurement> readings_log_;
   std::vector<tf03_driver::Measurement> measurement_cache_;
   std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
-
   std::vector<tf03_driver::CartMeasurement> cart_log_;
 };
 

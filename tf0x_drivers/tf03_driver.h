@@ -15,7 +15,7 @@ struct Measurement {
   uint16_t dist3;
   unsigned char apd;
   uint16_t volt;
-  uint16_t temp; // Celsius
+  float temp; // Celsius
   inline uint16_t DistanceMax() const {
     return 18000;
   }

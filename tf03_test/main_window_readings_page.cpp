@@ -79,7 +79,7 @@ void MainWindow::on_ReadingsPageRecordPushButton_clicked()
         ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt");
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QTextStream stream(&file);
-      stream << "# Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(v) Laser-Voltage(v) Temperature\n";
+      stream << "# Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
       for (auto& entry : readings_log_) {
         stream << entry.dist1 << " " << entry.dist2 << " " << entry.dist3 << " " << entry.apd << " " << entry.volt << " " << entry.temp << "\n";
       }
