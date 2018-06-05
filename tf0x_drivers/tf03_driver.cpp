@@ -8,7 +8,7 @@ constexpr char kHead = 0x5A;
 using utils = tf0x_driver::Utils;
 
 namespace tf03_driver {
-#if 0
+#if 1
 bool Driver::Initialize() {
   if (!serial_port_) {
     return false;

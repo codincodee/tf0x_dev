@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
   elapsed_timer_.start();
 
   sensor_thread_.reset(new std::thread(&MainWindow::SensorThread, this));
+  cart_thread_.reset(new std::thread(&MainWindow::CartThread, this));
 }
 
 MainWindow::~MainWindow()
@@ -38,6 +39,13 @@ MainWindow::~MainWindow()
   if (sensor_thread_) {
     if (sensor_thread_->joinable()) {
       sensor_thread_->join();
+    }
+  }
+
+  cart_thread_exit_signal_ = true;
+  if (cart_thread_) {
+    if (cart_thread_->joinable()) {
+      cart_thread_->join();
     }
   }
 }

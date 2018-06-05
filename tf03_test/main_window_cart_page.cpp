@@ -21,97 +21,95 @@ void MainWindow::InitializeCartPage() {
               ui->CartResult2Distance)));
 }
 
-const QString kCartStartButtonStart = "Start";
-const QString kCartStartButtonReset = "Reset";
+void MainWindow::HandleCartTimerEvent() {
+  cart_readings_mutex_.lock();
+  auto readings = cart_readings_;
+  cart_readings_mutex_.unlock();
 
-void MainWindow::HandleCartInstruction(
-    const cart_driver::Instruction &instruction, const int &repetition) {
-  if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
-    auto sheet = cart_results_->CurrentSheet();
-    if (sheet) {
-      tf03_driver::CartMeasurement cart_measure;
-      if (!cart_log_.empty()) {
-        cart_measure.id = (cart_log_.end() - 1)->id;
-        cart_measure.pos = (cart_log_.end() - 1)->pos;
-      }
-      cart_measure.measurement = last_measurement_;
-      for (int i = 0; i < repetition; ++i) {
-        ++cart_measure.id;
-        cart_measure.pos += cart_driver_->StopInterval() * 100;
-
-        tf0x_common::CartTestEntry entry;
-        entry.id = cart_measure.id;
-        entry.pos = cart_measure.pos;
-        entry.dist = cart_measure.measurement.dist1;
-        sheet->AddEntry(entry);
-        cart_log_.push_back(cart_measure);
-//        if (sheet->Size() > 30) {
-//          sheet->Clear();
-//          int i = 0;
-//          for (auto& it = cart_log_.rbegin(); it != cart_log_.rend(); ++it) {
-//            tf0x_common::CartTestEntry entry;
-//            entry.id = it->id;
-//            entry.pos = it->pos;
-//            entry.dist = it->measurement.dist1;
-//            // sheet->AddEntry(entry);
-//            ++i;
-//            if (i > 30) {
-//              break;
-//            }
-//          }
-//        }
-      }
+  auto sheet = cart_results_->CurrentSheet();
+  if (sheet) {
+    sheet->Clear();
+    for (auto& read : readings) {
+      tf0x_common::CartTestEntry entry;
+      entry.id = read.id;
+      entry.pos = read.pos;
+      entry.dist = read.measurement.dist1;
+      sheet->AddEntry(entry);
     }
-  } else if (instruction.type ==
-             cart_driver::Instruction::Type::reach_end_point) {
-    SaveCartTestLog("_forward");
-    cart_results_->SheetDone();
-    // ui->CartInfoLabel->setText("Returning");
-    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
-    ui->CartPageLogFileLineEdit->clear();
-  } else if (instruction.type ==
-             cart_driver::Instruction::Type::reach_start_point) {
-//    if (!cart_test_started_) {
-//      cart_test_started_ = true;
-//      return;
-//    }
-//    SaveCartTestLog("_backward");
-//    ui->CartPageLogFileLineEdit->clear();
-//    cart_results_->SheetDone();
-//    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
-//    ui->CartInfoLabel->setText("");
-//    cart_test_started_ = false;
+  }
+
+  if (!cart_logging_ && !readings.empty()) {
+    SaveCartTestLog(readings);
+    cart_readings_mutex_.lock();
+    cart_readings_.clear();
+    cart_readings_mutex_.unlock();
   }
 }
 
+void MainWindow::SaveCartTestLog(
+    const std::vector<tf03_driver::CartMeasurement> &readings) {
+  QString file_name = ui->CartPageLogFileLineEdit->text();
+  if (file_name.isEmpty()) {
+    QMessageBox::warning(
+        this, "Warning",
+        "Please enter a valid log file name.", QMessageBox::Abort);
+    return;
+  }
+  QFile file(
+      ui->LogPathLineEdit->text() + "/cart_test_" + file_name + ".txt");
+  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    QTextStream stream(&file);
+    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
+    for (auto& entry : readings) {
+      stream
+          << entry.pos << " "
+          << entry.measurement.dist1 << " "
+          << entry.measurement.dist2 << " "
+          << entry.measurement.dist3 << " "
+          << entry.measurement.apd << " "
+          << entry.measurement.volt << " "
+          << entry.measurement.temp << "\n";
+    }
+  } else {
+    QMessageBox::warning(
+        this, "Error", "Fail to write log.", QMessageBox::Abort);
+  }
+}
+
+const QString kCartStartButtonStart = "Start";
+const QString kCartStartButtonReset = "Reset";
+
 //void MainWindow::HandleCartInstruction(
-//    const cart_driver::Instruction &instruction) {
+//    const cart_driver::Instruction &instruction, const int &repetition) {
 //  if (instruction.type == cart_driver::Instruction::Type::read_sensor) {
 //    auto sheet = cart_results_->CurrentSheet();
 //    if (sheet) {
-//      auto last = sheet->GetLastEntry();
-//      if (!last_measurement_.dists.empty()) {
+//      tf03_driver::CartMeasurement cart_measure;
+//      if (!cart_log_.empty()) {
+//        cart_measure.id = (cart_log_.end() - 1)->id;
+//        cart_measure.pos = (cart_log_.end() - 1)->pos;
+//      }
+//      cart_measure.measurement = last_measurement_;
+//      for (int i = 0; i < repetition; ++i) {
+//        ++cart_measure.id;
+//        cart_measure.pos += cart_driver_->StopInterval() * 100;
+
 //        tf0x_common::CartTestEntry entry;
-//        entry.id = ++last.id;
-//        entry.dist = last_measurement_.dists[0];
-//        entry.pos = last.pos + cart_driver_->StopInterval();
+//        entry.id = cart_measure.id;
+//        entry.pos = cart_measure.pos;
+//        entry.dist = cart_measure.measurement.dist1;
 //        sheet->AddEntry(entry);
-//        ui->CartInfoLabel->setText(
-//            "Collected " + QString::number(sheet->Size()) + " Points.");
+//        cart_log_.push_back(cart_measure);
 //      }
 //    }
 //  } else if (instruction.type ==
 //             cart_driver::Instruction::Type::reach_end_point) {
 //    SaveCartTestLog("_forward");
 //    cart_results_->SheetDone();
-//    ui->CartInfoLabel->setText("Returning");
+//    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
+//    ui->CartPageLogFileLineEdit->clear();
 //  } else if (instruction.type ==
 //             cart_driver::Instruction::Type::reach_start_point) {
-//    SaveCartTestLog("_backward");
-//    ui->CartPageLogFileLineEdit->clear();
-//    cart_results_->SheetDone();
-//    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
-//    ui->CartInfoLabel->setText("");
 //  }
 //}
 
@@ -130,17 +128,21 @@ void MainWindow::on_CartStartTestPushButton_clicked()
           QMessageBox::Cancel, QMessageBox::Apply) == QMessageBox::Cancel) {
       return;
     } else {
-//      auto sheet = cart_results_->CurrentSheet();
-//      if (sheet) {
-//        sheet->Clear();
-//      }
-      // cart_test_started_ = false;
       ui->CartStartTestPushButton->setText(kCartStartButtonStart);
       return;
     }
   }
-  cart_results_->Clear();
-  cart_log_.clear();
+
+  cart_last_measurement_mutex_.lock();
+  cart_last_measurement_ = tf03_driver::CartMeasurement();
+  cart_last_measurement_mutex_.unlock();
+
+  cart_logging_ = false;
+
+  cart_readings_mutex_.lock();
+  cart_readings_.clear();
+  cart_readings_mutex_.unlock();
+
   if (!cart_driver_) {
     return;
   }
@@ -153,43 +155,40 @@ void MainWindow::on_CartStartTestPushButton_clicked()
          "Invalid parameters set, cart disabled", QMessageBox::Abort);
     return;
   }
+  cart_driver_mutex_.lock();
   cart_driver_->StartMultiStopsTesting(distance, interval);
+  cart_driver_mutex_.unlock();
   ui->CartStartTestPushButton->setText(kCartStartButtonReset);
 }
 
-void MainWindow::SaveCartTestLog(const QString& suffix) {
-  QString file_name = ui->CartPageLogFileLineEdit->text();
-  if (file_name.isEmpty()) {
-    QMessageBox::warning(
-        this, "Warning",
-        "Please enter a valid log file name.", QMessageBox::Abort);
-    return;
-  }
-  QFile file(
-      ui->LogPathLineEdit->text() + "/cart_test_" + file_name + suffix + ".txt");
-  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-    QTextStream stream(&file);
-//    for (int i = 0; i < sheet->Size(); ++i) {
-//      auto entry = sheet->At(i);
-//      stream << entry.dist << " " << entry.pos << "\n";
+//void MainWindow::SaveCartTestLog(const QString& suffix) {
+//  QString file_name = ui->CartPageLogFileLineEdit->text();
+//  if (file_name.isEmpty()) {
+//    QMessageBox::warning(
+//        this, "Warning",
+//        "Please enter a valid log file name.", QMessageBox::Abort);
+//    return;
+//  }
+//  QFile file(
+//      ui->LogPathLineEdit->text() + "/cart_test_" + file_name + suffix + ".txt");
+//  if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+//    QTextStream stream(&file);
+//    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
+//    for (auto& entry : cart_log_) {
+//      stream
+//          << entry.pos << " "
+//          << entry.measurement.dist1 << " "
+//          << entry.measurement.dist2 << " "
+//          << entry.measurement.dist3 << " "
+//          << entry.measurement.apd << " "
+//          << entry.measurement.volt << " "
+//          << entry.measurement.temp << "\n";
 //    }
-    stream << "# Position(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
-    for (auto& entry : cart_log_) {
-      stream
-          << entry.pos << " "
-          << entry.measurement.dist1 << " "
-          << entry.measurement.dist2 << " "
-          << entry.measurement.dist3 << " "
-          << entry.measurement.apd << " "
-          << entry.measurement.volt << " "
-          << entry.measurement.temp << "\n";
-    }
-  } else {
-    QMessageBox::warning(
-        this, "Error", "Fail to write log.", QMessageBox::Abort);
-  }
-//  ui->CartPageLogFileLineEdit->clear();
-}
+//  } else {
+//    QMessageBox::warning(
+//        this, "Error", "Fail to write log.", QMessageBox::Abort);
+//  }
+//}
 
 void MainWindow::on_CartPageBrowsePushButton_clicked()
 {

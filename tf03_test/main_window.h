@@ -87,9 +87,11 @@ private:
   void SaveCartTestLog(const QString& suffix = "");
   void HandleIncomingMeasurement(const tf03_driver::Measurement& measurement);
   bool SaveReadingsLog();
+  void SaveCartTestLog(const std::vector<tf03_driver::CartMeasurement>& readings);
   void CacheReadingsLog(const tf03_driver::Measurement& readings);
 
   void SensorThread();
+  void CartThread();
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
@@ -118,6 +120,15 @@ private:
   std::list<tf03_driver::Measurement> sensor_log_;
   std::mutex sensor_last_measurement_mutex_;
   tf03_driver::Measurement sensor_last_measurement_;
+
+  std::shared_ptr<std::thread> cart_thread_;
+  std::mutex cart_driver_mutex_;
+  std::atomic_bool cart_thread_exit_signal_ = false;
+  std::mutex cart_readings_mutex_;
+  std::vector<tf03_driver::CartMeasurement> cart_readings_;
+  std::atomic_bool cart_logging_ = false;
+  std::mutex cart_last_measurement_mutex_;
+  tf03_driver::CartMeasurement cart_last_measurement_;
 };
 
 #endif // MAIN_WINDOW_H

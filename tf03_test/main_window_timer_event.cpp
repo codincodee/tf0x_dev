@@ -4,18 +4,6 @@
 #include <QDebug>
 #include <QThread>
 
-void MainWindow::HandleCartTimerEvent() {
-  if (!cart_driver_) {
-    return;
-  }
-  cart_driver::Instruction instruction;
-  int repetition;
-  if (!cart_driver_->ReadInstruction(instruction, repetition)) {
-    return;
-  }
-  HandleCartInstruction(instruction, repetition);
-}
-
 void MainWindow::timerEvent(QTimerEvent *event) {
   HandleSensorTimerEvent();
   HandleCartTimerEvent();
@@ -44,7 +32,7 @@ void MainWindow::ResetSensorDriver() {
 }
 
 void MainWindow::ResetCartDriver() {
-  sensor_driver_mutex_.lock();
+  cart_driver_mutex_.lock();
   cart_serial_.reset(new tf0x_driver::QtSerialPort);
   cart_serial_->SetPortName(
       ui->CartSerialPortComboBox->currentText().toStdString());
@@ -56,7 +44,7 @@ void MainWindow::ResetCartDriver() {
   cart_driver_.reset(new cart_driver::Driver);
   cart_driver_->SetSerialPort(cart_serial_);
   cart_driver_->Initialize();
-  sensor_driver_mutex_.unlock();
+  cart_driver_mutex_.unlock();
 }
 
 ////////////////////// Sensor Thread ///////////////////////////
@@ -95,6 +83,61 @@ void MainWindow::SensorThread() {
     sensor_last_measurement_mutex_.lock();
     sensor_last_measurement_ = measurement;
     sensor_last_measurement_mutex_.unlock();
+
+    QThread::msleep(1);
+  }
+}
+
+////////////////////// Sensor Thread ///////////////////////////
+
+void MainWindow::CartThread() {
+  while (!cart_thread_exit_signal_) {
+    cart_driver_mutex_.lock();
+    if (!cart_driver_) {
+      cart_driver_mutex_.unlock();
+      continue;
+    }
+    cart_driver::Instruction instruction;
+    int repeat;
+    bool read_success = cart_driver_->ReadInstruction(instruction, repeat);
+    cart_driver_mutex_.unlock();
+
+    if (!read_success) {
+      continue;
+    }
+
+    switch (instruction.type) {
+    case cart_driver::Instruction::Type::read_sensor:
+      if (cart_logging_) {
+        cart_last_measurement_mutex_.lock();
+        auto cart_last = cart_last_measurement_;
+        cart_last_measurement_mutex_.unlock();
+
+        sensor_last_measurement_mutex_.lock();
+        auto sensor_last = sensor_last_measurement_;
+        sensor_last_measurement_mutex_.unlock();
+
+        for (int i = 0; i < repeat; ++i) {
+          ++cart_last.id;
+          cart_last.pos += cart_driver_->StopInterval();
+          cart_last.measurement = sensor_last;
+
+          cart_readings_mutex_.lock();
+          cart_readings_.push_back(cart_last);
+          cart_readings_mutex_.unlock();
+        }
+        cart_last_measurement_mutex_.lock();
+        cart_last_measurement_ = cart_last;
+        cart_last_measurement_mutex_.unlock();
+      }
+      break;
+    case cart_driver::Instruction::Type::reach_start_point:
+      cart_logging_ = true;
+      break;
+    case cart_driver::Instruction::Type::reach_end_point:
+      cart_logging_ = false;
+      break;
+    }
 
     QThread::msleep(1);
   }
