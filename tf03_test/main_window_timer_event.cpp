@@ -25,7 +25,7 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(10);
+  startTimer(20);
 }
 
 void MainWindow::ResetSensorDriver() {
@@ -96,6 +96,6 @@ void MainWindow::SensorThread() {
     sensor_last_measurement_ = measurement;
     sensor_last_measurement_mutex_.unlock();
 
-    QThread::msleep(10);
+    QThread::msleep(1);
   }
 }
