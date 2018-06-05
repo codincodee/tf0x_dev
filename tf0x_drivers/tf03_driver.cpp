@@ -343,7 +343,7 @@ bool Driver::SetVdbs(const uint16_t &value) {
   }
   char vc[2];
   memcpy(vc, &value, 2);
-  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x41) + std::string(1, vc[1]) + std::string(1, vc[0]);
+  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x41) + std::string(1, vc[0]) + std::string(1, vc[1]);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
