@@ -250,6 +250,17 @@ std::string Driver::GetVersion() {
   return version;
 }
 
+bool Driver::ResetDevice() {
+  std::string buffer = Head() + std::string(1, 4) + std::string(1, 2);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(AppendCheckSum(buffer))) {
+    return false;
+  }
+  return true;
+}
+
 std::string Driver::Head() {
   return std::string(1, kHead);
 }
@@ -261,6 +272,66 @@ std::string Driver::AppendCheckSum(const std::string &buffer) {
   }
   sum &= 0xFF;
   return buffer + std::string(1, (char)sum);
+}
+
+bool Driver::SetAPD(const uint8_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc;
+  memcpy(&vc, &value, 1);
+  std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x40) + std::string(1, vc);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::RestoreFactory() {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer = Head() + std::string(1, 4) + std::string(1, 0x10);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SaveSettings() {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer = Head() + std::string(1, 4) + std::string(1, 0x11);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetVdbs(const uint16_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc[2];
+  memcpy(vc, &value, 2);
+  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x41) + std::string(1, vc[1]) + std::string(1, vc[0]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
 }
 #endif
 }

@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -576,6 +576,16 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_4">
+            <item row="11" column="1">
+             <widget class="QPushButton" name="CommandPageSetAPDPushButton">
+              <property name="text">
+               <string>Set APD (V)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="0">
+             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
+            </item>
             <item row="9" column="0">
              <widget class="QLabel" name="label_6">
               <property name="text">
@@ -586,22 +596,8 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="1">
-             <widget class="QPushButton" name="pushButton_12">
-              <property name="text">
-               <string>Save Settings</string>
-              </property>
-             </widget>
-            </item>
             <item row="2" column="0">
              <widget class="QLineEdit" name="lineEdit_2"/>
-            </item>
-            <item row="2" column="1">
-             <widget class="QPushButton" name="pushButton_5">
-              <property name="text">
-               <string>Set Frequency</string>
-              </property>
-             </widget>
             </item>
             <item row="10" column="0">
              <widget class="QLabel" name="label_7">
@@ -610,6 +606,13 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pushButton_5">
+              <property name="text">
+               <string>Set Frequency</string>
               </property>
              </widget>
             </item>
@@ -626,15 +629,26 @@
               </property>
              </widget>
             </item>
+            <item row="10" column="1">
+             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
+              <property name="text">
+               <string>Save Settings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>Trigger Once</string>
+              </property>
+             </widget>
+            </item>
             <item row="4" column="1">
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="CommandPageResetPushButton">
               <property name="text">
                <string>Reset</string>
               </property>
              </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QComboBox" name="comboBox_2"/>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label">
@@ -649,9 +663,6 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QComboBox" name="comboBox"/>
-            </item>
             <item row="1" column="1">
              <widget class="QPushButton" name="pushButton_8">
               <property name="text">
@@ -659,19 +670,11 @@
               </property>
              </widget>
             </item>
-            <item row="6" column="1">
-             <widget class="QPushButton" name="pushButton_6">
-              <property name="text">
-               <string>Trigger Once</string>
-              </property>
-             </widget>
+            <item row="0" column="0">
+             <widget class="QComboBox" name="comboBox"/>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="pushButton_7">
-              <property name="text">
-               <string>Set Output Format</string>
-              </property>
-             </widget>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBox_2"/>
             </item>
             <item row="6" column="0">
              <widget class="QLabel" name="label_3">
@@ -680,6 +683,13 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="text">
+               <string>Set Output Format</string>
               </property>
              </widget>
             </item>
@@ -700,13 +710,10 @@
               </property>
              </widget>
             </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_5">
+            <item row="9" column="1">
+             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
               <property name="text">
-               <string>---</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
+               <string>Restore Factory</string>
               </property>
              </widget>
             </item>
@@ -717,19 +724,32 @@
               </property>
              </widget>
             </item>
-            <item row="9" column="1">
-             <widget class="QPushButton" name="pushButton_11">
-              <property name="text">
-               <string>Restore Factory</string>
-              </property>
-             </widget>
-            </item>
             <item row="3" column="1">
              <widget class="QPushButton" name="pushButton_3">
               <property name="text">
                <string>Check Version</string>
               </property>
              </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>---</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QPushButton" name="CommandPageSetVdbsPushButton">
+              <property name="text">
+               <string>Set Vdbs (mV)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
             </item>
            </layout>
           </item>

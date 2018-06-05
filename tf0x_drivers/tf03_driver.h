@@ -56,6 +56,8 @@ class API Driver: public tf0x_driver::Driver
   bool EnableCheckSum(const bool& enable);
   bool RestoreFactory();
   bool SaveSettings();
+  bool SetAPD(const uint8_t& value);
+  bool SetVdbs(const uint16_t& value);
  private:
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
   static std::string Head();
