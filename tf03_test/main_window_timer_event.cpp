@@ -76,6 +76,7 @@ void MainWindow::ResetSensorDriver() {
 }
 
 void MainWindow::ResetCartDriver() {
+  sensor_driver_mutex_.lock();
   cart_serial_.reset(new tf0x_driver::QtSerialPort);
   cart_serial_->SetPortName(
       ui->CartSerialPortComboBox->currentText().toStdString());
@@ -87,4 +88,13 @@ void MainWindow::ResetCartDriver() {
   cart_driver_.reset(new cart_driver::Driver);
   cart_driver_->SetSerialPort(cart_serial_);
   cart_driver_->Initialize();
+  sensor_driver_mutex_.unlock();
+}
+
+////////////////////// Sensor Thread ///////////////////////////
+
+void MainWindow::SensorThread() {
+//  while (!sensor_thread_exit_signal_) {
+
+//  }
 }

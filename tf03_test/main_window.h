@@ -11,6 +11,9 @@
 #include <tf0x_common/distance_over_distance_chart.h>
 #include <QElapsedTimer>
 #include <tf0x_common/cart_test_multi_result_sheets.h>
+#include <thread>
+#include <mutex>
+#include <atomic>
 
 namespace Ui {
   class MainWindow;
@@ -76,6 +79,8 @@ private:
   bool SaveReadingsLog();
   void CacheReadingsLog(const tf03_driver::Measurement& readings);
 
+  void SensorThread();
+
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;
@@ -91,6 +96,16 @@ private:
   std::vector<tf03_driver::Measurement> measurement_cache_;
   std::shared_ptr<tf0x_common::CartTestMultiResultSheets> cart_results_;
   std::vector<tf03_driver::CartMeasurement> cart_log_;
+
+  // Multi-threads
+  std::shared_ptr<std::thread> sensor_thread_;
+  std::mutex sensor_driver_mutex_;
+  std::atomic_bool sensor_thread_exit_signal_ = false;
+  std::mutex sensor_readings_mutex_;
+  std::vector<tf03_driver::Measurement> sensor_readings_;
+  std::atomic_bool sensor_logging_ = false;
+  std::mutex sensor_log_mutex_;
+  std::list<tf03_driver::Measurement> sensor_log_;
 };
 
 #endif // MAIN_WINDOW_H

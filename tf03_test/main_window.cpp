@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
   InitializeCartPage();
 
   elapsed_timer_.start();
+
+  sensor_thread_.reset(new std::thread(&MainWindow::SensorThread, this));
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +33,12 @@ MainWindow::~MainWindow()
 //    main_chart_view_ = nullptr;
 //  }
   SaveSettingsToConfigFile();
+
+  if (sensor_thread_) {
+    if (sensor_thread_->joinable()) {
+      sensor_thread_->join();
+    }
+  }
 }
 
 void MainWindow::on_tabWidget_currentChanged(int index)
