@@ -53,6 +53,25 @@ void Driver::SetSerialPort(
   serial_port_ = port;
 }
 
+bool Driver::ResetDevice() {
+  return false;
+}
+
+bool Driver::RestoreFactory() {
+  return false;
+}
+
+bool Driver::SetVdbs(const uint16_t &value) {
+  return false;
+}
+bool Driver::SaveSettings() {
+  return false;
+}
+
+bool Driver::SetAPD(const uint8_t &value) {
+  return false;
+}
+
 std::string Driver::GetVersion() {
   if (!serial_port_) {
     return std::string();

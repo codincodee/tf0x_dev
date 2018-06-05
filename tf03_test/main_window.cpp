@@ -34,6 +34,7 @@ MainWindow::~MainWindow()
 //  }
   SaveSettingsToConfigFile();
 
+  sensor_thread_exit_signal_ = true;
   if (sensor_thread_) {
     if (sensor_thread_->joinable()) {
       sensor_thread_->join();

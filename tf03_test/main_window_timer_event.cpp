@@ -2,41 +2,7 @@
 #include "ui_main_window.h"
 #include <tf0x_drivers/qt_serial_port.h>
 #include <QDebug>
-
-void MainWindow::HandleSensorTimerEvent() {
-  if (!sensor_driver_) {
-    return;
-  }
-  std::string buffer;
-  tf03_driver::Measurement measurement;
-  // sensor_driver_->ReadMeasurement(measurement, buffer);
-  // sensor_serial_->ReadBuffer(buffer);
-  if (!sensor_driver_->ReadMeasurement(measurement, buffer)) {
-    HandleIncomingStream(buffer);
-    return;
-  }
-  // qDebug() << measurement.dist1;
-
-  HandleIncomingMeasurement(measurement);
-//  qDebug() << measurement.dists[0];
-//  measurement_cache_.push_back(measurement);
-//  if (measurement_cache_.size() > 10) {
-//    for (auto& mea : measurement_cache_) {
-//      HandleIncomingMeasurement(mea);
-//    }
-//    measurement_cache_.clear();
-//  }
-
-  static QElapsedTimer timer;
-  static int cnt = 0;
-  ++cnt;
-  if (timer.elapsed() > 1000) {
-    this->setWindowTitle("TF03 Test (" + QString::number(cnt) + ")");
-    timer.restart();
-    cnt = 0;
-  }
-  last_measurement_ = measurement;
-}
+#include <QThread>
 
 void MainWindow::HandleCartTimerEvent() {
   if (!cart_driver_) {
@@ -59,10 +25,11 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(0);
+  startTimer(10);
 }
 
 void MainWindow::ResetSensorDriver() {
+  sensor_driver_mutex_.lock();
   sensor_serial_.reset(new tf0x_driver::QtSerialPort);
   sensor_serial_->SetPortName(
       ui->SensorSerialPortComboBox->currentText().toStdString());
@@ -73,6 +40,7 @@ void MainWindow::ResetSensorDriver() {
   sensor_driver_.reset(new tf03_driver::Driver);
   sensor_driver_->SetSerialPort(sensor_serial_);
   sensor_driver_->Initialize();
+  sensor_driver_mutex_.unlock();
 }
 
 void MainWindow::ResetCartDriver() {
@@ -93,8 +61,41 @@ void MainWindow::ResetCartDriver() {
 
 ////////////////////// Sensor Thread ///////////////////////////
 
-void MainWindow::SensorThread() {
-//  while (!sensor_thread_exit_signal_) {
+constexpr int kSensorReadingsSizeLimits = 4000;
 
-//  }
+void MainWindow::SensorThread() {
+  while (!sensor_thread_exit_signal_) {
+    sensor_driver_mutex_.lock();
+    if (!sensor_driver_) {
+      sensor_driver_mutex_.unlock();
+      continue;
+    }
+    std::string buffer;
+    tf03_driver::Measurement measurement;
+    bool read_success = sensor_driver_->ReadMeasurement(measurement, buffer);
+    sensor_driver_mutex_.unlock();
+
+    if (!read_success) {
+      continue;
+    }
+
+//    sensor_readings_mutex_.lock();
+//    if (sensor_readings_.size() > kSensorReadingsSizeLimits) {
+//      sensor_readings_.clear();
+//    }
+//    sensor_readings_.push_back(measurement);
+//    sensor_readings_mutex_.unlock();
+
+    if (sensor_logging_) {
+      sensor_log_mutex_.lock();
+      sensor_log_.push_back(measurement);
+      sensor_log_mutex_.unlock();
+    }
+
+    sensor_last_measurement_mutex_.lock();
+    sensor_last_measurement_ = measurement;
+    sensor_last_measurement_mutex_.unlock();
+
+    QThread::msleep(10);
+  }
 }

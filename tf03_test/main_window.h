@@ -116,6 +116,8 @@ private:
   std::atomic_bool sensor_logging_ = false;
   std::mutex sensor_log_mutex_;
   std::list<tf03_driver::Measurement> sensor_log_;
+  std::mutex sensor_last_measurement_mutex_;
+  tf03_driver::Measurement sensor_last_measurement_;
 };
 
 #endif // MAIN_WINDOW_H
