@@ -141,7 +141,6 @@ bool Driver::StartMultiStopsTesting(const float &distance, const float &delta) {
       utils::ToBuffer(int32_t(delta * 100)) +
       utils::ToBuffer(int32_t(1)) +
       utils::ToBuffer(int32_t(1));
-  std::cout << __LINE__ << std::endl;
   return serial_port_->WriteBuffer(buffer);
 }
 

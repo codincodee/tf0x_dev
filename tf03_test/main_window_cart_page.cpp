@@ -5,6 +5,9 @@
 #include <QDateTime>
 #include <QDesktopServices>
 
+const QString kCartStartButtonStart = "Start";
+const QString kCartStartButtonReset = "Reset";
+
 void MainWindow::InitializeCartPage() {
   cart_results_.reset(new tf0x_common::CartTestMultiResultSheets);
   cart_results_->AddSheet(
@@ -26,20 +29,24 @@ void MainWindow::HandleCartTimerEvent() {
   auto readings = cart_readings_;
   cart_readings_mutex_.unlock();
 
-  auto sheet = cart_results_->CurrentSheet();
-  if (sheet) {
-    sheet->Clear();
-    for (auto& read : readings) {
-      tf0x_common::CartTestEntry entry;
-      entry.id = read.id;
-      entry.pos = read.pos;
-      entry.dist = read.measurement.dist1;
-      sheet->AddEntry(entry);
+  if (cart_logging_) {
+    auto sheet = cart_results_->CurrentSheet();
+    if (sheet) {
+      sheet->Clear();
+      for (auto& read : readings) {
+        tf0x_common::CartTestEntry entry;
+        entry.id = read.id;
+        entry.pos = read.pos;
+        entry.dist = read.measurement.dist1;
+        sheet->AddEntry(entry);
+      }
     }
   }
 
   if (!cart_logging_ && !readings.empty()) {
     SaveCartTestLog(readings);
+    cart_results_->SheetDone();
+    ui->CartStartTestPushButton->setText(kCartStartButtonStart);
     cart_readings_mutex_.lock();
     cart_readings_.clear();
     cart_readings_mutex_.unlock();
@@ -75,9 +82,6 @@ void MainWindow::SaveCartTestLog(
         this, "Error", "Fail to write log.", QMessageBox::Abort);
   }
 }
-
-const QString kCartStartButtonStart = "Start";
-const QString kCartStartButtonReset = "Reset";
 
 //void MainWindow::HandleCartInstruction(
 //    const cart_driver::Instruction &instruction, const int &repetition) {
@@ -155,6 +159,10 @@ void MainWindow::on_CartStartTestPushButton_clicked()
          "Invalid parameters set, cart disabled", QMessageBox::Abort);
     return;
   }
+  cart_readings_mutex_.lock();
+  cart_readings_.reserve(distance / interval * 1.1);
+  cart_readings_mutex_.unlock();
+
   cart_driver_mutex_.lock();
   cart_driver_->StartMultiStopsTesting(distance, interval);
   cart_driver_mutex_.unlock();

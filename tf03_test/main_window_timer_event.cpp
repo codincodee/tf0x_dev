@@ -13,7 +13,7 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(20);
+  startTimer(100);
 }
 
 void MainWindow::ResetSensorDriver() {
@@ -53,6 +53,7 @@ constexpr int kSensorReadingsSizeLimits = 4000;
 
 void MainWindow::SensorThread() {
   while (!sensor_thread_exit_signal_) {
+    // QThread::msleep(1);
     sensor_driver_mutex_.lock();
     if (!sensor_driver_) {
       sensor_driver_mutex_.unlock();
@@ -83,8 +84,6 @@ void MainWindow::SensorThread() {
     sensor_last_measurement_mutex_.lock();
     sensor_last_measurement_ = measurement;
     sensor_last_measurement_mutex_.unlock();
-
-    QThread::msleep(1);
   }
 }
 
@@ -92,6 +91,8 @@ void MainWindow::SensorThread() {
 
 void MainWindow::CartThread() {
   while (!cart_thread_exit_signal_) {
+    // QThread::msleep(1);
+
     cart_driver_mutex_.lock();
     if (!cart_driver_) {
       cart_driver_mutex_.unlock();
@@ -104,6 +105,16 @@ void MainWindow::CartThread() {
 
     if (!read_success) {
       continue;
+    }
+
+    static QElapsedTimer timer;
+    static int cnt = 0;
+    if (timer.elapsed() < 1000) {
+      ++cnt;
+    } else {
+      qDebug() << cnt * 1000 / timer.elapsed();
+      timer.restart();
+      cnt = 0;
     }
 
     switch (instruction.type) {
@@ -119,7 +130,7 @@ void MainWindow::CartThread() {
 
         for (int i = 0; i < repeat; ++i) {
           ++cart_last.id;
-          cart_last.pos += cart_driver_->StopInterval();
+          cart_last.pos += cart_driver_->StopInterval() * 100.0f;
           cart_last.measurement = sensor_last;
 
           cart_readings_mutex_.lock();
@@ -138,7 +149,5 @@ void MainWindow::CartThread() {
       cart_logging_ = false;
       break;
     }
-
-    QThread::msleep(1);
   }
 }
