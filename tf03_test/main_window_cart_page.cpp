@@ -33,11 +33,16 @@ void MainWindow::HandleCartTimerEvent() {
     auto sheet = cart_results_->CurrentSheet();
     if (sheet) {
       sheet->Clear();
-      for (auto& read : readings) {
+      int i = 0;
+      for (auto& it = readings.rbegin(); it != readings.rend(); ++it) {
+        ++i;
+        if (i > 30) {
+          break;
+        }
         tf0x_common::CartTestEntry entry;
-        entry.id = read.id;
-        entry.pos = read.pos;
-        entry.dist = read.measurement.dist1;
+        entry.id = it->id;
+        entry.pos = it->pos;
+        entry.dist = it->measurement.dist1;
         sheet->AddEntry(entry);
       }
     }

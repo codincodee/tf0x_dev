@@ -91,8 +91,6 @@ void MainWindow::SensorThread() {
 
 void MainWindow::CartThread() {
   while (!cart_thread_exit_signal_) {
-    // QThread::msleep(1);
-
     cart_driver_mutex_.lock();
     if (!cart_driver_) {
       cart_driver_mutex_.unlock();
