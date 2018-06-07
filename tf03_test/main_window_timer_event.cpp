@@ -13,7 +13,7 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(100);
+  startTimer(10);
 }
 
 void MainWindow::ResetSensorDriver() {
@@ -60,11 +60,11 @@ void MainWindow::SensorThread() {
       continue;
     }
     std::string buffer;
-    tf03_driver::Measurement measurement;
-    bool read_success = sensor_driver_->ReadMeasurement(measurement, buffer);
+    std::vector<tf03_driver::Measurement> measurements;
+    measurements = sensor_driver_->ReadMeasurements(buffer);
     sensor_driver_mutex_.unlock();
 
-    if (!read_success) {
+    if (measurements.empty()) {
       continue;
     }
 
@@ -72,7 +72,7 @@ void MainWindow::SensorThread() {
     static int cnt = 0;
     auto elapsed = timer.elapsed();
     if (elapsed < 1000) {
-      ++cnt;
+      cnt += measurements.size();
     } else {
       sensor_frequency_ = cnt * 1000.0f / elapsed;
       timer.restart();
@@ -88,12 +88,14 @@ void MainWindow::SensorThread() {
 
     if (sensor_logging_) {
       sensor_log_mutex_.lock();
-      sensor_log_.push_back(measurement);
+      for (auto& measurement : measurements) {
+        sensor_log_.push_back(measurement);
+      }
       sensor_log_mutex_.unlock();
     }
 
     sensor_last_measurement_mutex_.lock();
-    sensor_last_measurement_ = measurement;
+    sensor_last_measurement_ = *(measurements.end() - 1);
     sensor_last_measurement_mutex_.unlock();
   }
 }

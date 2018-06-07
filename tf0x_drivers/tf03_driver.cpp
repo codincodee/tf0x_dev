@@ -138,6 +138,48 @@ bool Driver::ReadDistance(double &dist0) {
   return true;
 }
 
+std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
+  std::vector<Measurement> empty;
+  if (!serial_port_) {
+    return empty;
+  }
+  if (!serial_port_->ReadBuffer(buffer)) {
+    return empty;
+  }
+  if (buffer.empty()) {
+    return empty;
+  }
+
+  std::vector<Measurement> results;
+  buffer_ += buffer;
+  while (!buffer_.empty()) {
+    for (int i = 0; i < buffer_.size(); ++i) {
+      if (buffer_[i] == kHead) {
+        if (i != 0) {
+          buffer_.erase(buffer_.begin(), buffer_.begin() + i);
+        }
+        break;
+      }
+    }
+
+    if (buffer_[0] == kHead) {
+      if (buffer_.size() >= 22) {
+        std::string single;
+        single.assign(buffer_.begin(), buffer_.begin() + 22);
+        if (IsValidBuffer(single)) {
+          results.push_back(ParseBuffer(single));
+          buffer_.erase(buffer_.begin(), buffer_.begin() + 22);
+        } else {
+          buffer_.erase(buffer_.begin());
+        }
+      }
+    } else {
+      break;
+    }
+  }
+  return results;
+}
+
 bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
   if (!serial_port_) {
     return false;
@@ -298,6 +340,89 @@ bool Driver::SetFrequency(const uint16_t &value) {
 
 std::string Driver::Head() {
   return std::string(1, kHead);
+}
+
+bool Driver::IsValidBuffer(const std::string& buffer) {
+  if (buffer.size() < 22) {
+    return false;
+  }
+  int sum = 0;
+  for (int i = 0; i < 21; ++i) {
+    sum += buffer[i];
+  }
+  sum &= 0xFF;
+  char check = sum;
+  return check == buffer[21];
+}
+
+Measurement Driver::ParseBuffer(const std::string &buffer) {
+  Measurement measurement;
+  if (buffer.size() < 22) {
+    return measurement;
+  }
+  measurement.ts = timer_.elapsed();
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[10], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[11], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.dist1 = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[12], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[13], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.dist2 = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[14], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[15], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.dist3 = high16;
+  }
+  measurement.apd = buffer[16];
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[17], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[18], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.volt = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[19], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[20], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.temp = (high16 * 3300 / 4096 - 760) / 2.5 + 25;
+  }
+  return measurement;
 }
 
 std::string Driver::AppendCheckSum(const std::string &buffer) {

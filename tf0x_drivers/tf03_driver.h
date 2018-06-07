@@ -44,6 +44,7 @@ class API Driver: public tf0x_driver::Driver
   bool ReadDistance(double &distance) override;
   bool ReadMeasurement(Measurement& measurement);
   bool ReadMeasurement(Measurement &measurement, std::string& buffer);
+  std::vector<Measurement> ReadMeasurements(std::string& buffer);
 
   // Operations
   std::string GetVersion();
@@ -59,10 +60,13 @@ class API Driver: public tf0x_driver::Driver
   bool SetAPD(const uint8_t& value);
   bool SetVdbs(const uint16_t& value);
  private:
+  static bool IsValidBuffer(const std::string& buffer);
+  Measurement ParseBuffer(const std::string& buffer);
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
   static std::string Head();
   static std::string AppendCheckSum(const std::string& buffer);
   QElapsedTimer timer_;
+  std::string buffer_;
 };
 } // namespace tf03_driver
 
