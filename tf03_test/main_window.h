@@ -59,6 +59,8 @@ private slots:
 
   void on_CommandPageRestoreFactoryPushButton_clicked();
 
+  void on_CommandPageSetFrequencyPushButton_clicked();
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
@@ -120,6 +122,7 @@ private:
   std::list<tf03_driver::Measurement> sensor_log_;
   std::mutex sensor_last_measurement_mutex_;
   tf03_driver::Measurement sensor_last_measurement_;
+  std::atomic<float> sensor_frequency_ = 0.0f;
 
   std::shared_ptr<std::thread> cart_thread_;
   std::mutex cart_driver_mutex_;

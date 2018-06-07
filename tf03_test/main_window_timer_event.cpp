@@ -68,6 +68,17 @@ void MainWindow::SensorThread() {
       continue;
     }
 
+    static QElapsedTimer timer;
+    static int cnt = 0;
+    auto elapsed = timer.elapsed();
+    if (elapsed < 1000) {
+      ++cnt;
+    } else {
+      sensor_frequency_ = cnt * 1000.0f / elapsed;
+      timer.restart();
+      cnt = 0;
+    }
+
 //    sensor_readings_mutex_.lock();
 //    if (sensor_readings_.size() > kSensorReadingsSizeLimits) {
 //      sensor_readings_.clear();
@@ -105,15 +116,15 @@ void MainWindow::CartThread() {
       continue;
     }
 
-    static QElapsedTimer timer;
-    static int cnt = 0;
-    if (timer.elapsed() < 1000) {
-      ++cnt;
-    } else {
-      qDebug() << cnt * 1000 / timer.elapsed();
-      timer.restart();
-      cnt = 0;
-    }
+//    static QElapsedTimer timer;
+//    static int cnt = 0;
+//    if (timer.elapsed() < 1000) {
+//      ++cnt;
+//    } else {
+//      qDebug() << cnt * 1000 / timer.elapsed();
+//      timer.restart();
+//      cnt = 0;
+//    }
 
     switch (instruction.type) {
     case cart_driver::Instruction::Type::read_sensor:

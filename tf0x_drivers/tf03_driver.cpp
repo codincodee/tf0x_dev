@@ -280,6 +280,22 @@ bool Driver::ResetDevice() {
   return true;
 }
 
+bool Driver::SetFrequency(const uint16_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc[2];
+  memcpy(vc, &value, 2);
+  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x03) + std::string(1, vc[0]) + std::string(1, vc[1]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
 std::string Driver::Head() {
   return std::string(1, kHead);
 }

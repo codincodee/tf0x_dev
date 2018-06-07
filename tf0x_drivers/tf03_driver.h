@@ -48,7 +48,7 @@ class API Driver: public tf0x_driver::Driver
   // Operations
   std::string GetVersion();
   bool ResetDevice();
-  bool SetFrequency(const int& frequency);
+  bool SetFrequency(const uint16_t& frequency);
   bool MeasureOnce(Measurement& Measurement);
   bool SetOutputFormat(const OutputFormat& format);
   bool SetBaudRate(const int& baud_rate);

@@ -137,5 +137,7 @@ void MainWindow::HandleSensorTimerEvent() {
     ui->ReadingsPageSDLabel->setText(
         QString::number(standard_deviation, 'f', 2));
     numeric_display_timer_.restart();
+    ui->ReadingsPageFrequencyLabel->setText(
+        QString::number(sensor_frequency_.load(), 'f', 2));
   }
 }
