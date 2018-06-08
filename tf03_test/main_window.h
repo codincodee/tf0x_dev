@@ -91,6 +91,7 @@ private:
   bool SaveReadingsLog();
   void SaveCartTestLog(const std::vector<tf03_driver::CartMeasurement>& readings);
   void CacheReadingsLog(const tf03_driver::Measurement& readings);
+  void HandleSerialDetectionEvent();
 
   void SensorThread();
   void CartThread();
@@ -132,6 +133,8 @@ private:
   std::atomic_bool cart_logging_ = false;
   std::mutex cart_last_measurement_mutex_;
   tf03_driver::CartMeasurement cart_last_measurement_;
+
+  bool sensor_serial_pending_reconnect_ = false;
 };
 
 #endif // MAIN_WINDOW_H

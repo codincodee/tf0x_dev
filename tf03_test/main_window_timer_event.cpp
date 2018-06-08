@@ -7,16 +7,40 @@
 void MainWindow::timerEvent(QTimerEvent *event) {
   HandleSensorTimerEvent();
   HandleCartTimerEvent();
+  HandleSerialDetectionEvent();
 }
 
 void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(10);
+  startTimer(50);
+}
+
+void MainWindow::HandleSerialDetectionEvent() {
+  std::string current_port;
+  if (sensor_serial_) {
+    current_port = sensor_serial_->GetPortName();
+  }
+  auto ports = tf0x_driver::QtSerialPort::ScanAllPorts();
+  bool port_still_on = false;
+  for (auto& p : ports) {
+    if (p == current_port) {
+      port_still_on = true;
+    }
+  }
+  if (!port_still_on) {
+    sensor_serial_pending_reconnect_ = true;
+  } else {
+    if (sensor_serial_pending_reconnect_) {
+      ResetSensorDriver();
+      sensor_serial_pending_reconnect_ = false;
+    }
+  }
 }
 
 void MainWindow::ResetSensorDriver() {
+  main_chart_->Clear();
   sensor_driver_mutex_.lock();
   sensor_serial_.reset(new tf0x_driver::QtSerialPort);
   sensor_serial_->SetPortName(

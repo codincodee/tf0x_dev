@@ -20,6 +20,7 @@ public:
   QtCharts::QLineSeries* Series();
   float CurrentStandardDeviation();
   void CurrentAverageAndStandardDeviation(float& average, float& stddev);
+  void Clear();
 protected:
   bool AddPoint(
       const float &meter,

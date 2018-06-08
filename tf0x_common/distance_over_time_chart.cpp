@@ -72,6 +72,13 @@ bool DistanceOverTimeChart::AddPoint(
   return true;
 }
 
+void DistanceOverTimeChart::Clear() {
+  if (!line_series_) {
+    return;
+  }
+  line_series_->clear();
+}
+
 bool DistanceOverTimeChart::AddPoint(
     const float &meter, const int &millisecond) {
   return AddPoint(meter, millisecond, line_series_);

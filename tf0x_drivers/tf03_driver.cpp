@@ -126,6 +126,7 @@ bool Driver::Initialize() {
   if (!serial_port_) {
     return false;
   }
+  timer_.start();
   return true;
 }
 
