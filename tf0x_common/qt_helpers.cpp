@@ -3,7 +3,8 @@
 #include <QStandardPaths>
 
 QString QtHelpers::SelectFolder(QWidget *parent) {
-  return SelectFolder(parent, SelectFileFrom());
+  auto from = SelectFileFrom();
+  return SelectFolder(parent, from);
 }
 
 QString QtHelpers::SelectFolder(QWidget *parent, QString &from) {
@@ -19,7 +20,8 @@ QString QtHelpers::SelectFileFrom() {
 }
 
 QString QtHelpers::ChooseFile(QWidget *parent) {
-  return ChooseFile(parent, SelectFileFrom());
+  auto from = SelectFileFrom();
+  return ChooseFile(parent, from);
 }
 
 QString QtHelpers::ChooseFile(QWidget *parent, QString &from) {

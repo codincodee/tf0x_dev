@@ -16,39 +16,39 @@ void MainWindow::InitializeReadingsPage() {
   numeric_display_timer_.start();
 }
 
-void MainWindow::HandleIncomingMeasurement(
-    const tf03_driver::Measurement &measurement) {
-  CacheReadingsLog(measurement);
-  main_chart_->AddPoint(measurement.dist1 / 100.0f, measurement.ts);
-  auto series = main_chart_->Series();
-  if (!series) {
-    return;
-  }
-  if (!series->count()) {
-    return;
-  }
-  if (numeric_display_timer_.elapsed() > 100) {
-    ui->ReadingsPageDistLabel->setText(
-        QString::number(measurement.dist1 / 100.0f));
-    ui->ReadingsPageDistance2Label->setText(
-        QString::number(measurement.dist2 / 100.0f));
-    ui->ReadingsPageDistance3Label->setText(
-        QString::number(measurement.dist3 / 100.0f));
-    ui->ReadingsPageAPDVoltageLabel->setText(
-        QString::number(measurement.apd));
-    ui->ReadingsPageLaserVoltageLabel->setText(
-        QString::number(measurement.volt));
-    ui->ReadingsPageTemperatureLabel->setText(
-        QString::number(measurement.temp));
+//void MainWindow::HandleIncomingMeasurement(
+//    const tf03_driver::Measurement &measurement) {
+//  CacheReadingsLog(measurement);
+//  main_chart_->AddPoint(measurement.dist1 / 100.0f, measurement.ts);
+//  auto series = main_chart_->Series();
+//  if (!series) {
+//    return;
+//  }
+//  if (!series->count()) {
+//    return;
+//  }
+//  if (numeric_display_timer_.elapsed() > 100) {
+//    ui->ReadingsPageDistLabel->setText(
+//        QString::number(measurement.dist1 / 100.0f));
+//    ui->ReadingsPageDistance2Label->setText(
+//        QString::number(measurement.dist2 / 100.0f));
+//    ui->ReadingsPageDistance3Label->setText(
+//        QString::number(measurement.dist3 / 100.0f));
+//    ui->ReadingsPageAPDVoltageLabel->setText(
+//        QString::number(measurement.apd));
+//    ui->ReadingsPageLaserVoltageLabel->setText(
+//        QString::number(measurement.volt));
+//    ui->ReadingsPageTemperatureLabel->setText(
+//        QString::number(measurement.temp));
 
-    float standard_deviation, average;
-    main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);
-    ui->ReadingPageAverageLabel->setText(QString::number(average, 'f', 2));
-    ui->ReadingsPageSDLabel->setText(
-        QString::number(standard_deviation, 'f', 2));
-    numeric_display_timer_.restart();
-  }
-}
+//    float standard_deviation, average;
+//    main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);
+//    ui->ReadingPageAverageLabel->setText(QString::number(average, 'f', 2));
+//    ui->ReadingsPageSDLabel->setText(
+//        QString::number(standard_deviation, 'f', 2));
+//    numeric_display_timer_.restart();
+//  }
+//}
 
 const QString kReadingPageRecordButtonRecord = "Record";
 const QString kReadingPageRecordButtonStop = "Stop";
@@ -88,7 +88,7 @@ void MainWindow::on_ReadingsPageRecordPushButton_clicked()
       QTextStream stream(&file);
       stream << "# Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
       for (auto& entry : logs) {
-        stream << entry.dist1 << " " << entry.dist2 << " " << entry.dist3 << " " << entry.apd << " " << entry.volt << " " << entry.temp << "\n";
+        stream << entry.dist1 << " " << (short)entry.dist2 << " " << entry.dist3 << " " << entry.apd << " " << entry.volt << " " << entry.temp << "\n";
       }
     } else {
       QMessageBox::warning(this, "Error", "Unable to write log file.", QMessageBox::Abort);
@@ -121,7 +121,7 @@ void MainWindow::HandleSensorTimerEvent() {
     ui->ReadingsPageDistLabel->setText(
         QString::number(measurement.dist1 / 100.0f));
     ui->ReadingsPageDistance2Label->setText(
-        QString::number(measurement.dist2 / 100.0f));
+        QString::number((short)measurement.dist2 / 100.0f));
     ui->ReadingsPageDistance3Label->setText(
         QString::number(measurement.dist3 / 100.0f));
     ui->ReadingsPageAPDVoltageLabel->setText(

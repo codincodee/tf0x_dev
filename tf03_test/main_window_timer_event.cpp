@@ -11,6 +11,12 @@ void MainWindow::timerEvent(QTimerEvent *event) {
 }
 
 void MainWindow::InitializeTimerEvent() {
+  sensor_thread_exit_signal_ = false;
+  sensor_logging_ = false;
+  sensor_frequency_ = 0.0f;
+  cart_thread_exit_signal_ = false;
+  cart_logging_ = false;
+
   ResetSensorDriver();
   ResetCartDriver();
 

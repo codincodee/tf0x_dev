@@ -115,22 +115,22 @@ private:
   // Multi-threads
   std::shared_ptr<std::thread> sensor_thread_;
   std::mutex sensor_driver_mutex_;
-  std::atomic_bool sensor_thread_exit_signal_ = false;
+  std::atomic_bool sensor_thread_exit_signal_;
   std::mutex sensor_readings_mutex_;
   std::vector<tf03_driver::Measurement> sensor_readings_;
-  std::atomic_bool sensor_logging_ = false;
+  std::atomic_bool sensor_logging_;
   std::mutex sensor_log_mutex_;
   std::list<tf03_driver::Measurement> sensor_log_;
   std::mutex sensor_last_measurement_mutex_;
   tf03_driver::Measurement sensor_last_measurement_;
-  std::atomic<float> sensor_frequency_ = 0.0f;
+  std::atomic<float> sensor_frequency_;
 
   std::shared_ptr<std::thread> cart_thread_;
   std::mutex cart_driver_mutex_;
-  std::atomic_bool cart_thread_exit_signal_ = false;
+  std::atomic_bool cart_thread_exit_signal_;
   std::mutex cart_readings_mutex_;
   std::vector<tf03_driver::CartMeasurement> cart_readings_;
-  std::atomic_bool cart_logging_ = false;
+  std::atomic_bool cart_logging_;
   std::mutex cart_last_measurement_mutex_;
   tf03_driver::CartMeasurement cart_last_measurement_;
 

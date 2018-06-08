@@ -10,6 +10,7 @@
 
 namespace tf03_driver {
 struct Measurement {
+  Measurement() : dist1(0), dist2(0), dist3(0), apd(0), volt(0), temp(0.0f), ts(0) {}
   uint16_t dist1;
   uint16_t dist2;
   uint16_t dist3;
