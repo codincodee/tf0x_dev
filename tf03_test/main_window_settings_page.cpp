@@ -31,6 +31,8 @@ void MainWindow::InitializeSettingsPage() {
   ui->SettingsCartDistanceLineEdit->setValidator(validator);
   ui->CartPageDistanceLineEdit->setValidator(validator);
   ui->SettingsCartIntervalLineEdit->setValidator(validator);
+  ui->SettingsPageVisualizationFrequencyComboBox->addItem(kVisualizationFrequencyHigh);
+  ui->SettingsPageVisualizationFrequencyComboBox->addItem(kVisualizationFrequencyLow);
 }
 
 void MainWindow::FillSerialPortComboBox(QComboBox &combo_box) {

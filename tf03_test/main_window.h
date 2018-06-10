@@ -61,6 +61,8 @@ private slots:
 
   void on_CommandPageSetFrequencyPushButton_clicked();
 
+  void on_SettingsPageVisualizationFrequencyComboBox_currentTextChanged(const QString &arg1);
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
@@ -135,6 +137,13 @@ private:
   tf03_driver::CartMeasurement cart_last_measurement_;
 
   bool sensor_serial_pending_reconnect_ = false;
+
+  QString kVisualizationFrequencyHigh = "High";
+  QString kVisualizationFrequencyLow = "Low";
+
+  int cycle_timer_high_;
+  int cycle_timer_low_;
+  int cycle_timer_;
 };
 
 #endif // MAIN_WINDOW_H

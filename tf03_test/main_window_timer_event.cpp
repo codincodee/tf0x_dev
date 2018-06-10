@@ -5,9 +5,22 @@
 #include <QThread>
 
 void MainWindow::timerEvent(QTimerEvent *event) {
+  if (event->timerId() != cycle_timer_) {
+    return;
+  }
   HandleSensorTimerEvent();
   HandleCartTimerEvent();
   HandleSerialDetectionEvent();
+}
+
+void MainWindow::on_SettingsPageVisualizationFrequencyComboBox_currentTextChanged(const QString &arg1)
+{
+  if (arg1 == kVisualizationFrequencyHigh) {
+    cycle_timer_ = cycle_timer_high_;
+  }
+  if (arg1 == kVisualizationFrequencyLow) {
+    cycle_timer_ = cycle_timer_low_;
+  }
 }
 
 void MainWindow::InitializeTimerEvent() {
@@ -20,7 +33,9 @@ void MainWindow::InitializeTimerEvent() {
   ResetSensorDriver();
   ResetCartDriver();
 
-  startTimer(50);
+  cycle_timer_high_ = startTimer(50);
+  cycle_timer_low_ = startTimer(150);
+  cycle_timer_ = cycle_timer_high_;
 }
 
 void MainWindow::HandleSerialDetectionEvent() {
