@@ -173,6 +173,8 @@ std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
         } else {
           buffer_.erase(buffer_.begin());
         }
+      } else {
+        break;
       }
     } else {
       break;
