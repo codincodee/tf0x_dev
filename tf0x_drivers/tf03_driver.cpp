@@ -199,6 +199,42 @@ bool Driver::ReadMeasurement(Measurement& measurement, std::string& buffer) {
   }
   {
     unsigned char low = 0x00;
+    memcpy(&low, &buffer[4], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[5], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.raw_dist1 = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[6], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[7], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.raw_dist2 = high16;
+  }
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[8], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[9], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.raw_dist3 = high16;
+  }
+  {
+    unsigned char low = 0x00;
     memcpy(&low, &buffer[10], 1);
 
     unsigned char high = 0x00;

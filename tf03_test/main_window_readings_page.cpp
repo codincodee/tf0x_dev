@@ -86,9 +86,9 @@ void MainWindow::on_ReadingsPageRecordPushButton_clicked()
         ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt");
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QTextStream stream(&file);
-      stream << "# Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
+      stream << "# Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
       for (auto& entry : logs) {
-        stream << entry.dist1 << " " << (short)entry.dist2 << " " << entry.dist3 << " " << entry.apd << " " << entry.volt << " " << entry.temp << "\n";
+        stream << entry.raw_dist1 << " " << entry.raw_dist2 << " " << entry.raw_dist3 << " " << entry.dist1 << " " << (short)entry.dist2 << " " << entry.dist3 << " " << entry.apd << " " << entry.volt << " " << entry.temp << "\n";
       }
     } else {
       QMessageBox::warning(this, "Error", "Unable to write log file.", QMessageBox::Abort);

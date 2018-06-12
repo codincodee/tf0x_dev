@@ -10,10 +10,23 @@
 
 namespace tf03_driver {
 struct Measurement {
-  Measurement() : dist1(0), dist2(0), dist3(0), apd(0), volt(0), temp(0.0f), ts(0) {}
+  Measurement()
+    : dist1(0),
+      dist2(0),
+      dist3(0),
+      raw_dist1(0),
+      raw_dist2(0),
+      raw_dist3(0),
+      apd(0),
+      volt(0),
+      temp(0.0f),
+      ts(0) {}
   uint16_t dist1;
   uint16_t dist2;
   uint16_t dist3;
+  uint16_t raw_dist1;
+  uint16_t raw_dist2;
+  uint16_t raw_dist3;
   unsigned char apd;
   uint16_t volt;
   float temp; // Celsius
