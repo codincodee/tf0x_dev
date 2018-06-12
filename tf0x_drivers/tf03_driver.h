@@ -56,8 +56,8 @@ class API Driver: public tf0x_driver::Driver
   bool Initialize();
   void SetSerialPort(std::shared_ptr<tf0x_driver::AbstractSerialPort> port);
   bool ReadDistance(double &distance) override;
-  bool ReadMeasurement(Measurement& measurement);
-  bool ReadMeasurement(Measurement &measurement, std::string& buffer);
+//  bool ReadMeasurement(Measurement& measurement);
+//  bool ReadMeasurement(Measurement &measurement, std::string& buffer);
   std::vector<Measurement> ReadMeasurements(std::string& buffer);
 
   // Operations
