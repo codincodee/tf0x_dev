@@ -447,5 +447,38 @@ bool Driver::SetVdbs(const uint16_t &value) {
   }
   return true;
 }
+
+bool Driver::SetTableCorrA(const double &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  int16_t value_us = value * 1000;
+  char vc[2];
+  memcpy(vc, &value_us, 2);
+  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x42) + std::string(1, vc[0]) + std::string(1, vc[1]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetTableCorrB(const int16_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc[2];
+  memcpy(vc, &value, 2);
+  std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x43) + std::string(1, vc[0]) + std::string(1, vc[1]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
 #endif
 }

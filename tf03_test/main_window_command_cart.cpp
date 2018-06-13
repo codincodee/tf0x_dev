@@ -90,3 +90,36 @@ void MainWindow::on_CommandPageSetFrequencyPushButton_clicked()
   return;
 }
 
+void MainWindow::on_CommandPageSetCorrAPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  double value = ui->CommandPageSetCorrALineEdit->text().toDouble(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetTableCorrA(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}
+
+void MainWindow::on_CommandPageSetCorrBPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  int value = ui->CommandPageSetCorrBLineEdit->text().toInt(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetTableCorrB(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}

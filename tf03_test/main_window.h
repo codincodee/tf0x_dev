@@ -63,6 +63,10 @@ private slots:
 
   void on_SettingsPageVisualizationFrequencyComboBox_currentTextChanged(const QString &arg1);
 
+  void on_CommandPageSetCorrAPushButton_clicked();
+
+  void on_CommandPageSetCorrBPushButton_clicked();
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);

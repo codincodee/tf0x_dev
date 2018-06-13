@@ -73,6 +73,8 @@ class API Driver: public tf0x_driver::Driver
   bool SaveSettings();
   bool SetAPD(const uint8_t& value);
   bool SetVdbs(const uint16_t& value);
+  bool SetTableCorrA(const double& value);
+  bool SetTableCorrB(const int16_t& value);
  private:
   static bool IsValidBuffer(const std::string& buffer);
   Measurement ParseBuffer(const std::string& buffer);
