@@ -171,7 +171,9 @@ std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
           results.push_back(ParseBuffer(single));
           buffer_.erase(buffer_.begin(), buffer_.begin() + 22);
         } else {
-          buffer_.erase(buffer_.begin());
+          if (!DetectAndHandleEcho()) {
+            buffer_.erase(buffer_.begin());
+          }
         }
       } else {
         break;
@@ -188,6 +190,36 @@ std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
   return results_reverse;
 }
 
+bool Driver::DetectAndHandleEcho() {
+  if (buffer_.size() < 2) {
+    return false;
+  }
+  int len = buffer_[1];
+  if (buffer_.size() < len) {
+    return false;
+  }
+  std::string buf(buffer_.begin(), buffer_.begin() + len);
+  if (!IsValidEchoBuffer(buf)) {
+    return false;
+  }
+  switch (buf[2]) {
+  case 0x40:
+  {
+    if (buf[3] == 0) {
+      set_apd_echo.push_back({true});
+      std::cout << __LINE__ << std::endl;
+    } else {
+      set_apd_echo.push_back({false});
+      std::cout << __LINE__ << std::endl;
+    }
+  } break;
+  }
+  if (len <= 0) {
+    return false;
+  }
+  buffer_.erase(buffer_.begin(), buffer_.begin() + len);
+  return true;
+}
 //bool Driver::ReadMeasurement(Measurement &measurement) {
 //  std::string buffer;
 //  return ReadMeasurement(measurement, buffer);

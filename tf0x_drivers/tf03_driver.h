@@ -61,6 +61,10 @@ enum class TransType {
   can = 0x02
 };
 
+struct SetAPDEcho {
+  bool success;
+};
+
 class API Driver: public tf0x_driver::Driver
 {
  public:
@@ -88,7 +92,9 @@ class API Driver: public tf0x_driver::Driver
   bool SetTableCorrB(const int16_t& value);
   bool SetProtocolType(const ProtocolType& type);
   bool SetTransType(const TransType& type);
+  std::vector<SetAPDEcho> set_apd_echo;
  private:
+  bool DetectAndHandleEcho();
   static bool IsValidBuffer(const std::string& buffer);
   Measurement ParseBuffer(const std::string& buffer);
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
