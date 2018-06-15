@@ -2,8 +2,18 @@
 #include "ui_main_window.h"
 #include <QMessageBox>
 
-void MainWindow::InitializeCommandPageCartSection() {
+const QString kCommandSetProtocolReleaseProtocol = "Release";
+const QString kCommandSetProtocolDevelopProtocol = "Develop";
 
+const QString kCommandSetTransTypeSerial = "Serial";
+const QString kCommandSetTransTypeCAN = "CAN";
+
+void MainWindow::InitializeCommandPageCartSection() {
+  ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolReleaseProtocol);
+  ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolDevelopProtocol);
+
+  ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeCAN);
+  ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeSerial);
 }
 
 void MainWindow::on_CommandPageSetAPDPushButton_clicked()
@@ -122,4 +132,48 @@ void MainWindow::on_CommandPageSetCorrBPushButton_clicked()
   sensor_driver_->SetTableCorrB(value);
   sensor_driver_mutex_.unlock();
   return;
+}
+
+void MainWindow::on_CommandPageSetProtocolPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  tf03_driver::ProtocolType type;
+  if (ui->CommandPageSetProtocolComboBox->currentText() ==
+      kCommandSetProtocolReleaseProtocol) {
+    type = tf03_driver::ProtocolType::release;
+  } else if (ui->CommandPageSetProtocolComboBox->currentText() ==
+             kCommandSetProtocolDevelopProtocol) {
+    type = tf03_driver::ProtocolType::develop;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetProtocolType(type);
+  sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageSetTransTypePushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  tf03_driver::TransType type;
+  if (ui->CommandPageSetTransTypeComboBox->currentText() ==
+      kCommandSetTransTypeSerial) {
+    type = tf03_driver::TransType::serial;
+  } else if (ui->CommandPageSetTransTypeComboBox->currentText() ==
+             kCommandSetTransTypeCAN) {
+    type = tf03_driver::TransType::can;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetTransType(type);
+  sensor_driver_mutex_.unlock();
 }

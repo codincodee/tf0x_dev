@@ -180,7 +180,12 @@ std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
       break;
     }
   }
-  return results;
+  std::vector<Measurement> results_reverse;
+  results_reverse.reserve(results.size());
+  for (auto& i = results.rbegin(); i != results.rend(); ++i) {
+    results_reverse.push_back(*i);
+  }
+  return results_reverse;
 }
 
 //bool Driver::ReadMeasurement(Measurement &measurement) {
@@ -279,6 +284,18 @@ Measurement Driver::ParseBuffer(const std::string &buffer) {
     return measurement;
   }
   measurement.ts = timer_.elapsed();
+  {
+    unsigned char low = 0x00;
+    memcpy(&low, &buffer[2], 1);
+
+    unsigned char high = 0x00;
+    memcpy(&high, &buffer[3], 1);
+    uint16_t high16 = high;
+    high16 = high16 << 8;
+    high16 |= low;
+
+    measurement.algorithm = high16;
+  }
   {
     unsigned char low = 0x00;
     memcpy(&low, &buffer[4], 1);
@@ -472,6 +489,46 @@ bool Driver::SetTableCorrB(const int16_t &value) {
   char vc[2];
   memcpy(vc, &value, 2);
   std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x43) + std::string(1, vc[0]) + std::string(1, vc[1]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetProtocolType(const ProtocolType &type) {
+  if (!serial_port_) {
+    return false;
+  }
+  char type_code;
+  switch (type) {
+  case ProtocolType::release: type_code = 1; break;
+  case ProtocolType::develop: type_code = 2; break;
+  default: return false;
+  }
+  std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x44) + std::string(1, type_code);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetTransType(const TransType &type) {
+  if (!serial_port_) {
+    return false;
+  }
+  char type_code;
+  switch (type) {
+  case TransType::serial: type_code = 1; break;
+  case TransType::can: type_code = 2; break;
+  default: return false;
+  }
+  std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x45) + std::string(1, type_code);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);

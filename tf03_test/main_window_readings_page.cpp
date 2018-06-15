@@ -132,10 +132,16 @@ void MainWindow::HandleSensorTimerEvent() {
         QString::number(measurement.temp));
     ui->ReadingsPageRawDist1Label->setText(
         QString::number(measurement.raw_dist1 / 100.0f));
+//    ui->ReadingsPageRawDist2Label->setText(
+//        QString::number(measurement.raw_dist2 / 100.0f));
+//    ui->ReadingsPageRawDist3Label->setText(
+//        QString::number(measurement.raw_dist3 / 100.0f));
     ui->ReadingsPageRawDist2Label->setText(
-        QString::number(measurement.raw_dist2 / 100.0f));
+        QString::number((short)measurement.raw_dist2));
     ui->ReadingsPageRawDist3Label->setText(
-        QString::number(measurement.raw_dist3 / 100.0f));
+        QString::number((short)measurement.raw_dist3));
+    ui->ReadingsPageAlgorithmLabel->setText(
+        QString::number((short)measurement.algorithm));
 
     float standard_deviation, average;
     main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);

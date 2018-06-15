@@ -33,6 +33,7 @@ struct Measurement {
   inline uint16_t DistanceMax() const {
     return 18000;
   }
+  uint16_t algorithm;
   long ts;
 };
 
@@ -48,6 +49,16 @@ enum class OutputFormat {
   binary = 0x01,
   pix = 0x02,
   primitive = 0x03
+};
+
+enum class ProtocolType {
+  release = 0x01,
+  develop = 0x02
+};
+
+enum class TransType {
+  serial = 0x01,
+  can = 0x02
 };
 
 class API Driver: public tf0x_driver::Driver
@@ -75,6 +86,8 @@ class API Driver: public tf0x_driver::Driver
   bool SetVdbs(const uint16_t& value);
   bool SetTableCorrA(const double& value);
   bool SetTableCorrB(const int16_t& value);
+  bool SetProtocolType(const ProtocolType& type);
+  bool SetTransType(const TransType& type);
  private:
   static bool IsValidBuffer(const std::string& buffer);
   Measurement ParseBuffer(const std::string& buffer);
