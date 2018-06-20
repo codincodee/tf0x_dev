@@ -61,6 +61,10 @@ enum class TransType {
   can = 0x02
 };
 
+struct SetAPDEcho {
+  bool success;
+};
+
 class API Driver: public tf0x_driver::Driver
 {
  public:
@@ -90,7 +94,10 @@ class API Driver: public tf0x_driver::Driver
   bool SetTransType(const TransType& type);
   bool SetSplineBreaks(const std::vector<int16_t>& array);
   bool SetSplineCoefs(const std::vector<std::vector<int16_t>>& matrix);
+  std::vector<SetAPDEcho> set_apd_echo;
  private:
+  bool DetectAndHandleEcho();
+  bool IsValidEchoBuffer(const std::string& buffer);
   static bool IsValidBuffer(const std::string& buffer);
   Measurement ParseBuffer(const std::string& buffer);
   std::shared_ptr<tf0x_driver::AbstractSerialPort> serial_port_;
