@@ -1,6 +1,12 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 #include <QMessageBox>
+#include <tf0x_common/qt_helpers.h>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QStringList>
+#include <iostream>
 
 const QString kCommandSetProtocolReleaseProtocol = "Release";
 const QString kCommandSetProtocolDevelopProtocol = "Develop";
@@ -14,6 +20,8 @@ void MainWindow::InitializeCommandPageCartSection() {
 
   ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeCAN);
   ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeSerial);
+
+  // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
 
 void MainWindow::on_CommandPageSetAPDPushButton_clicked()
@@ -175,5 +183,88 @@ void MainWindow::on_CommandPageSetTransTypePushButton_clicked()
 
   sensor_driver_mutex_.lock();
   sensor_driver_->SetTransType(type);
+  sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageWriteParamPushButton_clicked()
+{
+  constexpr int kSplineBreaksNum = 9;
+  constexpr int kSplineCoefsRow = 4;
+  constexpr int kSplineCoefsColum = 8;
+
+  QString file;
+  auto line_edit = ui->CommandPageWriteParamLineEdit;
+  auto ui_path = line_edit->text();
+  if (ui_path.isEmpty()) {
+    file = QtHelpers::ChooseFile(this);
+  } else {
+    file = ui_path;
+  }
+  if (file.isEmpty()) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  ui->CommandPageWriteParamLineEdit->setText(file);
+  QFile qfile(file);
+  if (!qfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  QString line;
+  QTextStream stream(&qfile);
+  std::vector<int16_t> breaks;
+  std::vector<std::vector<int16_t>> coefs;
+  while (!stream.atEnd()) {
+    line = stream.readLine();
+
+    if (line == "spline breaks:") {
+      breaks.clear();
+      line = stream.readLine();
+      QStringList list = line.split(" ", QString::SkipEmptyParts);
+      if (list.size() != kSplineBreaksNum) {
+        QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+        return;
+      }
+      for (int i = 0; i < list.size(); ++i) {
+        bool ok;
+        QString str = list[i];
+        auto integer = str.toInt(&ok);
+        if (!ok) {
+          QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+          return;
+        }
+        breaks.push_back((int16_t)integer);
+      }
+      continue;
+    }
+
+    if (line == "spline coefs:") {
+      coefs.clear();
+      for (int row = 0; row < kSplineCoefsRow; ++row) {
+        std::vector<int16_t> column;
+        line = stream.readLine();
+        QStringList list = line.split(" ", QString::SkipEmptyParts);
+        if (list.size() != kSplineCoefsColum) {
+          QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+          return;
+        }
+        for (int i = 0; i < list.size(); ++i) {
+          bool ok;
+          QString str = list[i];
+          auto float_value = str.toFloat(&ok);
+          if (!ok) {
+            QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+            return;
+          }
+          column.push_back((int16_t)std::round(float_value * 100));
+        }
+        coefs.push_back(column);
+      }
+    }
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetSplineBreaks(breaks);
+  sensor_driver_->SetSplineCoefs(coefs);
   sensor_driver_mutex_.unlock();
 }

@@ -71,6 +71,8 @@ private slots:
 
   void on_CommandPageSetTransTypePushButton_clicked();
 
+  void on_CommandPageWriteParamPushButton_clicked();
+
 private:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);

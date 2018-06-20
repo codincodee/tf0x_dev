@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>900</width>
+    <width>953</width>
     <height>601</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -791,20 +791,50 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_4">
-            <item row="13" column="0">
-             <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
-            </item>
-            <item row="9" column="1">
-             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
+            <item row="15" column="1">
+             <widget class="QPushButton" name="CommandPageSetProtocolPushButton">
               <property name="text">
-               <string>Restore Factory</string>
+               <string>Set Protocol</string>
               </property>
              </widget>
+            </item>
+            <item row="15" column="0">
+             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
+            </item>
+            <item row="14" column="0">
+             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
+            </item>
+            <item row="14" column="1">
+             <widget class="QPushButton" name="CommandPageSetCorrBPushButton">
+              <property name="text">
+               <string>Set CorrB</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="1">
+             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
+              <property name="text">
+               <string>Set Trans Type</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="0">
+             <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
+            </item>
+            <item row="13" column="0">
+             <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
             </item>
             <item row="13" column="1">
              <widget class="QPushButton" name="CommandPageSetCorrAPushButton">
               <property name="text">
                <string>Set CorrA</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
+              <property name="text">
+               <string>Restore Factory</string>
               </property>
              </widget>
             </item>
@@ -832,25 +862,8 @@
               </property>
              </widget>
             </item>
-            <item row="12" column="1">
-             <widget class="QPushButton" name="CommandPageSetVdbsPushButton">
-              <property name="text">
-               <string>Set Vdbs (mV)</string>
-              </property>
-             </widget>
-            </item>
             <item row="9" column="0">
              <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>---</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLabel" name="label_5">
               <property name="text">
                <string>---</string>
               </property>
@@ -869,11 +882,15 @@
             <item row="12" column="0">
              <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
             </item>
-            <item row="4" column="0">
-             <widget class="QLabel" name="label_2">
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
+            <item row="12" column="1">
+             <widget class="QPushButton" name="CommandPageSetVdbsPushButton">
+              <property name="text">
+               <string>Set Vdbs (mV)</string>
               </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_5">
               <property name="text">
                <string>---</string>
               </property>
@@ -892,6 +909,19 @@
               </property>
              </widget>
             </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_2">
+              <property name="frameShape">
+               <enum>QFrame::NoFrame</enum>
+              </property>
+              <property name="text">
+               <string>---</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
             <item row="2" column="1">
              <widget class="QPushButton" name="CommandPageSetFrequencyPushButton">
               <property name="text">
@@ -901,6 +931,26 @@
             </item>
             <item row="11" column="0">
              <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
+            </item>
+            <item row="10" column="1">
+             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
+              <property name="text">
+               <string>Save Settings</string>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>---</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QComboBox" name="comboBox"/>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label">
@@ -915,27 +965,10 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="1">
-             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
-              <property name="text">
-               <string>Save Settings</string>
-              </property>
-             </widget>
-            </item>
             <item row="4" column="1">
              <widget class="QPushButton" name="CommandPageResetPushButton">
               <property name="text">
                <string>Reset</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="0">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>---</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
               </property>
              </widget>
             </item>
@@ -945,19 +978,6 @@
                <string>Trigger Once</string>
               </property>
              </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QComboBox" name="comboBox"/>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="pushButton_8">
-              <property name="text">
-               <string>Set Baud Rate</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QComboBox" name="comboBox_2"/>
             </item>
             <item row="6" column="0">
              <widget class="QLabel" name="label_3">
@@ -969,6 +989,9 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="0">
+             <widget class="QComboBox" name="comboBox_2"/>
+            </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="pushButton_7">
               <property name="text">
@@ -976,35 +999,26 @@
               </property>
              </widget>
             </item>
-            <item row="14" column="1">
-             <widget class="QPushButton" name="CommandPageSetCorrBPushButton">
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pushButton_8">
               <property name="text">
-               <string>Set CorrB</string>
+               <string>Set Baud Rate</string>
               </property>
              </widget>
             </item>
-            <item row="14" column="0">
-             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
-            </item>
-            <item row="15" column="1">
-             <widget class="QPushButton" name="CommandPageSetProtocolPushButton">
+            <item row="17" column="1">
+             <widget class="QPushButton" name="CommandPageWriteParamPushButton">
               <property name="text">
-               <string>Set Protocol</string>
+               <string>Write Parameters</string>
               </property>
              </widget>
             </item>
-            <item row="15" column="0">
-             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
-            </item>
-            <item row="16" column="1">
-             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
-              <property name="text">
-               <string>Set Trans Type</string>
+            <item row="17" column="0">
+             <widget class="QLineEdit" name="CommandPageWriteParamLineEdit">
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
               </property>
              </widget>
-            </item>
-            <item row="16" column="0">
-             <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
             </item>
            </layout>
           </item>
@@ -1713,7 +1727,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>900</width>
+     <width>953</width>
      <height>17</height>
     </rect>
    </property>

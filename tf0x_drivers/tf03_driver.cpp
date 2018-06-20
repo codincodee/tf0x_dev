@@ -2,6 +2,7 @@
 #include <iostream>
 #include "utils.h"
 #include <QElapsedTimer>
+#include <QThread>
 #include <stdint.h>
 
 constexpr char kHead = 0x5A;
@@ -534,6 +535,54 @@ bool Driver::SetTransType(const TransType &type) {
   serial_port_->ReadBuffer(recycle);
   if (!serial_port_->WriteBuffer(cmd)) {
     return false;
+  }
+  return true;
+}
+
+bool Driver::SetSplineBreaks(const std::vector<int16_t> &array) {
+  if (!serial_port_) {
+    return false;
+  }
+//  std::string recycle;
+//  serial_port_->ReadBuffer(recycle);
+  for (int i = 0; i < array.size(); ++i) {
+    char vc[2];
+    memcpy(vc, &array[i], 2);
+    std::string buffer = Head() + std::string(1, 7) + std::string(1, 0x46) + std::string(1, i) + std::string(1, vc[0]) + std::string(1, vc[1]);
+    auto cmd = AppendCheckSum(buffer);
+//    for (auto& c : cmd) {
+//      std::cout << utils::ToHexString(c) << " ";
+//    }
+//    std::cout << std::endl;
+    if (!serial_port_->WriteBuffer(cmd)) {
+      return false;
+    }
+    QThread::msleep(50);
+  }
+  return true;
+}
+
+bool Driver::SetSplineCoefs(const std::vector<std::vector<int16_t> > &matrix) {
+  if (!serial_port_) {
+    return false;
+  }
+//  std::string recycle;
+//  serial_port_->ReadBuffer(recycle);
+  for (int row = 0; row < matrix.size(); ++row) {
+    for (int col = 0; col < matrix[row].size(); ++col) {
+      char vc[2];
+      memcpy(vc, &matrix[row][col], 2);
+      std::string buffer = Head() + std::string(1, 8) + std::string(1, 0x47) + std::string(1, row) + std::string(1, col) + std::string(1, vc[0]) + std::string(1, vc[1]);
+      auto cmd = AppendCheckSum(buffer);
+//      for (auto& c : cmd) {
+//        std::cout << utils::ToHexString(c) << " ";
+//      }
+//      std::cout << std::endl;
+      if (!serial_port_->WriteBuffer(cmd)) {
+        return false;
+      }
+      QThread::msleep(50);
+    }
   }
   return true;
 }

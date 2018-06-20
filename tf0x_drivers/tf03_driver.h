@@ -88,6 +88,8 @@ class API Driver: public tf0x_driver::Driver
   bool SetTableCorrB(const int16_t& value);
   bool SetProtocolType(const ProtocolType& type);
   bool SetTransType(const TransType& type);
+  bool SetSplineBreaks(const std::vector<int16_t>& array);
+  bool SetSplineCoefs(const std::vector<std::vector<int16_t>>& matrix);
  private:
   static bool IsValidBuffer(const std::string& buffer);
   Measurement ParseBuffer(const std::string& buffer);
