@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <iostream>
+#include <QThread>
 
 const QString kCommandSetProtocolReleaseProtocol = "Release";
 const QString kCommandSetProtocolDevelopProtocol = "Develop";
@@ -214,8 +215,23 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
   QTextStream stream(&qfile);
   std::vector<int16_t> breaks;
   std::vector<std::vector<int16_t>> coefs;
+  const QString rawdist_std_identifier = "rawdist_std:";
+
+  int16_t rawdist_std = 0;
+
   while (!stream.atEnd()) {
     line = stream.readLine();
+
+    if (line.contains(rawdist_std_identifier)) {
+      line.remove(rawdist_std_identifier);
+      line.remove(" ");
+      bool ok;
+      rawdist_std = line.toInt(&ok);
+      if (!ok) {
+        QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+        return;
+      }
+    }
 
     if (line == "spline breaks:") {
       breaks.clear();
@@ -263,8 +279,13 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
     }
   }
 
+  breaks.push_back(rawdist_std);
+
   sensor_driver_mutex_.lock();
   sensor_driver_->SetSplineBreaks(breaks);
+  sensor_driver_mutex_.unlock();
+  QThread::msleep(100);
+  sensor_driver_mutex_.lock();
   sensor_driver_->SetSplineCoefs(coefs);
   sensor_driver_mutex_.unlock();
 }
