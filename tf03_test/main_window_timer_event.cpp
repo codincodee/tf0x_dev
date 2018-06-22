@@ -11,6 +11,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   HandleSensorTimerEvent();
   HandleCartTimerEvent();
   HandleSerialDetectionEvent();
+  HandleCommandPageEchoUpdate();
 }
 
 void MainWindow::on_SettingsPageVisualizationFrequencyComboBox_currentTextChanged(const QString &arg1)

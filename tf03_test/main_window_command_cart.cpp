@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <iostream>
 #include <QThread>
+#include <QTextCursor>
 
 const QString kCommandSetProtocolReleaseProtocol = "Release";
 const QString kCommandSetProtocolDevelopProtocol = "Develop";
@@ -288,4 +289,46 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
   sensor_driver_mutex_.lock();
   sensor_driver_->SetSplineCoefs(coefs);
   sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::HandleCommandPageEchoUpdate() {
+  static int apd_cnt = 0;
+  static int vdbs_cnt = 0;
+  static int corr_a_cnt = 0;
+  static int corr_b_cnt = 0;
+  static int protocol_cnt = 0;
+  static int trans_type_cnt = 0;
+  static int spline_breaks_cnt = 0;
+  static int spline_coefs_cnt = 0;
+
+  sensor_driver_mutex_.lock();
+  auto apd_echo = sensor_driver_->set_apd_echo;
+  auto vdbs_echo = sensor_driver_->set_vdbs_echo;
+  auto corr_a_echo = sensor_driver_->set_corr_a_echo;
+  auto corr_b_echo = sensor_driver_->set_corr_b_echo;
+  auto protocol_echo = sensor_driver_->set_protocol_echo;
+  auto trans_type_echo = sensor_driver_->set_trans_type_echo;
+  auto spline_breaks_echo = sensor_driver_->set_spline_breaks_echo;
+  auto spline_coefs_echo = sensor_driver_->set_spline_coefs_echo;
+  sensor_driver_mutex_.unlock();
+
+  if (apd_cnt != apd_echo.size()) {
+    auto size = apd_echo.size();
+    apd_echo.erase(apd_echo.begin(), apd_echo.begin() + apd_cnt);
+    for (auto& echo : apd_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set APD Successful");
+      } else {
+        CommandPageDumpEcho("Set APD Failed");
+      }
+    }
+    apd_cnt = size;
+  }
+}
+
+void MainWindow::CommandPageDumpEcho(const QString& msg) {
+  static int line = 0;
+  QTextCursor cursor = ui->CommandPageEchoPlainTextEdit->textCursor();
+  cursor.movePosition(QTextCursor::Start);
+  cursor.insertText(QString::number(++line) + ") " + msg + "\n");
 }

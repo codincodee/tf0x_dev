@@ -61,7 +61,7 @@ enum class TransType {
   can = 0x02
 };
 
-struct SetAPDEcho {
+struct SuccessEcho {
   bool success;
 };
 
@@ -94,7 +94,14 @@ class API Driver: public tf0x_driver::Driver
   bool SetTransType(const TransType& type);
   bool SetSplineBreaks(const std::vector<int16_t>& array);
   bool SetSplineCoefs(const std::vector<std::vector<int32_t>>& matrix);
-  std::vector<SetAPDEcho> set_apd_echo;
+  std::vector<SuccessEcho> set_apd_echo;
+  std::vector<SuccessEcho> set_vdbs_echo;
+  std::vector<SuccessEcho> set_corr_a_echo;
+  std::vector<SuccessEcho> set_corr_b_echo;
+  std::vector<SuccessEcho> set_protocol_echo;
+  std::vector<SuccessEcho> set_trans_type_echo;
+  std::vector<SuccessEcho> set_spline_breaks_echo;
+  std::vector<SuccessEcho> set_spline_coefs_echo;
  private:
   bool DetectAndHandleEcho();
   bool IsValidEchoBuffer(const std::string& buffer);

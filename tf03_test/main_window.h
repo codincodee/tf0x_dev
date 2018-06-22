@@ -108,6 +108,9 @@ private:
   void SensorThread();
   void CartThread();
 
+  void HandleCommandPageEchoUpdate();
+  void CommandPageDumpEcho(const QString& msg);
+
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;
