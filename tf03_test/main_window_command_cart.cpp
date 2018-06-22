@@ -301,7 +301,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int spline_breaks_cnt = 0;
   static int spline_coefs_cnt = 0;
 
-  sensor_driver_mutex_.lock();
+  // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
   auto vdbs_echo = sensor_driver_->set_vdbs_echo;
   auto corr_a_echo = sensor_driver_->set_corr_a_echo;
@@ -310,7 +310,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto trans_type_echo = sensor_driver_->set_trans_type_echo;
   auto spline_breaks_echo = sensor_driver_->set_spline_breaks_echo;
   auto spline_coefs_echo = sensor_driver_->set_spline_coefs_echo;
-  sensor_driver_mutex_.unlock();
+  // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
     auto size = apd_echo.size();
@@ -323,6 +323,97 @@ void MainWindow::HandleCommandPageEchoUpdate() {
       }
     }
     apd_cnt = size;
+  }
+
+  if (vdbs_cnt != vdbs_echo.size()) {
+    auto size = vdbs_echo.size();
+    vdbs_echo.erase(vdbs_echo.begin(), vdbs_echo.begin() + vdbs_cnt);
+    for (auto& echo : vdbs_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set Vdbs Successful");
+      } else {
+        CommandPageDumpEcho("Set Vdbs Failed");
+      }
+    }
+    vdbs_cnt = size;
+  }
+
+  if (corr_a_cnt != corr_a_echo.size()) {
+    auto size = corr_a_echo.size();
+    corr_a_echo.erase(corr_a_echo.begin(), corr_a_echo.begin() + corr_a_cnt);
+    for (auto& echo : corr_a_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set CorrA Successful");
+      } else {
+        CommandPageDumpEcho("Set CorrA Failed");
+      }
+    }
+    corr_a_cnt = size;
+  }
+
+  if (corr_b_cnt != corr_b_echo.size()) {
+    auto size = corr_b_echo.size();
+    corr_b_echo.erase(corr_b_echo.begin(), corr_b_echo.begin() + corr_b_cnt);
+    for (auto& echo : corr_b_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set CorrB Successful");
+      } else {
+        CommandPageDumpEcho("Set CorrB Failed");
+      }
+    }
+    corr_b_cnt = size;
+  }
+
+  if (protocol_cnt != protocol_echo.size()) {
+    auto size = protocol_echo.size();
+    protocol_echo.erase(protocol_echo.begin(), protocol_echo.begin() + protocol_cnt);
+    for (auto& echo : protocol_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set Protocol Successful");
+      } else {
+        CommandPageDumpEcho("Set Protocol Failed");
+      }
+    }
+    protocol_cnt = size;
+  }
+
+  if (trans_type_cnt != trans_type_echo.size()) {
+    auto size = trans_type_echo.size();
+    trans_type_echo.erase(trans_type_echo.begin(), trans_type_echo.begin() + trans_type_cnt);
+    for (auto& echo : trans_type_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set Trans Type Successful");
+      } else {
+        CommandPageDumpEcho("Set Trans Type Failed");
+      }
+    }
+    trans_type_cnt = size;
+  }
+
+  if (spline_breaks_cnt != spline_breaks_echo.size()) {
+    auto size = spline_breaks_echo.size();
+    spline_breaks_echo.erase(spline_breaks_echo.begin(), spline_breaks_echo.begin() + spline_breaks_cnt);
+    for (auto& echo : spline_breaks_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set Spline Breaks Successful");
+      } else {
+        CommandPageDumpEcho("Set Spline Breaks Failed");
+      }
+    }
+    spline_breaks_cnt = size;
+  }
+
+  if (spline_coefs_cnt != spline_coefs_echo.size()) {
+    auto size = spline_coefs_echo.size();
+    spline_coefs_echo.erase(spline_coefs_echo.begin(), spline_coefs_echo.begin() + spline_coefs_cnt);
+    for (auto& echo : spline_coefs_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Set Spline Coefs Successful");
+      } else {
+        CommandPageDumpEcho("Set Spline Coefs Failed");
+      }
+    }
+    spline_coefs_cnt = size;
   }
 }
 

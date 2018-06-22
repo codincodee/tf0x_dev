@@ -655,10 +655,10 @@ bool Driver::SetSplineBreaks(const std::vector<int16_t> &array) {
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
-  for (auto& c : cmd) {
-    std::cout << utils::ToHexString(c) << " ";
-  }
-  std::cout << std::endl;
+//  for (auto& c : cmd) {
+//    std::cout << utils::ToHexString(c) << " ";
+//  }
+//  std::cout << std::endl;
   if (!serial_port_->WriteBuffer(cmd)) {
     return false;
   }
@@ -681,10 +681,10 @@ bool Driver::SetSplineCoefs(const std::vector<std::vector<int32_t> > &matrix) {
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
-  for (auto& c : cmd) {
-    std::cout << utils::ToHexString(c) << " ";
-  }
-  std::cout << std::endl;
+//  for (auto& c : cmd) {
+//    std::cout << utils::ToHexString(c) << " ";
+//  }
+//  std::cout << std::endl;
   if (!serial_port_->WriteBuffer(cmd)) {
     return false;
   }
