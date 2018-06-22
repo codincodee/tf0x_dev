@@ -624,36 +624,36 @@ bool Driver::SetSplineBreaks(const std::vector<int16_t> &array) {
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
-//  for (auto& c : cmd) {
-//    std::cout << utils::ToHexString(c) << " ";
-//  }
-//  std::cout << std::endl;
+  for (auto& c : cmd) {
+    std::cout << utils::ToHexString(c) << " ";
+  }
+  std::cout << std::endl;
   if (!serial_port_->WriteBuffer(cmd)) {
     return false;
   }
   return true;
 }
 
-bool Driver::SetSplineCoefs(const std::vector<std::vector<int16_t> > &matrix) {
+bool Driver::SetSplineCoefs(const std::vector<std::vector<int32_t> > &matrix) {
   if (!serial_port_) {
     return false;
   }
   std::string buffer = Head() + std::string(1, 0) + std::string(1, 0x47);
   for (int row = 0; row < matrix.size(); ++row) {
     for (int col = 0; col < matrix[row].size(); ++col) {
-      char vc[2];
-      memcpy(vc, &matrix[row][col], 2);
-      buffer += std::string(1, vc[0]) + std::string(1, vc[1]);
+      char vc[4];
+      memcpy(vc, &matrix[row][col], 4);
+      buffer += std::string(1, vc[0]) + std::string(1, vc[1]) + std::string(1, vc[2]) + std::string(1, vc[3]);
     }
   }
   buffer[1] = buffer.size() + 1;
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
-//  for (auto& c : cmd) {
-//    std::cout << utils::ToHexString(c) << " ";
-//  }
-//  std::cout << std::endl;
+  for (auto& c : cmd) {
+    std::cout << utils::ToHexString(c) << " ";
+  }
+  std::cout << std::endl;
   if (!serial_port_->WriteBuffer(cmd)) {
     return false;
   }

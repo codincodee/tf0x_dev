@@ -93,7 +93,7 @@ class API Driver: public tf0x_driver::Driver
   bool SetProtocolType(const ProtocolType& type);
   bool SetTransType(const TransType& type);
   bool SetSplineBreaks(const std::vector<int16_t>& array);
-  bool SetSplineCoefs(const std::vector<std::vector<int16_t>>& matrix);
+  bool SetSplineCoefs(const std::vector<std::vector<int32_t>>& matrix);
   std::vector<SetAPDEcho> set_apd_echo;
  private:
   bool DetectAndHandleEcho();

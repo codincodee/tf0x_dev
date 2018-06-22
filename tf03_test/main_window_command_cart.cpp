@@ -214,7 +214,7 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
   QString line;
   QTextStream stream(&qfile);
   std::vector<int16_t> breaks;
-  std::vector<std::vector<int16_t>> coefs;
+  std::vector<std::vector<int32_t>> coefs;
   const QString rawdist_std_identifier = "rawdist_std:";
 
   int16_t rawdist_std = 0;
@@ -257,7 +257,7 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
     if (line == "spline coefs:") {
       coefs.clear();
       for (int row = 0; row < kSplineCoefsRow; ++row) {
-        std::vector<int16_t> column;
+        std::vector<int32_t> column;
         line = stream.readLine();
         QStringList list = line.split(" ", QString::SkipEmptyParts);
         if (list.size() != kSplineCoefsColum) {
@@ -267,12 +267,12 @@ void MainWindow::on_CommandPageWriteParamPushButton_clicked()
         for (int i = 0; i < list.size(); ++i) {
           bool ok;
           QString str = list[i];
-          auto float_value = str.toFloat(&ok);
+          auto int_value = str.toInt(&ok);
           if (!ok) {
             QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
             return;
           }
-          column.push_back((int16_t)std::round(float_value * 100));
+          column.push_back(int_value);
         }
         coefs.push_back(column);
       }
