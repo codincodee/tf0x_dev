@@ -34,7 +34,7 @@ void MainWindow::HandleCartTimerEvent() {
     if (sheet) {
       sheet->Clear();
       int i = 0;
-      for (auto& it = readings.rbegin(); it != readings.rend(); ++it) {
+      for (auto it = readings.rbegin(); it != readings.rend(); ++it) {
         ++i;
         if (i > 30) {
           break;

@@ -187,7 +187,7 @@ std::vector<Measurement> Driver::ReadMeasurements(std::string& buffer) {
   }
   std::vector<Measurement> results_reverse;
   results_reverse.reserve(results.size());
-  for (auto& i = results.rbegin(); i != results.rend(); ++i) {
+  for (auto i = results.rbegin(); i != results.rend(); ++i) {
     results_reverse.push_back(*i);
   }
   return results_reverse;

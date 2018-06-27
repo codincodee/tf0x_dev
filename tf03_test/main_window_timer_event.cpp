@@ -115,6 +115,11 @@ void MainWindow::SensorThread() {
     }
 
     static QElapsedTimer timer;
+    static bool init = false;
+    if (!init) {
+      timer.start();
+      init = true;
+    }
     static int cnt = 0;
     auto elapsed = timer.elapsed();
     if (elapsed < 1000) {
