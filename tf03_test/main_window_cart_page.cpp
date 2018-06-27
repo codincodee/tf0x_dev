@@ -71,7 +71,7 @@ void MainWindow::SaveCartTestLog(
       ui->LogPathLineEdit->text() + "/cart_test_" + file_name + ".txt");
   if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     QTextStream stream(&file);
-    stream << "# Position(cm) Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Temperature(C)\n";
+    stream << "# Position(cm) Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Algorithm Temperature(C)\n";
     for (auto& entry : readings) {
       stream
           << entry.pos << " "
@@ -83,6 +83,7 @@ void MainWindow::SaveCartTestLog(
           << entry.measurement.dist3 << " "
           << entry.measurement.apd << " "
           << entry.measurement.volt << " "
+          << entry.measurement.algorithm << " "
           << entry.measurement.temp << "\n";
     }
   } else {
