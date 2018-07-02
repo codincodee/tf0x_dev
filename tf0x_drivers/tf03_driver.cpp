@@ -401,6 +401,15 @@ Measurement Driver::ParseBuffer(const std::string &buffer) {
 
     measurement.algorithm = high16;
   }
+//  {
+//    char rawdist_fake[4];
+//    rawdist_fake[0] = buffer[6];
+//    rawdist_fake[1] = buffer[7];
+//    rawdist_fake[2] = buffer[8];
+//    rawdist_fake[3] = buffer[9];
+
+//    memcpy(&measurement.clock_cal, rawdist_fake, 4);
+//  }
   {
     unsigned char low = 0x00;
     memcpy(&low, &buffer[4], 1);

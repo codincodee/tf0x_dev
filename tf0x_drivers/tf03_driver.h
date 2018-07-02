@@ -20,13 +20,15 @@ struct Measurement {
       apd(0),
       volt(0),
       temp(0.0f),
-      ts(0) {}
+      ts(0),
+      clock_cal(0.0f) {}
   uint16_t dist1;
   uint16_t dist2;
   uint16_t dist3;
   uint16_t raw_dist1;
   uint16_t raw_dist2;
   uint16_t raw_dist3;
+  uint32_t clock_cal;
   unsigned char apd;
   uint16_t volt;
   float temp; // Celsius
