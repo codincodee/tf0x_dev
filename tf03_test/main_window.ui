@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.15</string>
+   <string>TF03 Test v1.3.16</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -873,7 +873,7 @@
              </widget>
             </item>
             <item row="3" column="1">
-             <widget class="QPushButton" name="pushButton_3">
+             <widget class="QPushButton" name="CommandPageCheckVersionPushButton">
               <property name="text">
                <string>Check Version</string>
               </property>

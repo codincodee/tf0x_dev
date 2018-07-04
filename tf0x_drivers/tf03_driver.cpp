@@ -222,6 +222,17 @@ bool Driver::DetectAndHandleEcho() {
     return false;
   }
   switch (buf[2]) {
+  case 0x01:
+  {
+    std::cout << __LINE__ << std::endl;
+    std::string version;
+    version += std::to_string(buf[5]);
+    version += ".";
+    version += std::to_string(buf[4]);
+    version += ".";
+    version += std::to_string(buf[3]);
+    check_version_echo.push_back(version);
+  } break;
   case 0x40:
   {
     if (buf[3] == 0) {
@@ -303,40 +314,48 @@ void Driver::SetSerialPort(
   serial_port_ = port;
 }
 
-std::string Driver::GetVersion() {
+bool Driver::GetVersion() {
   if (!serial_port_) {
-    return std::string();
+    return false;
   }
   std::string buffer = Head() + std::string(1, 4) + std::string(1, 1);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
-  serial_port_->WriteBuffer(AppendCheckSum(buffer));
-  int cnt = 0;
-  std::string echo;
-  while (!serial_port_->ReadBuffer(echo)) {
-    if (++cnt > 10) {
-      return std::string();
-    }
+//  for (auto& i : cmd) {
+//    std::cout << utils::ToHexString(i);
+//  }
+//  std::cout << std::endl;
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
   }
-  if (echo.size() < 6) {
-    return std::string();
-  }
-  if (echo[0] != kHead) {
-    return std::string();
-  }
-  if (echo[1] != 7)  {
-    return std::string();
-  }
-  if (echo[2] != 1) {
-    return std::string();
-  }
-  std::string version;
-  version =
-      utils::ToDecimalString(echo[5]) + "." +
-      utils::ToDecimalString(echo[4]) + "." +
-      utils::ToDecimalString(echo[3]);
-  return version;
+  return true;
+//  int cnt = 0;
+//  std::string echo;
+//  while (!serial_port_->ReadBuffer(echo)) {
+//    if (++cnt > 10) {
+//      return std::string();
+//    }
+//  }
+//  if (echo.size() < 6) {
+//    return std::string();
+//  }
+//  if (echo[0] != kHead) {
+//    return std::string();
+//  }
+//  if (echo[1] != 7)  {
+//    return std::string();
+//  }
+//  if (echo[2] != 1) {
+//    return std::string();
+//  }
+//  std::string version;
+//  version =
+//      utils::ToDecimalString(echo[5]) + "." +
+//      utils::ToDecimalString(echo[4]) + "." +
+//      utils::ToDecimalString(echo[3]);
+//  return version;
+  return "";
 }
 
 bool Driver::ResetDevice() {

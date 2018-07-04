@@ -316,6 +316,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int trans_type_cnt = 0;
   static int spline_breaks_cnt = 0;
   static int spline_coefs_cnt = 0;
+  static int version_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -326,6 +327,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto trans_type_echo = sensor_driver_->set_trans_type_echo;
   auto spline_breaks_echo = sensor_driver_->set_spline_breaks_echo;
   auto spline_coefs_echo = sensor_driver_->set_spline_coefs_echo;
+  auto version_echo = sensor_driver_->check_version_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -431,6 +433,15 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     spline_coefs_cnt = size;
   }
+
+  if (version_cnt != version_echo.size()) {
+    auto size = version_echo.size();
+    version_echo.erase(version_echo.begin(), version_echo.begin() + version_cnt);
+    for (auto& echo : version_echo) {
+      CommandPageDumpEcho(QString::fromStdString("Version: " + echo));
+    }
+    version_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -439,3 +450,15 @@ void MainWindow::CommandPageDumpEcho(const QString& msg) {
   cursor.movePosition(QTextCursor::Start);
   cursor.insertText(QString::number(++line) + ") " + msg + "\n");
 }
+
+void MainWindow::on_CommandPageCheckVersionPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  auto version = sensor_driver_->GetVersion();
+  sensor_driver_mutex_.unlock();
+}
+
