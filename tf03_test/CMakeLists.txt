@@ -16,6 +16,9 @@ add_executable(
     main_window_debug_page.cpp
     main_window_command_cart.cpp
     main_window_cart_page.cpp
+    command_window.cpp
+    command_window.h
+    command_window.ui
     main_window.ui
 )
 

@@ -28,11 +28,15 @@ void MainWindow::InitializeCommandPageCartSection() {
 
 void MainWindow::on_CommandPageSetAPDPushButton_clicked()
 {
+  return HandleCommandPageSetAPD(ui->CommandPageSetAPDLineEdit->text());
+}
+
+void MainWindow::HandleCommandPageSetAPD(const QString& input) {
   if (!sensor_driver_) {
     return;
   }
   bool ok;
-  int apd = ui->CommandPageSetAPDLineEdit->text().toInt(&ok);
+  int apd = input.toInt(&ok);
   if (!ok) {
     QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
     return;
@@ -48,11 +52,15 @@ void MainWindow::on_CommandPageSetAPDPushButton_clicked()
 
 void MainWindow::on_CommandPageSetVdbsPushButton_clicked()
 {
+  return HandleCommandPageSetVdbs(ui->CommandPageSetVdbsLineEdit->text());
+}
+
+void MainWindow::HandleCommandPageSetVdbs(const QString& input) {
   if (!sensor_driver_) {
     return;
   }
   bool ok;
-  int value = ui->CommandPageSetVdbsLineEdit->text().toInt(&ok);
+  int value = input.toInt(&ok);
   if (!ok) {
     QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
     return;
@@ -112,11 +120,15 @@ void MainWindow::on_CommandPageSetFrequencyPushButton_clicked()
 
 void MainWindow::on_CommandPageSetCorrAPushButton_clicked()
 {
+  return HandleCommandPageSetCorrA(ui->CommandPageSetCorrALineEdit->text());
+}
+
+void MainWindow::HandleCommandPageSetCorrA(const QString& input) {
   if (!sensor_driver_) {
     return;
   }
   bool ok;
-  double value = ui->CommandPageSetCorrALineEdit->text().toDouble(&ok);
+  double value = input.toDouble(&ok);
   if (!ok) {
     QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
     return;
@@ -129,11 +141,15 @@ void MainWindow::on_CommandPageSetCorrAPushButton_clicked()
 
 void MainWindow::on_CommandPageSetCorrBPushButton_clicked()
 {
+  return HandleCommandPageSetCorrB(ui->CommandPageSetCorrBLineEdit->text());
+}
+
+void MainWindow::HandleCommandPageSetCorrB(const QString& input) {
   if (!sensor_driver_) {
     return;
   }
   bool ok;
-  int value = ui->CommandPageSetCorrBLineEdit->text().toInt(&ok);
+  int value = input.toInt(&ok);
   if (!ok) {
     QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
     return;

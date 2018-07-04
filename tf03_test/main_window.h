@@ -26,6 +26,10 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
+  void HandleCommandPageSetVdbs(const QString& input);
+  void HandleCommandPageSetAPD(const QString& input);
+  void HandleCommandPageSetCorrB(const QString& input);
+  void HandleCommandPageSetCorrA(const QString& input);
 protected:
   void timerEvent(QTimerEvent *event);
 private slots:
