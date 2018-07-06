@@ -318,6 +318,8 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int spline_coefs_cnt = 0;
   static int version_cnt = 0;
   static int restore_cnt = 0;
+  static int reset_cnt = 0;
+  static int save_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -330,6 +332,8 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto spline_coefs_echo = sensor_driver_->set_spline_coefs_echo;
   auto version_echo = sensor_driver_->check_version_echo;
   auto restore_echo = sensor_driver_->restore_factory_echo;
+  auto reset_echo = sensor_driver_->soft_reset_echo;
+  auto save_echo = sensor_driver_->save_settings_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -456,6 +460,32 @@ void MainWindow::HandleCommandPageEchoUpdate() {
       }
     }
     restore_cnt = size;
+  }
+
+  if (reset_cnt != reset_echo.size()) {
+    auto size = reset_echo.size();
+    reset_echo.erase(reset_echo.begin(), reset_echo.begin() + reset_cnt);
+    for (auto& echo : reset_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Soft Reset Successful");
+      } else {
+        CommandPageDumpEcho("Soft Reset Failed");
+      }
+    }
+    reset_cnt = size;
+  }
+
+  if (save_cnt != save_echo.size()) {
+    auto size = save_echo.size();
+    save_echo.erase(save_echo.begin(), save_echo.begin() + save_cnt);
+    for (auto& echo : save_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Save Settings Successful");
+      } else {
+        CommandPageDumpEcho("Save Settings Failed");
+      }
+    }
+    save_cnt = size;
   }
 }
 
