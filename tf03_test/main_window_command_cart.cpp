@@ -317,6 +317,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int spline_breaks_cnt = 0;
   static int spline_coefs_cnt = 0;
   static int version_cnt = 0;
+  static int restore_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -328,6 +329,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto spline_breaks_echo = sensor_driver_->set_spline_breaks_echo;
   auto spline_coefs_echo = sensor_driver_->set_spline_coefs_echo;
   auto version_echo = sensor_driver_->check_version_echo;
+  auto restore_echo = sensor_driver_->restore_factory_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -441,6 +443,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
       CommandPageDumpEcho(QString::fromStdString("Version: " + echo));
     }
     version_cnt = size;
+  }
+
+  if (restore_cnt != restore_echo.size()) {
+    auto size = restore_echo.size();
+    restore_echo.erase(restore_echo.begin(), restore_echo.begin() + restore_cnt);
+    for (auto& echo : restore_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Restore Factory Successful");
+      } else {
+        CommandPageDumpEcho("Restore Factory Failed");
+      }
+    }
+    restore_cnt = size;
   }
 }
 

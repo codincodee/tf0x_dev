@@ -104,6 +104,7 @@ class API Driver: public tf0x_driver::Driver
   std::vector<SuccessEcho> set_trans_type_echo;
   std::vector<SuccessEcho> set_spline_breaks_echo;
   std::vector<SuccessEcho> set_spline_coefs_echo;
+  std::vector<SuccessEcho> restore_factory_echo;
   std::vector<std::string> check_version_echo;
  private:
   bool DetectAndHandleEcho();

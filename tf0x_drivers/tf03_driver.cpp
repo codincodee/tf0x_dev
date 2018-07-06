@@ -233,6 +233,14 @@ bool Driver::DetectAndHandleEcho() {
     version += std::to_string(buf[3]);
     check_version_echo.push_back(version);
   } break;
+  case 0x10:
+  {
+    if (buf[3] == 0) {
+      restore_factory_echo.push_back({true});
+    } else {
+      restore_factory_echo.push_back({false});
+    }
+  } break;
   case 0x40:
   {
     if (buf[3] == 0) {
