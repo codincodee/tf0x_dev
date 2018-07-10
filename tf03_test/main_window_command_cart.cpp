@@ -16,12 +16,20 @@ const QString kCommandSetProtocolDevelopProtocol = "Develop";
 const QString kCommandSetTransTypeSerial = "Serial";
 const QString kCommandSetTransTypeCAN = "CAN";
 
+const QString kCommandVdbsAdjustTypeDisabled = "Disabled";
+const QString kCommandVdbsAdjustTypeAlgorithm = "Algorithm";
+const QString kCommandVdbsAdjustTypeTDC = "TDC";
+
 void MainWindow::InitializeCommandPageCartSection() {
   ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolReleaseProtocol);
   ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolDevelopProtocol);
 
   ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeCAN);
   ui->CommandPageSetTransTypeComboBox->addItem(kCommandSetTransTypeSerial);
+
+  ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeTDC);
+  ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeAlgorithm);
+  ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeDisabled);
 
   // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
@@ -320,6 +328,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int restore_cnt = 0;
   static int reset_cnt = 0;
   static int save_cnt = 0;
+  static int vdbs_adjust_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -334,6 +343,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto restore_echo = sensor_driver_->restore_factory_echo;
   auto reset_echo = sensor_driver_->soft_reset_echo;
   auto save_echo = sensor_driver_->save_settings_echo;
+  auto vdbs_adjust_echo = sensor_driver_->vdbs_adjust_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -487,6 +497,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     save_cnt = size;
   }
+
+  if (vdbs_adjust_cnt != vdbs_adjust_echo.size()) {
+    auto size = vdbs_adjust_echo.size();
+    vdbs_adjust_echo.erase(vdbs_adjust_echo.begin(), vdbs_adjust_echo.begin() + vdbs_adjust_cnt);
+    for (auto& echo : vdbs_adjust_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Vdbs Adjust Successful");
+      } else {
+        CommandPageDumpEcho("Vdbs Adjust Failed");
+      }
+    }
+    vdbs_adjust_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -507,3 +530,28 @@ void MainWindow::on_CommandPageCheckVersionPushButton_clicked()
   sensor_driver_mutex_.unlock();
 }
 
+
+void MainWindow::on_CommandPageVdbsAdjustPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  tf03_driver::VdbsAdjustType type;
+  if (ui->CommandPageVdbsAdjustComboBox->currentText() ==
+      kCommandVdbsAdjustTypeDisabled) {
+    type = tf03_driver::VdbsAdjustType::disabled;
+  } else if (ui->CommandPageVdbsAdjustComboBox->currentText() ==
+             kCommandVdbsAdjustTypeAlgorithm) {
+    type = tf03_driver::VdbsAdjustType::algorithm;
+  } else if (ui->CommandPageVdbsAdjustComboBox->currentText() ==
+             kCommandVdbsAdjustTypeTDC) {
+    type = tf03_driver::VdbsAdjustType::tdc;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->AdjustVdbs(type);
+  sensor_driver_mutex_.unlock();
+}
