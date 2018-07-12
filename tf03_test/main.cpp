@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QObject>
 #include "command_window.h"
+#include "apd_experiment_main_window.h"
 
 int main(int argc, char* argv[])
 {
@@ -12,5 +13,7 @@ int main(int argc, char* argv[])
   win.show();
 //  CommandWindow cmd_win(&win);
 //  cmd_win.show();
+  APDExperimentMainWindow apd(&win);
+  QObject::connect(&win, SIGNAL(ShowAPDExperimentWindow()), &apd, SLOT(show()));
   return app.exec();
 }

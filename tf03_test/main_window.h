@@ -81,7 +81,13 @@ private slots:
 
   void on_CommandPageVdbsAdjustPushButton_clicked();
 
-private:
+  void on_CommandPageAPDExperimentPushButton_clicked();
+
+  void on_CommandPageAPDAutoPushButton_clicked();
+
+signals:
+  void ShowAPDExperimentWindow();
+public:
   bool SetSensorSerialPort(tf0x_driver::AbstractSerialPort& port);
   static void FillComboBoxWithBaudRate(QComboBox& combo_box);
   static void FillSerialPortComboBox(QComboBox& combo_box);
@@ -118,6 +124,8 @@ private:
 
   void HandleCommandPageEchoUpdate();
   void CommandPageDumpEcho(const QString& msg);
+
+  void HandleAPDExperiment(const std::vector<tf03_driver::Measurement>& measurements);
 
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
@@ -165,6 +173,22 @@ private:
   int cycle_timer_high_;
   int cycle_timer_low_;
   int cycle_timer_;
+
+  bool apd_experiment_on_ = false;
+  std::atomic<float> apd_anticipated_voltage_;
+  float apd_experiment_step_voltage_;
+  float apd_experiment_step_interval_;
+  float apd_voltage_from_;
+  float apd_voltage_to_;
+  QElapsedTimer apd_experiment_timer_;
+  // std::mutex apd_experiment_measurements_mutex_;
+  std::list<tf03_driver::Measurement> apd_experiment_measurements_list_;
+
+  bool IsAPDCrashed();
+  std::atomic_bool apd_experiment_ended_;
+  std::atomic_bool apd_crashed_;
+  std::atomic<float> apd_crashed_voltage_;
+
 };
 
 #endif // MAIN_WINDOW_H

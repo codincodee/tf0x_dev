@@ -329,6 +329,14 @@ bool Driver::DetectAndHandleEcho() {
       vdbs_adjust_echo.push_back({false});
     }
   } break;
+  case 0x4c:
+  {
+    if (buf[3] == 0) {
+      apd_auto_echo.push_back({true});
+    } else {
+      apd_auto_echo.push_back({false});
+    }
+  } break;
   }
   if (len <= 0) {
     return false;
@@ -708,6 +716,20 @@ bool Driver::AdjustVdbs(const VdbsAdjustType &type) {
     return false;
   }
   std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x4b) + std::string(1, (int)type);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::EnableAPDAuto(const bool &enable) {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x4c) + std::string(1, enable ? 0 : 1);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);

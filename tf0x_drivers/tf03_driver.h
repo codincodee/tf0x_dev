@@ -103,6 +103,7 @@ class API Driver: public tf0x_driver::Driver
   bool SetSplineBreaks(const std::vector<int16_t>& array);
   bool SetSplineCoefs(const std::vector<std::vector<int32_t>>& matrix);
   bool AdjustVdbs(const VdbsAdjustType& type);
+  bool EnableAPDAuto(const bool& enable);
   std::vector<SuccessEcho> set_apd_echo;
   std::vector<SuccessEcho> set_vdbs_echo;
   std::vector<SuccessEcho> set_corr_a_echo;
@@ -116,6 +117,7 @@ class API Driver: public tf0x_driver::Driver
   std::vector<SuccessEcho> save_settings_echo;
   std::vector<std::string> check_version_echo;
   std::vector<SuccessEcho> vdbs_adjust_echo;
+  std::vector<SuccessEcho> apd_auto_echo;
  private:
   bool DetectAndHandleEcho();
   bool IsValidEchoBuffer(const std::string& buffer);

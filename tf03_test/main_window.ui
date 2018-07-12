@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.18</string>
+   <string>TF03 Test v1.3.20</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -29,12 +29,6 @@
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <layout class="QGridLayout" name="gridLayout_13">
-            <item row="8" column="0">
-             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
-            </item>
             <item row="7" column="1">
              <widget class="QPushButton" name="CommandPageSetCorrAPushButton">
               <property name="text">
@@ -42,8 +36,11 @@
               </property>
              </widget>
             </item>
-            <item row="7" column="0">
-             <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
+            <item row="8" column="0">
+             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
             </item>
             <item row="8" column="1">
              <widget class="QPushButton" name="CommandPageSetCorrBPushButton">
@@ -52,10 +49,26 @@
               </property>
              </widget>
             </item>
+            <item row="5" column="0">
+             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
+            </item>
             <item row="5" column="1">
              <widget class="QPushButton" name="CommandPageSetAPDPushButton">
               <property name="text">
                <string>APD</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLineEdit" name="CommandPageSetFrequencyLineEdit"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="CommandPageCheckVersionPushButton">
+              <property name="text">
+               <string>Version</string>
               </property>
              </widget>
             </item>
@@ -66,40 +79,13 @@
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLineEdit" name="CommandPageSetFrequencyLineEdit"/>
-            </item>
-            <item row="4" column="1">
-             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
-              <property name="text">
-               <string>Save</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="CommandPageSetFrequencyPushButton">
-              <property name="text">
-               <string>Frequency</string>
-              </property>
-             </widget>
-            </item>
             <item row="10" column="0">
              <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="CommandPageCheckVersionPushButton">
+            <item row="10" column="1">
+             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
               <property name="text">
-               <string>Version</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
-              <property name="text">
-               <string>Restore</string>
+               <string>Trans</string>
               </property>
              </widget>
             </item>
@@ -110,19 +96,32 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="1">
-             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
+            <item row="0" column="1">
+             <widget class="QPushButton" name="CommandPageSetFrequencyPushButton">
               <property name="text">
-               <string>Trans</string>
+               <string>Frequency</string>
               </property>
              </widget>
             </item>
-            <item row="11" column="1">
-             <widget class="QPushButton" name="CommandPageWriteParamPushButton">
+            <item row="3" column="1">
+             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
               <property name="text">
-               <string>Params</string>
+               <string>Restore</string>
               </property>
              </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
+              <property name="text">
+               <string>Save</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
+            </item>
+            <item row="12" column="0">
+             <widget class="QComboBox" name="CommandPageVdbsAdjustComboBox"/>
             </item>
             <item row="6" column="1">
              <widget class="QPushButton" name="CommandPageSetVdbsPushButton">
@@ -134,11 +133,12 @@
             <item row="11" column="0">
              <widget class="QLineEdit" name="CommandPageWriteParamLineEdit"/>
             </item>
-            <item row="9" column="0">
-             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
-            </item>
-            <item row="12" column="0">
-             <widget class="QComboBox" name="CommandPageVdbsAdjustComboBox"/>
+            <item row="11" column="1">
+             <widget class="QPushButton" name="CommandPageWriteParamPushButton">
+              <property name="text">
+               <string>Params</string>
+              </property>
+             </widget>
             </item>
             <item row="12" column="1">
              <widget class="QPushButton" name="CommandPageVdbsAdjustPushButton">
@@ -146,6 +146,23 @@
                <string>Vdbs Adjust</string>
               </property>
              </widget>
+            </item>
+            <item row="13" column="1">
+             <widget class="QPushButton" name="CommandPageAPDExperimentPushButton">
+              <property name="text">
+               <string>APD Experiment</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="1">
+             <widget class="QPushButton" name="CommandPageAPDAutoPushButton">
+              <property name="text">
+               <string>APD Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0">
+             <widget class="QComboBox" name="CommandPageAPDAutoComboBox"/>
             </item>
            </layout>
           </item>

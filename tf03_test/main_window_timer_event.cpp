@@ -145,6 +145,8 @@ void MainWindow::SensorThread() {
       sensor_log_mutex_.unlock();
     }
 
+    HandleAPDExperiment(measurements);
+
     sensor_last_measurement_mutex_.lock();
     sensor_last_measurement_ = *(measurements.end() - 1);
     sensor_last_measurement_mutex_.unlock();

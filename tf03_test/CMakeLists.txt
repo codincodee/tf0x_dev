@@ -16,10 +16,14 @@ add_executable(
     main_window_debug_page.cpp
     main_window_command_cart.cpp
     main_window_cart_page.cpp
+    main_window_apd_experiment.cpp
     command_window.cpp
     command_window.h
     command_window.ui
     main_window.ui
+    apd_experiment_main_window.cpp
+    apd_experiment_main_window.h
+    apd_experiment_main_window.ui
 )
 
 target_link_libraries(

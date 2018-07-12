@@ -20,6 +20,9 @@ const QString kCommandVdbsAdjustTypeDisabled = "Disabled";
 const QString kCommandVdbsAdjustTypeAlgorithm = "Algorithm";
 const QString kCommandVdbsAdjustTypeTDC = "TDC";
 
+const QString kCommandAPDAutoEnable = "Enable";
+const QString kCommandAPDAutoDisable = "Disable";
+
 void MainWindow::InitializeCommandPageCartSection() {
   ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolReleaseProtocol);
   ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolDevelopProtocol);
@@ -31,6 +34,8 @@ void MainWindow::InitializeCommandPageCartSection() {
   ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeAlgorithm);
   ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeDisabled);
 
+  ui->CommandPageAPDAutoComboBox->addItem(kCommandAPDAutoEnable);
+  ui->CommandPageAPDAutoComboBox->addItem(kCommandAPDAutoDisable);
   // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
 
@@ -329,6 +334,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int reset_cnt = 0;
   static int save_cnt = 0;
   static int vdbs_adjust_cnt = 0;
+  static int apd_auto_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -344,6 +350,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto reset_echo = sensor_driver_->soft_reset_echo;
   auto save_echo = sensor_driver_->save_settings_echo;
   auto vdbs_adjust_echo = sensor_driver_->vdbs_adjust_echo;
+  auto apd_auto_echo = sensor_driver_->apd_auto_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -510,6 +517,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     vdbs_adjust_cnt = size;
   }
+
+  if (apd_auto_cnt != apd_auto_echo.size()) {
+    auto size = apd_auto_echo.size();
+    apd_auto_echo.erase(apd_auto_echo.begin(), apd_auto_echo.begin() + apd_auto_cnt);
+    for (auto& echo : apd_auto_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("APD Auto Mode Switched Successful");
+      } else {
+        CommandPageDumpEcho("APD Auto Mode Switched Failed");
+      }
+    }
+    apd_auto_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -554,4 +574,31 @@ void MainWindow::on_CommandPageVdbsAdjustPushButton_clicked()
   sensor_driver_mutex_.lock();
   sensor_driver_->AdjustVdbs(type);
   sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageAPDAutoPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool enable;
+  if (ui->CommandPageAPDAutoComboBox->currentText() ==
+      kCommandAPDAutoEnable) {
+    enable = true;
+  } else if (ui->CommandPageAPDAutoComboBox->currentText() ==
+             kCommandAPDAutoDisable) {
+    enable = false;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->EnableAPDAuto(enable);
+  sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageAPDExperimentPushButton_clicked()
+{
+  emit ShowAPDExperimentWindow();
 }
