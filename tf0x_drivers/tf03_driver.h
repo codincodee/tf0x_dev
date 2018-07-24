@@ -26,7 +26,7 @@ struct Measurement {
   uint16_t dist2;
   uint16_t dist3;
   uint16_t raw_dist1;
-  uint16_t raw_dist2;
+  int16_t raw_dist2;
   uint16_t raw_dist3;
   uint32_t clock_cal;
   unsigned char apd;
