@@ -82,6 +82,9 @@ void APDExperimentMainWindow::on_StartPushButton_clicked()
     main_window_->apd_crashed_ = false;
     main_window_->apd_anticipated_voltage_ = main_window_->apd_voltage_from_;
     main_window_->apd_experiment_measurements_list_.clear();
+    main_window_->apd_voltage_map_.clear();
+    main_window_->apd_experiment_measurements_list_iterator_ = main_window_->apd_experiment_measurements_list_.begin();
+    main_window_->apd_stand_dist_ = -1.0f;
     main_window_->apd_experiment_timer_.restart();
     main_window_->sensor_driver_mutex_.lock();
     main_window_->sensor_driver_->EnableAPDAuto(false);

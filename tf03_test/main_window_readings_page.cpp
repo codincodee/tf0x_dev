@@ -7,6 +7,9 @@
 #include <QTextStream>
 #include <QDebug>
 
+const QString kDistanceSwitchPushButtonRawDist = "Plot RawDist";
+const QString kDistanceSwitchPushButtonCorrDist = "Plot CorrDist";
+
 void MainWindow::InitializeReadingsPage() {
   main_chart_ = new tf0x_common::DistanceOverTimeChart();
   main_chart_->SetCeiling(150.0f);
@@ -14,6 +17,8 @@ void MainWindow::InitializeReadingsPage() {
   main_chart_view_ = new QtCharts::QChartView(main_chart_);
   ui->MainChartVerticalLayout->addWidget(main_chart_view_);
   numeric_display_timer_.start();
+  ui->ReadingsPageDistanceSwtichPushButton->setText(kDistanceSwitchPushButtonRawDist);
+  readings_page_rawdist_display_ = false;
 }
 
 //void MainWindow::HandleIncomingMeasurement(
@@ -125,7 +130,13 @@ void MainWindow::HandleSensorTimerEvent() {
   sensor_last_measurement_mutex_.lock();
   auto measurement = sensor_last_measurement_;
   sensor_last_measurement_mutex_.unlock();
-  main_chart_->AddPoint(measurement.dist1 / 100.0f, measurement.ts);
+  float display_dist;
+  if (readings_page_rawdist_display_) {
+    display_dist = measurement.raw_dist1;
+  } else {
+    display_dist = measurement.dist1;
+  }
+  main_chart_->AddPoint(display_dist / 100.0f, measurement.ts);
 
   if (numeric_display_timer_.elapsed() > 100) {
     ui->ReadingsPageDistLabel->setText(
@@ -161,5 +172,17 @@ void MainWindow::HandleSensorTimerEvent() {
     numeric_display_timer_.restart();
     ui->ReadingsPageFrequencyLabel->setText(
         QString::number(sensor_frequency_.load(), 'f', 2));
+  }
+}
+
+void MainWindow::on_ReadingsPageDistanceSwtichPushButton_clicked()
+{
+  auto button = ui->ReadingsPageDistanceSwtichPushButton;
+  if (button->text() == kDistanceSwitchPushButtonRawDist) {
+    button->setText(kDistanceSwitchPushButtonCorrDist);
+    readings_page_rawdist_display_ = true;
+  } else {
+    button->setText(kDistanceSwitchPushButtonRawDist);
+    readings_page_rawdist_display_ = false;
   }
 }

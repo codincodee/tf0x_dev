@@ -85,6 +85,8 @@ private slots:
 
   void on_CommandPageAPDAutoPushButton_clicked();
 
+  void on_ReadingsPageDistanceSwtichPushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:
@@ -183,12 +185,15 @@ public:
   QElapsedTimer apd_experiment_timer_;
   // std::mutex apd_experiment_measurements_mutex_;
   std::list<tf03_driver::Measurement> apd_experiment_measurements_list_;
-
-  bool IsAPDCrashed();
+  std::list<tf03_driver::Measurement>::iterator apd_experiment_measurements_list_iterator_;
+  std::map<int, std::shared_ptr<std::list<tf03_driver::Measurement>>> apd_voltage_map_;
+  float apd_stand_dist_;
+  bool IsAPDCrashed(const std::list<tf03_driver::Measurement>& list);
   std::atomic_bool apd_experiment_ended_;
   std::atomic_bool apd_crashed_;
   std::atomic<float> apd_crashed_voltage_;
 
+  bool readings_page_rawdist_display_;
 };
 
 #endif // MAIN_WINDOW_H
