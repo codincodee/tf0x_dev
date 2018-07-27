@@ -345,6 +345,14 @@ bool Driver::DetectAndHandleEcho() {
       apd_closed_loop_echo.push_back({false});
     }
   } break;
+  case 0x4e:
+  {
+    if (buf[3] == 0) {
+      auto_gain_echo.push_back({true});
+    } else {
+      auto_gain_echo.push_back({false});
+    }
+  } break;
   }
   if (len <= 0) {
     return false;
@@ -760,6 +768,21 @@ bool Driver::EnableAPDClosedLoop(const bool &enable) {
   }
   return true;
 }
+
+bool Driver::EnableAutoGain(const bool &enable) {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer = Head() + std::string(1, 5) + std::string(1, 0x4e) + std::string(1, enable ? 0 : 1);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
 
 bool Driver::SetSplineBreaks(const std::vector<int16_t> &array) {
   if (!serial_port_) {

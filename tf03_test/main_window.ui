@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
+    <width>1243</width>
     <height>601</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.24</string>
+   <string>TF03 Test v1.3.25</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -29,8 +29,82 @@
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <layout class="QGridLayout" name="gridLayout_13">
+            <item row="17" column="0">
+             <widget class="QComboBox" name="CommandPageAutoGainComboBox"/>
+            </item>
+            <item row="10" column="0">
+             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
+              <property name="text">
+               <string>Restore</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="0">
+             <widget class="QComboBox" name="CommandPageAPDAutoComboBox"/>
+            </item>
+            <item row="4" column="1">
+             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
+              <property name="text">
+               <string>Save</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="1">
+             <widget class="QPushButton" name="CommandPageAPDAutoPushButton">
+              <property name="text">
+               <string>APD Auto</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLineEdit" name="CommandPageWriteParamLineEdit"/>
+            </item>
+            <item row="14" column="1">
+             <widget class="QPushButton" name="CommandPageAPDExperimentPushButton">
+              <property name="text">
+               <string>APD Experiment</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QPushButton" name="CommandPageWriteParamPushButton">
+              <property name="text">
+               <string>Params</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="1">
+             <widget class="QPushButton" name="CommandPageVdbsAdjustPushButton">
+              <property name="text">
+               <string>Vdbs Adjust</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="1">
+             <widget class="QPushButton" name="CommandPageAPDClosedLoopPushButton">
+              <property name="text">
+               <string>APD ClosedLoop</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="0">
+             <widget class="QComboBox" name="CommandPageAPDClosedLoopComboBox"/>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
+            </item>
             <item row="8" column="0">
              <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
+            </item>
+            <item row="5" column="1">
+             <widget class="QPushButton" name="CommandPageSetAPDPushButton">
+              <property name="text">
+               <string>APD</string>
+              </property>
+             </widget>
             </item>
             <item row="7" column="1">
              <widget class="QPushButton" name="CommandPageSetCorrAPushButton">
@@ -42,25 +116,18 @@
             <item row="6" column="0">
              <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
             </item>
-            <item row="5" column="1">
-             <widget class="QPushButton" name="CommandPageSetAPDPushButton">
-              <property name="text">
-               <string>APD</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="0">
              <widget class="QLineEdit" name="CommandPageSetFrequencyLineEdit"/>
             </item>
-            <item row="5" column="0">
-             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
-            </item>
-            <item row="8" column="1">
-             <widget class="QPushButton" name="CommandPageSetCorrBPushButton">
+            <item row="10" column="1">
+             <widget class="QPushButton" name="CommandPageSetProtocolPushButton">
               <property name="text">
-               <string>CorrB</string>
+               <string>Protocol</string>
               </property>
              </widget>
+            </item>
+            <item row="11" column="0">
+             <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
             </item>
             <item row="7" column="0">
              <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
@@ -72,37 +139,27 @@
               </property>
              </widget>
             </item>
-            <item row="10" column="0">
-             <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
-            </item>
-            <item row="9" column="1">
-             <widget class="QPushButton" name="CommandPageSetProtocolPushButton">
+            <item row="8" column="1">
+             <widget class="QPushButton" name="CommandPageSetCorrBPushButton">
               <property name="text">
-               <string>Protocol</string>
+               <string>CorrB</string>
               </property>
              </widget>
-            </item>
-            <item row="10" column="1">
-             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
-              <property name="text">
-               <string>Trans</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="CommandPageCheckVersionPushButton">
-              <property name="text">
-               <string>Version</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="0">
-             <widget class="QComboBox" name="CommandPageVdbsAdjustComboBox"/>
             </item>
             <item row="6" column="1">
              <widget class="QPushButton" name="CommandPageSetVdbsPushButton">
               <property name="text">
                <string>Vdbs</string>
+              </property>
+             </widget>
+            </item>
+            <item row="13" column="0">
+             <widget class="QComboBox" name="CommandPageVdbsAdjustComboBox"/>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="CommandPageCheckVersionPushButton">
+              <property name="text">
+               <string>Version</string>
               </property>
              </widget>
             </item>
@@ -113,64 +170,17 @@
               </property>
              </widget>
             </item>
-            <item row="9" column="0">
-             <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
-            </item>
-            <item row="3" column="1">
-             <widget class="QPushButton" name="CommandPageRestoreFactoryPushButton">
-              <property name="text">
-               <string>Restore</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
-              <property name="text">
-               <string>Save</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="1">
-             <widget class="QPushButton" name="CommandPageAPDAutoPushButton">
-              <property name="text">
-               <string>APD Auto</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="0">
-             <widget class="QComboBox" name="CommandPageAPDAutoComboBox"/>
-            </item>
-            <item row="11" column="0">
-             <widget class="QLineEdit" name="CommandPageWriteParamLineEdit"/>
-            </item>
             <item row="11" column="1">
-             <widget class="QPushButton" name="CommandPageWriteParamPushButton">
+             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
               <property name="text">
-               <string>Params</string>
+               <string>Trans</string>
               </property>
              </widget>
             </item>
-            <item row="13" column="1">
-             <widget class="QPushButton" name="CommandPageAPDExperimentPushButton">
+            <item row="17" column="1">
+             <widget class="QPushButton" name="CommandPageAutoGainPushButton">
               <property name="text">
-               <string>APD Experiment</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="1">
-             <widget class="QPushButton" name="CommandPageVdbsAdjustPushButton">
-              <property name="text">
-               <string>Vdbs Adjust</string>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0">
-             <widget class="QComboBox" name="CommandPageAPDClosedLoopComboBox"/>
-            </item>
-            <item row="15" column="1">
-             <widget class="QPushButton" name="CommandPageAPDClosedLoopPushButton">
-              <property name="text">
-               <string>APD ClosedLoop</string>
+               <string>Auto Gain</string>
               </property>
              </widget>
             </item>
@@ -1910,7 +1920,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1100</width>
+     <width>1243</width>
      <height>17</height>
     </rect>
    </property>

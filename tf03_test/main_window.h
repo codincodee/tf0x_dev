@@ -89,6 +89,8 @@ private slots:
 
   void on_CommandPageAPDClosedLoopPushButton_clicked();
 
+  void on_CommandPageAutoGainPushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:

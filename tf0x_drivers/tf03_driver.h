@@ -105,6 +105,7 @@ class API Driver: public tf0x_driver::Driver
   bool AdjustVdbs(const VdbsAdjustType& type);
   bool EnableAPDAuto(const bool& enable);
   bool EnableAPDClosedLoop(const bool& enable);
+  bool EnableAutoGain(const bool& enable);
   std::vector<SuccessEcho> set_apd_echo;
   std::vector<SuccessEcho> set_vdbs_echo;
   std::vector<SuccessEcho> set_corr_a_echo;
@@ -120,6 +121,7 @@ class API Driver: public tf0x_driver::Driver
   std::vector<SuccessEcho> vdbs_adjust_echo;
   std::vector<SuccessEcho> apd_auto_echo;
   std::vector<SuccessEcho> apd_closed_loop_echo;
+  std::vector<SuccessEcho> auto_gain_echo;
  private:
   bool DetectAndHandleEcho();
   bool IsValidEchoBuffer(const std::string& buffer);

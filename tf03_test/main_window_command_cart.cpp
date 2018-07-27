@@ -39,6 +39,9 @@ void MainWindow::InitializeCommandPageCartSection() {
 
   ui->CommandPageAPDClosedLoopComboBox->addItem(kCommandCommonSwitchEnable);
   ui->CommandPageAPDClosedLoopComboBox->addItem(kCommandCommonSwitchDisable);
+
+  ui->CommandPageAutoGainComboBox->addItem(kCommandCommonSwitchEnable);
+  ui->CommandPageAutoGainComboBox->addItem(kCommandCommonSwitchDisable);
   // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
 
@@ -339,6 +342,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int vdbs_adjust_cnt = 0;
   static int apd_auto_cnt = 0;
   static int apd_closed_loop_cnt = 0;
+  static int auto_gain_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -356,6 +360,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto vdbs_adjust_echo = sensor_driver_->vdbs_adjust_echo;
   auto apd_auto_echo = sensor_driver_->apd_auto_echo;
   auto apd_closed_loop_echo = sensor_driver_->apd_closed_loop_echo;
+  auto auto_gain_echo = sensor_driver_->auto_gain_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -548,6 +553,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     apd_closed_loop_cnt = size;
   }
+
+  if (auto_gain_cnt != auto_gain_echo.size()) {
+    auto size = auto_gain_echo.size();
+    auto_gain_echo.erase(auto_gain_echo.begin(), auto_gain_echo.begin() + auto_gain_cnt);
+    for (auto& echo : auto_gain_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Auto Gain Mode Switched Successful");
+      } else {
+        CommandPageDumpEcho("Auto Gain Mode Switched Failed");
+      }
+    }
+    auto_gain_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -640,5 +658,27 @@ void MainWindow::on_CommandPageAPDClosedLoopPushButton_clicked()
 
   sensor_driver_mutex_.lock();
   sensor_driver_->EnableAPDClosedLoop(enable);
+  sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageAutoGainPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool enable;
+  if (ui->CommandPageAutoGainComboBox->currentText() ==
+      kCommandCommonSwitchEnable) {
+    enable = true;
+  } else if (ui->CommandPageAutoGainComboBox->currentText() ==
+             kCommandCommonSwitchDisable) {
+    enable = false;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->EnableAutoGain(enable);
   sensor_driver_mutex_.unlock();
 }
