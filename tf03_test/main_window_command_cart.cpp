@@ -20,8 +20,8 @@ const QString kCommandVdbsAdjustTypeDisabled = "Disabled";
 const QString kCommandVdbsAdjustTypeAlgorithm = "Algorithm";
 const QString kCommandVdbsAdjustTypeTDC = "TDC";
 
-const QString kCommandAPDAutoEnable = "Enable";
-const QString kCommandAPDAutoDisable = "Disable";
+const QString kCommandCommonSwitchEnable = "Enable";
+const QString kCommandCommonSwitchDisable = "Disable";
 
 void MainWindow::InitializeCommandPageCartSection() {
   ui->CommandPageSetProtocolComboBox->addItem(kCommandSetProtocolReleaseProtocol);
@@ -34,8 +34,11 @@ void MainWindow::InitializeCommandPageCartSection() {
   ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeAlgorithm);
   ui->CommandPageVdbsAdjustComboBox->addItem(kCommandVdbsAdjustTypeDisabled);
 
-  ui->CommandPageAPDAutoComboBox->addItem(kCommandAPDAutoEnable);
-  ui->CommandPageAPDAutoComboBox->addItem(kCommandAPDAutoDisable);
+  ui->CommandPageAPDAutoComboBox->addItem(kCommandCommonSwitchEnable);
+  ui->CommandPageAPDAutoComboBox->addItem(kCommandCommonSwitchDisable);
+
+  ui->CommandPageAPDClosedLoopComboBox->addItem(kCommandCommonSwitchEnable);
+  ui->CommandPageAPDClosedLoopComboBox->addItem(kCommandCommonSwitchDisable);
   // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
 
@@ -219,9 +222,9 @@ void MainWindow::on_CommandPageSetTransTypePushButton_clicked()
 
 void MainWindow::on_CommandPageWriteParamPushButton_clicked()
 {
-  constexpr int kSplineBreaksNum = 9;
+  constexpr int kSplineBreaksNum = 7;
   constexpr int kSplineCoefsRow = 4;
-  constexpr int kSplineCoefsColum = 8;
+  constexpr int kSplineCoefsColum = 6;
 
   QString file;
   auto line_edit = ui->CommandPageWriteParamLineEdit;
@@ -335,6 +338,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int save_cnt = 0;
   static int vdbs_adjust_cnt = 0;
   static int apd_auto_cnt = 0;
+  static int apd_closed_loop_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -351,6 +355,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto save_echo = sensor_driver_->save_settings_echo;
   auto vdbs_adjust_echo = sensor_driver_->vdbs_adjust_echo;
   auto apd_auto_echo = sensor_driver_->apd_auto_echo;
+  auto apd_closed_loop_echo = sensor_driver_->apd_closed_loop_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -530,6 +535,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     apd_auto_cnt = size;
   }
+
+  if (apd_closed_loop_cnt != apd_closed_loop_echo.size()) {
+    auto size = apd_closed_loop_echo.size();
+    apd_closed_loop_echo.erase(apd_closed_loop_echo.begin(), apd_closed_loop_echo.begin() + apd_closed_loop_cnt);
+    for (auto& echo : apd_closed_loop_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("APD Closed-Loop Mode Switched Successful");
+      } else {
+        CommandPageDumpEcho("APD Closed-Loop Mode Switched Failed");
+      }
+    }
+    apd_closed_loop_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -583,10 +601,10 @@ void MainWindow::on_CommandPageAPDAutoPushButton_clicked()
   }
   bool enable;
   if (ui->CommandPageAPDAutoComboBox->currentText() ==
-      kCommandAPDAutoEnable) {
+      kCommandCommonSwitchEnable) {
     enable = true;
   } else if (ui->CommandPageAPDAutoComboBox->currentText() ==
-             kCommandAPDAutoDisable) {
+             kCommandCommonSwitchDisable) {
     enable = false;
   } else {
     QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
@@ -601,4 +619,26 @@ void MainWindow::on_CommandPageAPDAutoPushButton_clicked()
 void MainWindow::on_CommandPageAPDExperimentPushButton_clicked()
 {
   emit ShowAPDExperimentWindow();
+}
+
+void MainWindow::on_CommandPageAPDClosedLoopPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool enable;
+  if (ui->CommandPageAPDClosedLoopComboBox->currentText() ==
+      kCommandCommonSwitchEnable) {
+    enable = true;
+  } else if (ui->CommandPageAPDClosedLoopComboBox->currentText() ==
+             kCommandCommonSwitchDisable) {
+    enable = false;
+  } else {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+
+  sensor_driver_mutex_.lock();
+  sensor_driver_->EnableAPDClosedLoop(enable);
+  sensor_driver_mutex_.unlock();
 }

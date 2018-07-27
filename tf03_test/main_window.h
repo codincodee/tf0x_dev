@@ -87,6 +87,8 @@ private slots:
 
   void on_ReadingsPageDistanceSwtichPushButton_clicked();
 
+  void on_CommandPageAPDClosedLoopPushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:
@@ -194,6 +196,11 @@ public:
   std::atomic<float> apd_crashed_voltage_;
 
   bool readings_page_rawdist_display_;
+
+  int RobustAverageDist(std::shared_ptr<std::list<tf03_driver::Measurement>> dists);
+  int RobustSTD(std::shared_ptr<std::list<tf03_driver::Measurement>> dists, const int& std_dist);
+  const int kMaxToIgnore = 2;
+  const int kMinToIngore = 2;
 };
 
 #endif // MAIN_WINDOW_H
