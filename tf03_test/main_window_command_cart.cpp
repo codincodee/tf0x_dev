@@ -225,9 +225,9 @@ void MainWindow::on_CommandPageSetTransTypePushButton_clicked()
 
 void MainWindow::on_CommandPageWriteParamPushButton_clicked()
 {
-  constexpr int kSplineBreaksNum = 7;
+  constexpr int kSplineBreaksNum = 8;
   constexpr int kSplineCoefsRow = 4;
-  constexpr int kSplineCoefsColum = 6;
+  constexpr int kSplineCoefsColum = 7;
 
   QString file;
   auto line_edit = ui->CommandPageWriteParamLineEdit;
