@@ -361,6 +361,14 @@ bool Driver::DetectAndHandleEcho() {
       tdc_outrange_value_echo.push_back({false});
     }
   } break;
+  case 0x50:
+  {
+    if (buf[3] == 0) {
+      can_send_id_echo.push_back({true});
+    } else {
+      can_send_id_echo.push_back({false});
+    }
+  } break;
   }
   if (len <= 0) {
     return false;
@@ -669,6 +677,22 @@ bool Driver::SetTDCOutRangeValue(const uint16_t &value) {
   char vc[2];
   memcpy(vc, &value, 2);
   std::string buffer = Head() + std::string(1, 6) + std::string(1, 0x4F) + std::string(1, vc[0]) + std::string(1, vc[1]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetCANSendID(const int32_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc[4];
+  memcpy(vc, &value, 4);
+  std::string buffer = Head() + std::string(1, 8) + std::string(1, 0x50) + std::string(1, vc[0]) + std::string(1, vc[1]) + std::string(1, vc[2]) + std::string(1, vc[3]);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);

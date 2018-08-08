@@ -91,6 +91,10 @@ private slots:
 
   void on_CommandPageAutoGainPushButton_clicked();
 
+  void on_CommandPageTDCOutRangeValuePushButton_clicked();
+
+  void on_CommandPageCANSendIDPushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:

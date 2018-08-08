@@ -29,8 +29,26 @@
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <layout class="QGridLayout" name="gridLayout_13">
-            <item row="17" column="0">
-             <widget class="QComboBox" name="CommandPageAutoGainComboBox"/>
+            <item row="17" column="1">
+             <widget class="QPushButton" name="CommandPageAutoGainPushButton">
+              <property name="text">
+               <string>Auto Gain</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="CommandPageSetFrequencyPushButton">
+              <property name="text">
+               <string>Frequency</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="1">
+             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
+              <property name="text">
+               <string>Trans</string>
+              </property>
+             </widget>
             </item>
             <item row="10" column="0">
              <widget class="QComboBox" name="CommandPageSetProtocolComboBox"/>
@@ -42,15 +60,21 @@
               </property>
              </widget>
             </item>
-            <item row="15" column="0">
-             <widget class="QComboBox" name="CommandPageAPDAutoComboBox"/>
+            <item row="17" column="0">
+             <widget class="QComboBox" name="CommandPageAutoGainComboBox"/>
             </item>
-            <item row="4" column="1">
-             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
+            <item row="14" column="1">
+             <widget class="QPushButton" name="CommandPageAPDExperimentPushButton">
               <property name="text">
-               <string>Save</string>
+               <string>APD Experiment</string>
               </property>
              </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLineEdit" name="CommandPageWriteParamLineEdit"/>
+            </item>
+            <item row="15" column="0">
+             <widget class="QComboBox" name="CommandPageAPDAutoComboBox"/>
             </item>
             <item row="15" column="1">
              <widget class="QPushButton" name="CommandPageAPDAutoPushButton">
@@ -59,13 +83,30 @@
               </property>
              </widget>
             </item>
-            <item row="12" column="0">
-             <widget class="QLineEdit" name="CommandPageWriteParamLineEdit"/>
-            </item>
-            <item row="14" column="1">
-             <widget class="QPushButton" name="CommandPageAPDExperimentPushButton">
+            <item row="4" column="1">
+             <widget class="QPushButton" name="CommandPageSaveSettingsPushButton">
               <property name="text">
-               <string>APD Experiment</string>
+               <string>Save</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
+            </item>
+            <item row="13" column="1">
+             <widget class="QPushButton" name="CommandPageVdbsAdjustPushButton">
+              <property name="text">
+               <string>Vdbs Adjust</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
+            </item>
+            <item row="16" column="1">
+             <widget class="QPushButton" name="CommandPageAPDClosedLoopPushButton">
+              <property name="text">
+               <string>APD ClosedLoop</string>
               </property>
              </widget>
             </item>
@@ -76,48 +117,8 @@
               </property>
              </widget>
             </item>
-            <item row="13" column="1">
-             <widget class="QPushButton" name="CommandPageVdbsAdjustPushButton">
-              <property name="text">
-               <string>Vdbs Adjust</string>
-              </property>
-             </widget>
-            </item>
-            <item row="16" column="1">
-             <widget class="QPushButton" name="CommandPageAPDClosedLoopPushButton">
-              <property name="text">
-               <string>APD ClosedLoop</string>
-              </property>
-             </widget>
-            </item>
             <item row="16" column="0">
              <widget class="QComboBox" name="CommandPageAPDClosedLoopComboBox"/>
-            </item>
-            <item row="5" column="0">
-             <widget class="QLineEdit" name="CommandPageSetAPDLineEdit"/>
-            </item>
-            <item row="8" column="0">
-             <widget class="QLineEdit" name="CommandPageSetCorrBLineEdit"/>
-            </item>
-            <item row="5" column="1">
-             <widget class="QPushButton" name="CommandPageSetAPDPushButton">
-              <property name="text">
-               <string>APD</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QPushButton" name="CommandPageSetCorrAPushButton">
-              <property name="text">
-               <string>CorrA</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLineEdit" name="CommandPageSetFrequencyLineEdit"/>
             </item>
             <item row="10" column="1">
              <widget class="QPushButton" name="CommandPageSetProtocolPushButton">
@@ -126,8 +127,28 @@
               </property>
              </widget>
             </item>
+            <item row="5" column="1">
+             <widget class="QPushButton" name="CommandPageSetAPDPushButton">
+              <property name="text">
+               <string>APD</string>
+              </property>
+             </widget>
+            </item>
             <item row="11" column="0">
              <widget class="QComboBox" name="CommandPageSetTransTypeComboBox"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLineEdit" name="CommandPageSetFrequencyLineEdit"/>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLineEdit" name="CommandPageSetVdbsLineEdit"/>
+            </item>
+            <item row="7" column="1">
+             <widget class="QPushButton" name="CommandPageSetCorrAPushButton">
+              <property name="text">
+               <string>CorrA</string>
+              </property>
+             </widget>
             </item>
             <item row="7" column="0">
              <widget class="QLineEdit" name="CommandPageSetCorrALineEdit"/>
@@ -163,24 +184,23 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="CommandPageSetFrequencyPushButton">
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="CommandPageTDCOutRangeValueLineEdit"/>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="CommandPageTDCOutRangeValuePushButton">
               <property name="text">
-               <string>Frequency</string>
+               <string>TDC Out-range Value</string>
               </property>
              </widget>
             </item>
-            <item row="11" column="1">
-             <widget class="QPushButton" name="CommandPageSetTransTypePushButton">
-              <property name="text">
-               <string>Trans</string>
-              </property>
-             </widget>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="CommandPageCANSendIDLineEdit"/>
             </item>
-            <item row="17" column="1">
-             <widget class="QPushButton" name="CommandPageAutoGainPushButton">
+            <item row="1" column="3">
+             <widget class="QPushButton" name="CommandPageCANSendIDPushButton">
               <property name="text">
-               <string>Auto Gain</string>
+               <string>PushButton</string>
               </property>
              </widget>
             </item>

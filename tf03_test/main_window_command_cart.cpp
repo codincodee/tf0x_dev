@@ -344,6 +344,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int apd_closed_loop_cnt = 0;
   static int auto_gain_cnt = 0;
   static int tdc_outrange_value_cnt = 0;
+  static int can_send_id_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -363,6 +364,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto apd_closed_loop_echo = sensor_driver_->apd_closed_loop_echo;
   auto auto_gain_echo = sensor_driver_->auto_gain_echo;
   auto tdc_outrange_value_echo = sensor_driver_->tdc_outrange_value_echo;
+  auto can_send_id_echo = sensor_driver_->can_send_id_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -581,6 +583,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     tdc_outrange_value_cnt = size;
   }
+
+  if (can_send_id_cnt != can_send_id_echo.size()) {
+    auto size = can_send_id_echo.size();
+    can_send_id_echo.erase(can_send_id_echo.begin(), can_send_id_echo.begin() + can_send_id_cnt);
+    for (auto& echo : can_send_id_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("CAN Send ID Set Successful");
+      } else {
+        CommandPageDumpEcho("CAN Send ID Set Failed");
+      }
+    }
+    can_send_id_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -711,6 +726,23 @@ void MainWindow::on_CommandPageTDCOutRangeValuePushButton_clicked()
   }
   sensor_driver_mutex_.lock();
   sensor_driver_->SetTDCOutRangeValue(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}
+
+void MainWindow::on_CommandPageCANSendIDPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  int value = ui->CommandPageCANSendIDLineEdit->text().toInt(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetCANSendID(value);
   sensor_driver_mutex_.unlock();
   return;
 }
