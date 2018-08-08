@@ -345,6 +345,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int auto_gain_cnt = 0;
   static int tdc_outrange_value_cnt = 0;
   static int can_send_id_cnt = 0;
+  static int can_receive_id_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -365,6 +366,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto auto_gain_echo = sensor_driver_->auto_gain_echo;
   auto tdc_outrange_value_echo = sensor_driver_->tdc_outrange_value_echo;
   auto can_send_id_echo = sensor_driver_->can_send_id_echo;
+  auto can_receive_id_echo = sensor_driver_->can_receive_id_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -596,6 +598,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     can_send_id_cnt = size;
   }
+
+  if (can_receive_id_cnt != can_receive_id_echo.size()) {
+    auto size = can_receive_id_echo.size();
+    can_receive_id_echo.erase(can_receive_id_echo.begin(), can_receive_id_echo.begin() + can_receive_id_cnt);
+    for (auto& echo : can_receive_id_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("CAN Receive ID Set Successful");
+      } else {
+        CommandPageDumpEcho("CAN Receive ID Set Failed");
+      }
+    }
+    can_receive_id_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -746,3 +761,21 @@ void MainWindow::on_CommandPageCANSendIDPushButton_clicked()
   sensor_driver_mutex_.unlock();
   return;
 }
+
+void MainWindow::on_CommandPageCANReceiveIDPushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  int value = ui->CommandPageCANReceiveIDLineEdit->text().toInt(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetCANReceiveID(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}
+

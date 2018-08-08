@@ -95,6 +95,8 @@ private slots:
 
   void on_CommandPageCANSendIDPushButton_clicked();
 
+  void on_CommandPageCANReceiveIDPushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:
