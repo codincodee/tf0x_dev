@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.26</string>
+   <string>TF03 Test v1.3.27</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -211,6 +211,16 @@
              <widget class="QPushButton" name="CommandPageCANReceiveIDPushButton">
               <property name="text">
                <string>CAN Receive ID</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QComboBox" name="CommandPageCANBaudRateComboBox"/>
+            </item>
+            <item row="3" column="3">
+             <widget class="QPushButton" name="CommandPageCANBaudRatePushButton">
+              <property name="text">
+               <string>CAN Baud Rate</string>
               </property>
              </widget>
             </item>

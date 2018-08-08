@@ -97,6 +97,8 @@ private slots:
 
   void on_CommandPageCANReceiveIDPushButton_clicked();
 
+  void on_CommandPageCANBaudRatePushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:

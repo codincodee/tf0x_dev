@@ -42,6 +42,11 @@ void MainWindow::InitializeCommandPageCartSection() {
 
   ui->CommandPageAutoGainComboBox->addItem(kCommandCommonSwitchEnable);
   ui->CommandPageAutoGainComboBox->addItem(kCommandCommonSwitchDisable);
+
+  ui->CommandPageCANBaudRateComboBox->addItem("1000000");
+  ui->CommandPageCANBaudRateComboBox->addItem("500000");
+  ui->CommandPageCANBaudRateComboBox->addItem("250000");
+  ui->CommandPageCANBaudRateComboBox->addItem("125000");
   // ui->CommandPageWriteParamLineEdit->setReadOnly(true);
 }
 
@@ -346,6 +351,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int tdc_outrange_value_cnt = 0;
   static int can_send_id_cnt = 0;
   static int can_receive_id_cnt = 0;
+  static int can_baud_rate_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -367,6 +373,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto tdc_outrange_value_echo = sensor_driver_->tdc_outrange_value_echo;
   auto can_send_id_echo = sensor_driver_->can_send_id_echo;
   auto can_receive_id_echo = sensor_driver_->can_receive_id_echo;
+  auto can_baud_rate_echo = sensor_driver_->can_baud_rate_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -611,6 +618,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     can_receive_id_cnt = size;
   }
+
+  if (can_baud_rate_cnt != can_baud_rate_echo.size()) {
+    auto size = can_baud_rate_echo.size();
+    can_baud_rate_echo.erase(can_baud_rate_echo.begin(), can_baud_rate_echo.begin() + can_baud_rate_cnt);
+    for (auto& echo : can_baud_rate_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("CAN Baud Rate Set Successful");
+      } else {
+        CommandPageDumpEcho("CAN Baud Rate Set Failed");
+      }
+    }
+    can_baud_rate_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -779,3 +799,19 @@ void MainWindow::on_CommandPageCANReceiveIDPushButton_clicked()
   return;
 }
 
+void MainWindow::on_CommandPageCANBaudRatePushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  int value = ui->CommandPageCANBaudRateComboBox->currentText().toInt(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetCANBaudRate(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}

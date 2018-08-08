@@ -109,6 +109,7 @@ class API Driver: public tf0x_driver::Driver
   bool SetTDCOutRangeValue(const uint16_t& value);
   bool SetCANSendID(const int32_t& value);
   bool SetCANReceiveID(const int32_t& value);
+  bool SetCANBaudRate(const int32_t& value);
   std::vector<SuccessEcho> set_apd_echo;
   std::vector<SuccessEcho> set_vdbs_echo;
   std::vector<SuccessEcho> set_corr_a_echo;
@@ -128,6 +129,7 @@ class API Driver: public tf0x_driver::Driver
   std::vector<SuccessEcho> tdc_outrange_value_echo;
   std::vector<SuccessEcho> can_send_id_echo;
   std::vector<SuccessEcho> can_receive_id_echo;
+  std::vector<SuccessEcho> can_baud_rate_echo;
  private:
   bool DetectAndHandleEcho();
   bool IsValidEchoBuffer(const std::string& buffer);

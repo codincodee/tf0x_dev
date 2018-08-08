@@ -377,6 +377,14 @@ bool Driver::DetectAndHandleEcho() {
       can_receive_id_echo.push_back({false});
     }
   } break;
+  case 0x52:
+  {
+    if (buf[3] == 0) {
+      can_baud_rate_echo.push_back({true});
+    } else {
+      can_baud_rate_echo.push_back({false});
+    }
+  } break;
   }
   if (len <= 0) {
     return false;
@@ -717,6 +725,22 @@ bool Driver::SetCANReceiveID(const int32_t &value) {
   char vc[4];
   memcpy(vc, &value, 4);
   std::string buffer = Head() + std::string(1, 8) + std::string(1, 0x51) + std::string(1, vc[0]) + std::string(1, vc[1]) + std::string(1, vc[2]) + std::string(1, vc[3]);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::SetCANBaudRate(const int32_t &value) {
+  if (!serial_port_) {
+    return false;
+  }
+  char vc[4];
+  memcpy(vc, &value, 4);
+  std::string buffer = Head() + std::string(1, 8) + std::string(1, 0x52) + std::string(1, vc[0]) + std::string(1, vc[1]) + std::string(1, vc[2]) + std::string(1, vc[3]);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
