@@ -343,6 +343,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int apd_auto_cnt = 0;
   static int apd_closed_loop_cnt = 0;
   static int auto_gain_cnt = 0;
+  static int tdc_outrange_value_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -361,6 +362,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto apd_auto_echo = sensor_driver_->apd_auto_echo;
   auto apd_closed_loop_echo = sensor_driver_->apd_closed_loop_echo;
   auto auto_gain_echo = sensor_driver_->auto_gain_echo;
+  auto tdc_outrange_value_echo = sensor_driver_->tdc_outrange_value_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -566,6 +568,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     auto_gain_cnt = size;
   }
+
+  if (tdc_outrange_value_cnt != tdc_outrange_value_echo.size()) {
+    auto size = tdc_outrange_value_echo.size();
+    tdc_outrange_value_echo.erase(tdc_outrange_value_echo.begin(), tdc_outrange_value_echo.begin() + tdc_outrange_value_cnt);
+    for (auto& echo : tdc_outrange_value_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("TDC Out-range Value Set Successful");
+      } else {
+        CommandPageDumpEcho("TDC Out-range Value Set Failed");
+      }
+    }
+    tdc_outrange_value_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -681,4 +696,21 @@ void MainWindow::on_CommandPageAutoGainPushButton_clicked()
   sensor_driver_mutex_.lock();
   sensor_driver_->EnableAutoGain(enable);
   sensor_driver_mutex_.unlock();
+}
+
+void MainWindow::on_CommandPageTDCOutRangeValuePushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  bool ok;
+  unsigned short value = ui->CommandPageTDCOutRangeValueLineEdit->text().toUShort(&ok);
+  if (!ok) {
+    QMessageBox::warning(this, "Abort", "Please enter a valid parameter.", QMessageBox::Ok);
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->SetTDCOutRangeValue(value);
+  sensor_driver_mutex_.unlock();
+  return;
 }
