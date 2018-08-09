@@ -38,6 +38,7 @@ add_subdirectory(tf0x_drivers)
 add_subdirectory(tf0x_common)
 add_subdirectory(tf02_traffic)
 add_subdirectory(tf03_test)
+add_subdirectory(tf03_traffic)
 
 # The interesting stuff goes here
 # ===============================
@@ -49,6 +50,7 @@ export(
     tf02_traffic
     tf0x_common
     tf03_test
+    tf03_traffic
   FILE
     "${PROJECT_BINARY_DIR}/tf0x_devTargets.cmake"
 )
