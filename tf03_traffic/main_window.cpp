@@ -114,24 +114,6 @@ void MainWindow::on_FreshPushButton_clicked()
 }
 
 void MainWindow::ReadingThread(std::vector<std::string> serials) {
-//  std::vector<std::shared_ptr<tf0x_driver::AbstractSerialPort>> serial_ports;
-//  std::vector<std::shared_ptr<tf03_driver::Driver>> drivers;
-
-//  for (auto serial : serials) {
-//    std::shared_ptr<tf0x_driver::QtSerialPort> serial_port(
-//        new tf0x_driver::QtSerialPort);
-//    serial_ports.push_back(serial_port);
-//    std::cout << serial << std::endl;
-//    serial_port->SetPortName(serial);
-//    serial_port->SetBaudRate(115200);
-//    serial_port->Initialize();
-
-//    std::shared_ptr<tf03_driver::Driver> driver(new tf03_driver::Driver);
-//    drivers.push_back(driver);
-//    driver->SetSerialPort(serial_port);
-//    driver->Initialize();
-//  }
-
   auto device_cnt = serials.size();
   readings_.clear();
   for (int i = 0; i < device_cnt; ++i) {
@@ -168,8 +150,19 @@ void MainWindow::SaveReadings() {
     QFile file(data_dir + "/sensor_" + QString::number(i + 1) + ".txt");
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream stream(&file);
+    stream << "# Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Algorithm Temperature(C)\n";
     for (auto& entry : readings_[i]) {
-      stream << entry.dist1 << "\n";
+      stream
+          << entry.raw_dist1 << " "
+          << entry.raw_dist2 << " "
+          << entry.raw_dist3 << " "
+          << entry.dist1 << " "
+          << (short)entry.dist2 << " "
+          << entry.dist3 << " "
+          << entry.apd << " "
+          << entry.volt << " "
+          << entry.algorithm << " "
+          << entry.temp << "\n";
     }
   }
 }
