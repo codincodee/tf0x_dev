@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1243</width>
+    <width>1245</width>
     <height>601</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.27</string>
+   <string>TF03 Test v1.3.28</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -1960,7 +1960,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1243</width>
+     <width>1245</width>
      <height>17</height>
     </rect>
    </property>

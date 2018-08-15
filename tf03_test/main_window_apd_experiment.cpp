@@ -22,7 +22,8 @@ void MainWindow::HandleAPDExperiment(const std::vector<tf03_driver::Measurement>
   if (IsAPDCrashed(apd_experiment_measurements_list_)) {
     apd_experiment_ended_ = true;
     apd_crashed_ = true;
-    apd_crashed_voltage_.store(std::prev(apd_experiment_measurements_list_.end())->apd);
+    // apd_crashed_voltage_.store(std::prev(apd_experiment_measurements_list_.end())->apd);
+    apd_crashed_voltage_.store(apd_anticipated_voltage_);
   }
 }
 
