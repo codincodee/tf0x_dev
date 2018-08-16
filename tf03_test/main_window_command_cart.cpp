@@ -352,6 +352,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   static int can_send_id_cnt = 0;
   static int can_receive_id_cnt = 0;
   static int can_baud_rate_cnt = 0;
+  static int restore_factory_2_cnt = 0;
 
   // sensor_driver_mutex_.lock();
   auto apd_echo = sensor_driver_->set_apd_echo;
@@ -374,6 +375,7 @@ void MainWindow::HandleCommandPageEchoUpdate() {
   auto can_send_id_echo = sensor_driver_->can_send_id_echo;
   auto can_receive_id_echo = sensor_driver_->can_receive_id_echo;
   auto can_baud_rate_echo = sensor_driver_->can_baud_rate_echo;
+  auto restore_factory_2_echo = sensor_driver_->restore_factory_2_echo;
   // sensor_driver_mutex_.unlock();
 
   if (apd_cnt != apd_echo.size()) {
@@ -631,6 +633,19 @@ void MainWindow::HandleCommandPageEchoUpdate() {
     }
     can_baud_rate_cnt = size;
   }
+
+  if (restore_factory_2_cnt != restore_factory_2_echo.size()) {
+    auto size = restore_factory_2_echo.size();
+    restore_factory_2_echo.erase(restore_factory_2_echo.begin(), restore_factory_2_echo.begin() + restore_factory_2_cnt);
+    for (auto& echo : restore_factory_2_echo) {
+      if (echo.success == true) {
+        CommandPageDumpEcho("Restore Factory Successful");
+      } else {
+        CommandPageDumpEcho("Restore Factory Failed");
+      }
+    }
+    restore_factory_2_cnt = size;
+  }
 }
 
 void MainWindow::CommandPageDumpEcho(const QString& msg) {
@@ -812,6 +827,17 @@ void MainWindow::on_CommandPageCANBaudRatePushButton_clicked()
   }
   sensor_driver_mutex_.lock();
   sensor_driver_->SetCANBaudRate(value);
+  sensor_driver_mutex_.unlock();
+  return;
+}
+
+void MainWindow::on_CommandPageRestoreFactory2PushButton_clicked()
+{
+  if (!sensor_driver_) {
+    return;
+  }
+  sensor_driver_mutex_.lock();
+  sensor_driver_->RestoreFactory2();
   sensor_driver_mutex_.unlock();
   return;
 }

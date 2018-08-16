@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.28</string>
+   <string>TF03 Test v1.3.29</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -221,6 +221,13 @@
              <widget class="QPushButton" name="CommandPageCANBaudRatePushButton">
               <property name="text">
                <string>CAN Baud Rate</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QPushButton" name="CommandPageRestoreFactory2PushButton">
+              <property name="text">
+               <string>Restore Factory</string>
               </property>
              </widget>
             </item>

@@ -99,6 +99,8 @@ private slots:
 
   void on_CommandPageCANBaudRatePushButton_clicked();
 
+  void on_CommandPageRestoreFactory2PushButton_clicked();
+
 signals:
   void ShowAPDExperimentWindow();
 public:

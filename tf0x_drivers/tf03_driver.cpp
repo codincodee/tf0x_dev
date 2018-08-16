@@ -385,6 +385,14 @@ bool Driver::DetectAndHandleEcho() {
       can_baud_rate_echo.push_back({false});
     }
   } break;
+  case 0x53:
+  {
+    if (buf[3] == 0) {
+      restore_factory_2_echo.push_back({true});
+    } else {
+      restore_factory_2_echo.push_back({false});
+    }
+  } break;
   }
   if (len <= 0) {
     return false;
@@ -647,6 +655,20 @@ bool Driver::RestoreFactory() {
     return false;
   }
   std::string buffer = Head() + std::string(1, 4) + std::string(1, 0x10);
+  auto cmd = AppendCheckSum(buffer);
+  std::string recycle;
+  serial_port_->ReadBuffer(recycle);
+  if (!serial_port_->WriteBuffer(cmd)) {
+    return false;
+  }
+  return true;
+}
+
+bool Driver::RestoreFactory2() {
+  if (!serial_port_) {
+    return false;
+  }
+  std::string buffer = Head() + std::string(1, 4) + std::string(1, 0x53);
   auto cmd = AppendCheckSum(buffer);
   std::string recycle;
   serial_port_->ReadBuffer(recycle);
