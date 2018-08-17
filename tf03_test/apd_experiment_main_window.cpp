@@ -13,8 +13,9 @@ APDExperimentMainWindow::APDExperimentMainWindow(MainWindow *parent) :
   ui->StartPushButton->setText(kStartPushButtonStart);
   ui->StartVoltageLineEdit->setText("150");
   ui->EndVoltageLineEdit->setText("180");
-  ui->StepIntervalLineEdit->setText("2");
+  ui->StepIntervalLineEdit->setText("1");
   ui->StepVoltageLineEdit->setText("1");
+  ui->ThresholdLineEdit->setText("20");
   startTimer(500);
 }
 
@@ -78,13 +79,17 @@ void APDExperimentMainWindow::on_StartPushButton_clicked()
     if (!ok) {
       return;
     }
+    main_window_->apd_experiment_crash_threshold_ = ui->ThresholdLineEdit->text().toInt(&ok);
+    if (!ok) {
+      return;
+    }
     main_window_->apd_experiment_ended_ = false;
     main_window_->apd_crashed_ = false;
-    main_window_->apd_anticipated_voltage_ = main_window_->apd_voltage_from_;
+    main_window_->apd_anticipated_voltage_ = main_window_->apd_voltage_from_ - main_window_->apd_experiment_step_voltage_;
     main_window_->apd_experiment_measurements_list_.clear();
     main_window_->apd_voltage_map_.clear();
-    main_window_->apd_experiment_measurements_list_iterator_ = main_window_->apd_experiment_measurements_list_.begin();
     main_window_->apd_stand_dist_ = -1.0f;
+    main_window_->apd_experiment_last_anticipated_voltage_ = main_window_->apd_voltage_from_;
     main_window_->apd_experiment_timer_.restart();
     main_window_->sensor_driver_mutex_.lock();
     main_window_->sensor_driver_->EnableAPDAuto(false);

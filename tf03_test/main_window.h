@@ -198,14 +198,16 @@ public:
   float apd_voltage_to_;
   QElapsedTimer apd_experiment_timer_;
   // std::mutex apd_experiment_measurements_mutex_;
-  std::list<tf03_driver::Measurement> apd_experiment_measurements_list_;
+  std::list<std::pair<tf03_driver::Measurement, float>> apd_experiment_measurements_list_;
   std::list<tf03_driver::Measurement>::iterator apd_experiment_measurements_list_iterator_;
   std::map<int, std::shared_ptr<std::list<tf03_driver::Measurement>>> apd_voltage_map_;
   float apd_stand_dist_;
-  bool IsAPDCrashed(const std::list<tf03_driver::Measurement>& list);
+  bool IsAPDCrashed(const std::list<std::pair<tf03_driver::Measurement, float>>& list);
   std::atomic_bool apd_experiment_ended_;
   std::atomic_bool apd_crashed_;
   std::atomic<float> apd_crashed_voltage_;
+  float apd_experiment_last_anticipated_voltage_;
+  int apd_experiment_crash_threshold_;
 
   bool readings_page_rawdist_display_;
 

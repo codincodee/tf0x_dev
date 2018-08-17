@@ -14,66 +14,70 @@ void MainWindow::HandleAPDExperiment(const std::vector<tf03_driver::Measurement>
   }
   // apd_experiment_measurements_mutex_.lock();
   for (auto& measurement : measurements) {
-    apd_experiment_measurements_list_.clear();
-    apd_experiment_measurements_list_.push_back(measurement);
+    apd_experiment_measurements_list_.push_back({measurement, apd_anticipated_voltage_});
   }
   // apd_experiment_measurements_mutex_.unlock();
+
+  if (apd_experiment_last_anticipated_voltage_ == apd_anticipated_voltage_) {
+    return;
+  }
+  apd_experiment_last_anticipated_voltage_ = apd_anticipated_voltage_;
 
   if (IsAPDCrashed(apd_experiment_measurements_list_)) {
     apd_experiment_ended_ = true;
     apd_crashed_ = true;
     // apd_crashed_voltage_.store(std::prev(apd_experiment_measurements_list_.end())->apd);
-    apd_crashed_voltage_.store(apd_anticipated_voltage_);
+    apd_crashed_voltage_.store(apd_anticipated_voltage_ - 1);
   }
 }
 
-bool MainWindow::IsAPDCrashed(const std::list<tf03_driver::Measurement>& list) {
-  constexpr int kLeastNumVolt = 10;
-  auto iter = list.begin();
-  auto& map = apd_voltage_map_;
-  if (iter == list.end()) {
+bool MainWindow::IsAPDCrashed(const std::list<std::pair<tf03_driver::Measurement, float>>& list) {
+  if (list.empty()) {
     return false;
   }
-  std::set<int> new_incomings;
-  int volt;
-  while (iter != list.end()) {
-    volt = iter->apd;
-    new_incomings.insert(volt);
-    if (!map.count(volt)) {
-      map[volt] = std::shared_ptr<std::list<tf03_driver::Measurement>>(new std::list<tf03_driver::Measurement>);
-    }
-    if (map[volt]->size() < kLeastNumVolt) {
-      map[volt]->push_back(*iter);
-    }
-    ++iter;
-  }
-
-  if (map.size() < 2) {
-    return false;
-  }
-  const int offset_from = std::next(map.begin())->first;
   if (apd_stand_dist_ < 0.0f) {
-    if (!map.count(offset_from)) {
-      return false;
-    } else {
-      if (map[offset_from]->size() < kLeastNumVolt) {
-        return false;
-      } else {
-        apd_stand_dist_ = RobustAverageDist(map[offset_from]);
-//        std::cout << offset_from << " " << apd_stand_dist_ << std::endl;
+    if (apd_voltage_from_ >= list.rbegin()->second) {
+      auto iter = list.begin();
+      std::shared_ptr<std::list<tf03_driver::Measurement>> samples(new std::list<tf03_driver::Measurement>);
+      while (iter->second < list.rbegin()->second) {
+        if (iter == list.end()) {
+          break;
+        }
+        samples->push_back(iter->first);
+        ++iter;
       }
+      apd_stand_dist_ = RobustAverageDist(samples);
+      if (apd_stand_dist_ < 0.0) {
+        return false;
+      }
+    } else {
+      return false;
     }
   }
 
-  for (auto volt : new_incomings) {
-    if (map[volt]->size() < kLeastNumVolt) {
-      continue;
+  // std::cout << "apd stand dist: " << apd_stand_dist_ << std::endl;
+
+  std::shared_ptr<std::list<tf03_driver::Measurement>> samples(new std::list<tf03_driver::Measurement>);
+  float voltage_of_interest = 0.0f;
+  for (auto& iter = list.rbegin(); iter != list.rend(); ++iter) {
+    if (iter->second != list.rbegin()->second) {
+      voltage_of_interest = iter->second;
+      break;
     }
-    auto std_dist = RobustSTD(map[volt], apd_stand_dist_);
-//    std::cout << "std_dist " << std_dist << std::endl;
-    if (std_dist > 35) {
-      return true;
+  }
+  for (auto& iter = list.rbegin(); iter != list.rend(); ++iter) {
+    if (iter->second == voltage_of_interest) {
+      samples->push_back(iter->first);
     }
+    if (iter->second < voltage_of_interest) {
+      break;
+    }
+  }
+
+  auto result = RobustSTD(samples, apd_stand_dist_);
+  // std::cout << "result: " << result << std::endl;
+  if (result >= apd_experiment_crash_threshold_) {
+    return true;
   }
   return false;
 }
