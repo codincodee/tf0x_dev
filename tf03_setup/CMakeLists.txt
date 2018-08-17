@@ -9,6 +9,8 @@ add_executable(
   tf03_setup
     main.cpp
     main_window.cpp
+    main_window_menu_setup.cpp
+    main_window_device.cpp
     main_window.h
     main_window.ui
 )

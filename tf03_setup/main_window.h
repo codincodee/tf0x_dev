@@ -27,10 +27,22 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 
 private:
+  void SetupMenuButtons();
+  void SetMenuButtonUI(QPushButton* button);
+  void SetupMenuButtonsUI();
+  void ClearAllMenuButtons();
+  void ConnectDevice();
+  void ClearAllConfirmButtons();
+  void ClearAllOptionButtons();
+  void ClearAllNoneMenuButtons();
+
   Ui::MainWindow *ui;
   QPoint mouse_event_offset_;
   std::vector<QPushButton*> menu_buttons_;
+  std::vector<QPushButton*> option_buttons_;
+  std::vector<QPushButton*> confirm_buttons_;
   QString kCommonStyleSheet;
+  QString kConfirmButtonText;
   int kMenuButtonFontSize;
 };
 

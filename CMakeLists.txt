@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(tf0x_dev C CXX)
 
+set(CMAKE_CXX_STANDARD 11)
+
 set(tf0x_dev_MAJOR_VERSION 0)
 set(tf0x_dev_MINOR_VERSION 1)
 set(tf0x_dev_PATCH_VERSION 0)

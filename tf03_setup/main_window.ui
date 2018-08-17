@@ -19,21 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="2" column="0">
-       <widget class="QPushButton" name="HardwareInterfacePushButton">
-        <property name="text">
-         <string>输出接口</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="SetFrequencyPushButton">
-        <property name="text">
-         <string>输出帧率</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="GridLayout">
       <item row="0" column="0">
        <widget class="QLabel" name="DistanceLabel">
         <property name="font">
@@ -51,13 +37,6 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="SetSerialPortPushButton">
-        <property name="text">
-         <string>设置端口</string>
         </property>
        </widget>
       </item>
