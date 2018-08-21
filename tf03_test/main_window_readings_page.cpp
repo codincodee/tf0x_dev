@@ -84,30 +84,32 @@ void MainWindow::on_ReadingsPageRecordPushButton_clicked()
     }
     sensor_logging_ = false;
     sensor_log_mutex_.lock();
-    auto logs = sensor_log_;
-    sensor_log_.clear();
+    auto logs = *sensor_log_;
+    sensor_log_->clear();
     sensor_log_mutex_.unlock();
-    QFile file(
-        ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt");
-    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-      QTextStream stream(&file);
-      stream << "# Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Algorithm Temperature(C)\n";
-      for (auto& entry : logs) {
-        stream
-            << entry.raw_dist1 << " "
-            << entry.raw_dist2 << " "
-            << entry.raw_dist3 << " "
-            << entry.dist1 << " "
-            << (short)entry.dist2 << " "
-            << entry.dist3 << " "
-            << entry.apd << " "
-            << entry.volt << " "
-            << entry.algorithm << " "
-            << entry.temp << "\n";
-      }
-    } else {
-      QMessageBox::warning(this, "Error", "Unable to write log file.", QMessageBox::Abort);
-    }
+//    QFile file(
+//        ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt");
+//    if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+//      QTextStream stream(&file);
+//      stream << "# Raw-Distance-1(cm) Raw-Distance-2(cm) Raw-Distance-3(cm) Distance-1(cm) Distance-2(cm) Distance-3(cm) APD-Voltage(V) Laser-Voltage(V) Algorithm Temperature(C)\n";
+//      for (auto& entry : logs) {
+//        stream
+//            << entry.raw_dist1 << " "
+//            << entry.raw_dist2 << " "
+//            << entry.raw_dist3 << " "
+//            << entry.dist1 << " "
+//            << (short)entry.dist2 << " "
+//            << entry.dist3 << " "
+//            << entry.apd << " "
+//            << entry.volt << " "
+//            << entry.algorithm << " "
+//            << entry.temp << "\n";
+//      }
+
+//    } else {
+//      QMessageBox::warning(this, "Error", "Unable to write log file.", QMessageBox::Abort);
+//    }
+    SaveLog(logs, LogFileName());
     ui->ReadingsPageRecordPushButton->setText(kReadingPageRecordButtonRecord);
     ui->ReadingsPageLogFileLineEdit->setDisabled(false);
   }
@@ -184,5 +186,49 @@ void MainWindow::on_ReadingsPageDistanceSwtichPushButton_clicked()
   } else {
     button->setText(kDistanceSwitchPushButtonRawDist);
     readings_page_rawdist_display_ = false;
+  }
+}
+
+void MainWindow::HandlePeriodicSave() {
+  if (!sensor_logging_) {
+    return;
+  }
+  sensor_log_mutex_.lock();
+  if (sensor_log_->size() < 50000) {
+    sensor_log_mutex_.unlock();
+    return;
+  }
+  auto log = sensor_log_;
+  sensor_log_.reset(new std::list<tf03_driver::Measurement>);
+  sensor_log_mutex_.unlock();
+
+  SaveLog(*log, LogFileName());
+}
+
+QString MainWindow::LogFileName() {
+  auto file_name = ui->ReadingsPageLogFileLineEdit->text();
+  return
+      ui->LogPathLineEdit->text() + "/" + "readings_log_" + file_name + ".txt";
+}
+
+void MainWindow::SaveLog(
+    const std::list<tf03_driver::Measurement> &log,
+    const QString& file_name) {
+  QFile file(file_name);
+  if (file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append)) {
+    QTextStream stream(&file);
+    for (auto& entry : log) {
+      stream
+          << entry.raw_dist1 << " "
+          << entry.raw_dist2 << " "
+          << entry.raw_dist3 << " "
+          << entry.dist1 << " "
+          << (short)entry.dist2 << " "
+          << entry.dist3 << " "
+          << entry.apd << " "
+          << entry.volt << " "
+          << entry.algorithm << " "
+          << entry.temp << "\n";
+    }
   }
 }

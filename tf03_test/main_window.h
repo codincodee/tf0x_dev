@@ -143,6 +143,13 @@ public:
 
   void HandleAPDExperiment(const std::vector<tf03_driver::Measurement>& measurements);
 
+  void HandlePeriodicSave();
+  void SaveLog(
+      const std::list<tf03_driver::Measurement>& log,
+      const QString& file_name);
+
+  QString LogFileName();
+
   Ui::MainWindow *ui;
   QtCharts::QChartView* main_chart_view_;
   tf0x_common::DistanceOverTimeChart* main_chart_;
@@ -167,7 +174,7 @@ public:
   std::vector<tf03_driver::Measurement> sensor_readings_;
   std::atomic_bool sensor_logging_;
   std::mutex sensor_log_mutex_;
-  std::list<tf03_driver::Measurement> sensor_log_;
+  std::shared_ptr<std::list<tf03_driver::Measurement>> sensor_log_;
   std::mutex sensor_last_measurement_mutex_;
   tf03_driver::Measurement sensor_last_measurement_;
   std::atomic<float> sensor_frequency_;

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   sensor_thread_.reset(new std::thread(&MainWindow::SensorThread, this));
   cart_thread_.reset(new std::thread(&MainWindow::CartThread, this));
+  sensor_log_.reset(new std::list<tf03_driver::Measurement>);
 }
 
 MainWindow::~MainWindow()

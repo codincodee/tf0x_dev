@@ -140,7 +140,7 @@ void MainWindow::SensorThread() {
     if (sensor_logging_) {
       sensor_log_mutex_.lock();
       for (auto& measurement : measurements) {
-        sensor_log_.push_back(measurement);
+        sensor_log_->push_back(measurement);
       }
       sensor_log_mutex_.unlock();
     }
