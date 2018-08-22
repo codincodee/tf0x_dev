@@ -213,8 +213,11 @@ public:
   std::atomic_bool apd_experiment_ended_;
   std::atomic_bool apd_crashed_;
   std::atomic<float> apd_crashed_voltage_;
+  std::atomic<float> apd_experiment_result_voltage_;
+  std::atomic<float> apd_crashed_temperature_;
   float apd_experiment_last_anticipated_voltage_;
   int apd_experiment_crash_threshold_;
+  float ComputeAPDExperimentResultVoltage(const float& volt, const float& temp);
 
   bool readings_page_rawdist_display_;
 

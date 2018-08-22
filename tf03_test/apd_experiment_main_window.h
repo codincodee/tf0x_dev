@@ -22,6 +22,8 @@ protected:
 private slots:
   void on_StartPushButton_clicked();
 
+  void on_WriteAPDPushButton_clicked();
+
 private:
   Ui::APDExperimentMainWindow *ui;
   MainWindow* main_window_;

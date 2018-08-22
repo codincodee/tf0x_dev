@@ -37,7 +37,10 @@ void APDExperimentMainWindow::timerEvent(QTimerEvent *event) {
     main_window_->apd_experiment_on_ = false;
     QString prompt = "Experiment Ended. ";
     if (main_window_->apd_crashed_) {
-      prompt += "Found APD crash voltage: " + QString::number(main_window_->apd_crashed_voltage_) + ". ";
+      prompt +=
+          "Found APD crash voltage: " + QString::number(main_window_->apd_crashed_voltage_) + ". "
+          "Temperature: " + QString::number(main_window_->apd_crashed_temperature_.load()) + ". "
+          "Result APD: " + QString::number(main_window_->apd_experiment_result_voltage_.load());
     } else {
       prompt += "Failed to find a APD crash voltage. ";
     }
@@ -100,4 +103,11 @@ void APDExperimentMainWindow::on_StartPushButton_clicked()
     main_window_->apd_experiment_on_ = false;
     ui->StartPushButton->setText(kStartPushButtonStart);
   }
+}
+
+void APDExperimentMainWindow::on_WriteAPDPushButton_clicked()
+{
+  main_window_->sensor_driver_mutex_.lock();
+  main_window_->sensor_driver_->SetAPD(main_window_->apd_experiment_result_voltage_.load());
+  main_window_->sensor_driver_mutex_.unlock();
 }

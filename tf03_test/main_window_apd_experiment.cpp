@@ -28,6 +28,12 @@ void MainWindow::HandleAPDExperiment(const std::vector<tf03_driver::Measurement>
     apd_crashed_ = true;
     // apd_crashed_voltage_.store(std::prev(apd_experiment_measurements_list_.end())->apd);
     apd_crashed_voltage_.store(apd_anticipated_voltage_ - 1);
+    if (!apd_experiment_measurements_list_.empty()) {
+      apd_crashed_temperature_.store(apd_experiment_measurements_list_.rbegin()->first.temp);
+      apd_experiment_result_voltage_.store(ComputeAPDExperimentResultVoltage(apd_crashed_voltage_.load(), apd_crashed_temperature_.load()));
+    } else {
+      apd_experiment_result_voltage_.store(0);
+    }
   }
 }
 
@@ -55,7 +61,7 @@ bool MainWindow::IsAPDCrashed(const std::list<std::pair<tf03_driver::Measurement
     }
   }
 
-  // std::cout << "apd stand dist: " << apd_stand_dist_ << std::endl;
+  std::cout << "apd stand dist: " << apd_stand_dist_ << std::endl;
 
   std::shared_ptr<std::list<tf03_driver::Measurement>> samples(new std::list<tf03_driver::Measurement>);
   float voltage_of_interest = 0.0f;
@@ -75,7 +81,7 @@ bool MainWindow::IsAPDCrashed(const std::list<std::pair<tf03_driver::Measurement
   }
 
   auto result = RobustSTD(samples, apd_stand_dist_);
-  // std::cout << "result: " << result << std::endl;
+  std::cout << "result: " << result << std::endl;
   if (result >= apd_experiment_crash_threshold_) {
     return true;
   }
@@ -131,4 +137,8 @@ int MainWindow::RobustSTD(std::shared_ptr<std::list<tf03_driver::Measurement> > 
     stddev += diff * diff;
   }
   return std::sqrt(stddev / num) * 120;
+}
+
+float MainWindow::ComputeAPDExperimentResultVoltage(const float &volt, const float &temp) {
+  return (volt - (temp - 30) * 0.9) * 0.9;
 }
