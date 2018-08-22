@@ -1,5 +1,8 @@
 #include "qt_serial_port.h"
 #include <QSerialPortInfo>
+#include <QDebug>
+#include <iostream>
+#include <QElapsedTimer>
 
 namespace tf0x_driver {
 bool QtSerialPort::Initialize() {
@@ -47,7 +50,12 @@ bool QtSerialPort::ReadBuffer(std::string &buffer) {
   if (!q_serial_port_->isOpen()) {
     return false;
   }
+//  if (!q_serial_port_->waitForReadyRead(100)) {
+//    qDebug() << __LINE__;
+//    return false;
+//  }
   buffer = q_serial_port_->readAll().toStdString();
+  // std::cout << buffer << std::endl;
   return true;
 }
 
