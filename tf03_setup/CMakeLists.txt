@@ -8,9 +8,15 @@ find_package(Qt5Widgets)
 add_executable(
   tf03_setup
     main.cpp
+    driver_parsers.cpp
+    driver.cpp
+    driver.h
+    parsed.cpp
+    parsed.h
     main_window.cpp
     main_window.h
     main_window.ui
+    static_unique_ptr_cast.h
 )
 
 target_link_libraries(

@@ -2,6 +2,9 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <memory>
+
+class Driver;
 
 namespace Ui {
   class MainWindow;
@@ -17,6 +20,7 @@ public:
 
 private:
   Ui::MainWindow *ui;
+  std::shared_ptr<Driver> driver_;
 };
 
 #endif // MAIN_WINDOW_H
