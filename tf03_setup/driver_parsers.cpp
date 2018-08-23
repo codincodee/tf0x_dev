@@ -15,7 +15,6 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
 bool Driver::ParseNineByteMeasure(
     const QByteArray &buffer, Parsed &parsed, int &from, int &to) {
   auto msg = ParseNineByteMeasureMessageAtFront(buffer, from, to);
-//   qDebug() << buffer.size() << msg;
   if (msg.isEmpty()) {
     return false;
   }
@@ -32,16 +31,12 @@ QByteArray Driver::ParseNineByteMeasureMessageAtFront(
   QByteArray result;
   for (int i = 0; i < buffer.size(); ++i) {
     if (buffer[i] == 0x59) {
-//      qDebug() << __LINE__;
       auto ii = i + 1;
       if (ii < buffer.size()) {
         if (buffer[ii] == 0x59) {
-//          qDebug() << __LINE__;
           auto end = ii + 7;
           if (end < buffer.size()) {
-//            qDebug() << __LINE__ << i << end;
             if (CheckSum(buffer, i, end)) {
-//              qDebug() << __LINE__;
               from = i;
               to = end;
               result.reserve(to - from + 1);
@@ -63,7 +58,5 @@ bool Driver::CheckSum(const QByteArray &buffer, const int &from, const int &to) 
   for (int i = from; i < to; ++i) {
     sum += buffer[i];
   }
-//  sum &= 0xff;
-
   return buffer[to] == sum;
 }
