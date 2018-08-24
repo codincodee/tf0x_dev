@@ -31,7 +31,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     if (elapse > 1000) {
       auto frequency =
           (measure.id - last_freq_measure_id_) / (elapse / 1000.0f);
-      ui->FrequencyDisplayLabel->setText(QString::number(frequency));
+      ui->FrequencyDisplayLabel->setText(QString::number(frequency, 'f', 2));
     }
   }
 }
