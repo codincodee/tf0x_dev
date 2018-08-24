@@ -3,10 +3,22 @@
 
 #include <QString>
 #include <string>
+#include <shared_mutex>
 
 struct Lingual {
   QString eng;
   QString chn;
 };
 
+enum class Language {
+  chinese, english
+};
+
+extern Language gCurrentLanguage;
+extern std::shared_mutex gCurrentLanguageMutex;
+
+Language current_language();
+void set_current_language(const Language& language);
+
+QString which_lingual(const Lingual& lingual);
 #endif // LINGUAL_H

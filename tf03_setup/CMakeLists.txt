@@ -18,7 +18,10 @@ add_executable(
     main_window.h
     main_window.ui
     static_unique_ptr_cast.h
+    lingual.cpp
     lingual.h
+    command_echo_widgets.cpp
+    command_echo_widgets.h
 )
 
 target_link_libraries(
