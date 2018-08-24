@@ -21,3 +21,7 @@ QString which_lingual(const Lingual &lingual) {
   }
   return "";
 }
+
+bool lingual_equal(const QString &str, const Lingual &lingual) {
+  return str == which_lingual(lingual);
+}

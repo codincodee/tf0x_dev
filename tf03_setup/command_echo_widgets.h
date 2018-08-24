@@ -7,6 +7,8 @@
 #include <QGridLayout>
 #include "lingual.h"
 
+class Driver;
+
 struct CommandEchoWidgets
 {
   QLabel* item;
@@ -20,16 +22,18 @@ struct CommandEchoWidgets
   Lingual status_lingual;
 };
 
-class CommandEchoWidgetsManager {
+class CommandEchoWidgetsManager : public QObject {
  public:
   CommandEchoWidgetsManager();
   void SetUIGrid(QGridLayout* layout);
+  void SetDriver(std::shared_ptr<Driver> driver);
   void AddWidgets(const char& id, const CommandEchoWidgets& widget);
   void UpdateUITexts();
  private:
   std::unordered_map<char, CommandEchoWidgets> widgets_;
   QGridLayout* ui_grid_;
   const Lingual kSetButtonText;
+  std::shared_ptr<Driver> driver_;
 };
 
 #endif // COMMAND_ECHO_WIDGETS_H

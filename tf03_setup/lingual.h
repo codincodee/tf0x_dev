@@ -21,4 +21,6 @@ Language current_language();
 void set_current_language(const Language& language);
 
 QString which_lingual(const Lingual& lingual);
+bool lingual_equal(const QString& str, const Lingual& lingual);
+
 #endif // LINGUAL_H
