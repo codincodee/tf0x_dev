@@ -12,7 +12,8 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
-          Driver::ParseNineByteMeasure,
+          &Driver::ParseNineByteMeasure,
+          this,
           std::placeholders::_1,
           std::placeholders::_2,
           std::placeholders::_3,
@@ -73,6 +74,8 @@ bool Driver::ParseNineByteMeasure(
     return false;
   }
   std::unique_ptr<MeasureBasic> measure(new MeasureBasic);
+  ++measure_id_;
+  measure->id = measure_id_;
   memcpy(&measure->dist, msg.data() + 2, 2);
   memcpy(&measure->amp, msg.data() + 4, 2);
   parsed.type = MessageType::measure;

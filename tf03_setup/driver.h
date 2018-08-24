@@ -54,9 +54,10 @@ class Driver
   void ProcessBufferInWorkThread(QByteArray& buffer);
   QByteArray buffer_;
   std::shared_ptr<QSerialPort> serial_port_;
+  unsigned long measure_id_ = 0;
 
   // Parsers
-  static bool ParseNineByteMeasure(
+  bool ParseNineByteMeasure(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray Parse0x5AMessageAtFront(
       const QByteArray& buffer, int& from, int& to);

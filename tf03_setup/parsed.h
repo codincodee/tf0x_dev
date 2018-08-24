@@ -5,6 +5,7 @@
 #include "lingual.h"
 
 struct ParsedBase {
+  unsigned long id = 0;
   virtual ~ParsedBase();
 };
 

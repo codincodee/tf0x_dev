@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <memory>
+#include <QElapsedTimer>
 
 class Driver;
 
@@ -28,6 +29,8 @@ private:
   Ui::MainWindow *ui;
   std::shared_ptr<Driver> driver_;
   int timer_id_;
+  QElapsedTimer frequency_timer_;
+  unsigned long last_freq_measure_id_ = 0;
 };
 
 #endif // MAIN_WINDOW_H

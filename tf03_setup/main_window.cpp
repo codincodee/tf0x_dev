@@ -1,6 +1,7 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 #include "driver.h"
+#include <QElapsedTimer>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -10,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
   driver_.reset(new Driver);
   driver_->Open();
   timer_id_ = startTimer(100);
+  frequency_timer_.start();
 }
 
 MainWindow::~MainWindow()
@@ -25,10 +27,12 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   MeasureBasic measure;
   if (driver_->LastMeasure(measure)) {
     ui->DistanceDisplayLabel->setText(QString::number(measure.dist));
-  }
-  auto message = driver_->GetMessages();
-  if (!message.empty()) {
-    message[0];
+    auto elapse = frequency_timer_.elapsed();
+    if (elapse > 1000) {
+      auto frequency =
+          (measure.id - last_freq_measure_id_) / (elapse / 1000.0f);
+      ui->FrequencyDisplayLabel->setText(QString::number(frequency));
+    }
   }
 }
 
