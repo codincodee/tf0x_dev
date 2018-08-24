@@ -2,13 +2,14 @@
 #define PARSED_H
 
 #include <QString>
+#include "lingual.h"
 
 struct ParsedBase {
   virtual ~ParsedBase();
 };
 
-struct Status : public ParsedBase {
-  QString command;
+struct StatusEcho : public ParsedBase {
+  Lingual command;
   bool success;
 };
 

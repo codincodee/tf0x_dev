@@ -9,6 +9,7 @@ add_executable(
   tf03_setup
     main.cpp
     driver_parsers.cpp
+    driver_commands.cpp
     driver.cpp
     driver.h
     parsed.cpp
@@ -17,6 +18,7 @@ add_executable(
     main_window.h
     main_window.ui
     static_unique_ptr_cast.h
+    lingual.h
 )
 
 target_link_libraries(

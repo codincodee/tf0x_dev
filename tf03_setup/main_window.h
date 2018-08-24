@@ -18,9 +18,16 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+protected:
+  void timerEvent(QTimerEvent *event);
+
+private slots:
+  void on_TestPushButton_clicked();
+
 private:
   Ui::MainWindow *ui;
   std::shared_ptr<Driver> driver_;
+  int timer_id_;
 };
 
 #endif // MAIN_WINDOW_H
