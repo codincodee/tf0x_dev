@@ -44,6 +44,8 @@ void MainWindow::timerEvent(QTimerEvent *event) {
       frequency_timer_.restart();
     }
   }
+
+  command_echo_widgets_manager_->Update();
 }
 
 void MainWindow::on_TestPushButton_clicked()

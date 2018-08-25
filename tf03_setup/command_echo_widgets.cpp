@@ -6,21 +6,42 @@
 CommandEchoWidgetsManager::CommandEchoWidgetsManager()
   : kSetButtonText{"Set", "设置"} {
   {
-    auto combo = new QComboBox;
-    auto button = new QPushButton;
     Lingual devel{"Devel", "开发"};
     Lingual release{"Release", "发布"};
-    AddWidgets(
-        0x44,
-        {new QLabel, combo, button, new QLabel,
-         {"Protocol", "协议"},
-         kSetButtonText,
-         [combo, devel, release](){
-           combo->clear();
-           combo->addItem(which_lingual(devel));
-           combo->addItem(which_lingual(release));
-         }});
-    connect(button, &QPushButton::clicked, [this, combo, devel, release](){
+    const CommandEchoWidgets const_widgets;
+    auto combo = new QComboBox;
+    auto button = new QPushButton;
+    auto status = new QLabel;
+    CommandEchoWidgets widgets;
+    std::shared_ptr<QElapsedTimer> timer(new QElapsedTimer);
+    widgets.timer = timer;
+    widgets.item = new QLabel;
+    widgets.button = button;
+    widgets.status = status;
+    widgets.option = combo;
+    widgets.item_lingual = {"Protocol", "通信协议"};
+    widgets.button_lingual = const_widgets.kButtonText;
+    widgets.option_lingual = [combo, devel, release](){
+      combo->clear();
+      combo->addItem(which_lingual(devel));
+      combo->addItem(which_lingual(release));
+    };
+    widgets.update = [timer, button, status, const_widgets](){
+      if (button->isEnabled()) {
+        return;
+      }
+      if (timer->elapsed() > 1000) {
+        button->setDisabled(false);
+        status->setText(which_lingual(const_widgets.kNoResponse));
+      }
+    };
+
+    connect(
+        button, &QPushButton::clicked,
+        [this, button, timer, combo, devel, release, status](){
+      button->setDisabled(true);
+      status->clear();
+      timer->restart();
       if (lingual_equal(combo->currentText(), devel)) {
         driver_->SetDevelMode();
       } else if (lingual_equal(combo->currentText(), release)) {
@@ -29,6 +50,7 @@ CommandEchoWidgetsManager::CommandEchoWidgetsManager()
         qDebug() << "Error: " << __FUNCTION__ << __LINE__;
       }
     });
+    AddWidgets(0x44, widgets);
   }
 }
 
@@ -61,5 +83,11 @@ void CommandEchoWidgetsManager::UpdateUITexts() {
     widgets.second.button->setText(which_lingual(widgets.second.button_lingual));
     widgets.second.option_lingual();
     widgets.second.status->setText(which_lingual(widgets.second.status_lingual));
+  }
+}
+
+void CommandEchoWidgetsManager::Update() {
+  for (auto& widgets : widgets_) {
+    widgets.second.update();
   }
 }

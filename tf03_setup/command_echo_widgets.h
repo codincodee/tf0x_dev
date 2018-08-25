@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <QGridLayout>
 #include "lingual.h"
+#include <memory>
+#include <QElapsedTimer>
 
 class Driver;
 
@@ -20,6 +22,13 @@ struct CommandEchoWidgets
   Lingual button_lingual;
   std::function<void()> option_lingual;
   Lingual status_lingual;
+
+  std::function<void()> update;
+
+  Lingual kButtonText = {"Set", "设置"};
+  Lingual kNoResponse = {"No Response", "未响应"};
+
+  std::shared_ptr<QElapsedTimer> timer;
 };
 
 class CommandEchoWidgetsManager : public QObject {
@@ -29,6 +38,7 @@ class CommandEchoWidgetsManager : public QObject {
   void SetDriver(std::shared_ptr<Driver> driver);
   void AddWidgets(const char& id, const CommandEchoWidgets& widget);
   void UpdateUITexts();
+  void Update();
  private:
   std::unordered_map<char, CommandEchoWidgets> widgets_;
   QGridLayout* ui_grid_;
