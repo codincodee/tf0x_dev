@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 class Driver;
+class QString;
 
 class CommandEchoHandler
 {
@@ -16,10 +17,13 @@ public:
   bool IsCommandSucceeded(const char& id);
   bool IsFrequencyEchoed();
   unsigned short Frequency();
+  bool IsSerialNumberEchoed();
+  QString SerialNumber();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
   std::vector<unsigned short> frequencies_;
+  std::vector<std::pair<bool, QString>> serial_numbers_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

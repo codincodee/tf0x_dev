@@ -30,7 +30,8 @@ struct CommandEchoWidgets : public QObject
 
   virtual void Update();
 
-  const Lingual kButtonLingual = {"Set", "设置"};
+  const Lingual kButtonSetLingual = {"Set", "设置"};
+  const Lingual kButtonRequestLingual = {"Request", "请求"};
   const Lingual kNoResponseLingual = {"No Response", "未响应"};
   const Lingual kSuccessLingual = {"Successful", "成功"};
   const Lingual kFailLingual = {"Failed", "失败"};
@@ -70,4 +71,12 @@ struct SetFrequencyWidgets : public CommandEchoWidgets {
   QComboBox* combo;
 };
 
+////////////////////// SerialNumberWidgets /////////////////////////////
+
+struct SerialNumberWidgets : public CommandEchoWidgets {
+  SerialNumberWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+  QLabel* label;
+};
 #endif // COMMAND_ECHO_WIDGETS_H

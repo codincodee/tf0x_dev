@@ -24,6 +24,12 @@ void Driver::SetFrequency(const unsigned short &frequency) {
   });
 }
 
+void Driver::RequestSerialNumber() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x56), QByteArray(1, 0x00)));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);

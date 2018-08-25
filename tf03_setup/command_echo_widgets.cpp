@@ -13,8 +13,8 @@ CommandEchoWidgets::CommandEchoWidgets() {
   item = new QLabel;
   button = new QPushButton;
   status = new QLabel;
-  button_lingual = kButtonLingual;
-  button->setText(which_lingual(kButtonLingual));
+  button_lingual = kButtonSetLingual;
+  button->setText(which_lingual(kButtonSetLingual));
   connect(button, SIGNAL(clicked()), this, SLOT(OnButtonClicked()));
 }
 
@@ -116,6 +116,38 @@ void SetFrequencyWidgets::Update() {
     status_lingual.eng += ": " + str + "Hz";
     status_lingual.chn += ": " + str + "赫兹";
     status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
+  }
+}
+
+////////////////////// SerialNumberWidgets /////////////////////////////
+
+SerialNumberWidgets::SerialNumberWidgets() {
+  id = 0x56;
+  label = new QLabel;
+  option = label;
+  item_lingual = {"Serial Number", "序列号"};
+  button_lingual = kButtonRequestLingual;
+  button->setText(which_lingual(kButtonRequestLingual));
+}
+
+void SerialNumberWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  label->clear();
+  driver->RequestSerialNumber();
+}
+
+void SerialNumberWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsSerialNumberEchoed()) {
+    auto sn = echo_handler->SerialNumber();
+    if (sn.isEmpty()) {
+      status_lingual = kFailLingual;
+    } else {
+      status_lingual = kSuccessLingual;
+    }
+    status->setText(which_lingual(status_lingual));
+    label->setText(sn);
     button->setDisabled(false);
   }
 }

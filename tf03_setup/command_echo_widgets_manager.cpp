@@ -58,6 +58,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<SetProtocolWidgets>(new SetProtocolWidgets));
   widgets.push_back(
       std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
+  widgets.push_back(
+      std::shared_ptr<SerialNumberWidgets>(new SerialNumberWidgets));
 
   for (auto& widget : widgets) {
     widget->driver = driver_;

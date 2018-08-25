@@ -19,6 +19,11 @@ struct FrequencyEcho : public ParsedBase {
   unsigned short frequency;
 };
 
+struct SerialNumberEcho : public ParsedBase {
+  QString sn;
+  bool status;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

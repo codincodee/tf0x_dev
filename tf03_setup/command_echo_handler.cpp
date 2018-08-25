@@ -17,6 +17,7 @@ void CommandEchoHandler::Probe() {
   }
   echo_map_.clear();
   frequencies_.clear();
+  serial_numbers_.clear();
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
     if (msg.type == MessageType::status) {
@@ -28,6 +29,11 @@ void CommandEchoHandler::Probe() {
       auto freq = static_unique_ptr_cast<FrequencyEcho>(std::move(msg.data));
       if (freq) {
         frequencies_.push_back(freq->frequency);
+      }
+    } else if (msg.type == MessageType::serial_number) {
+      auto sn = static_unique_ptr_cast<SerialNumberEcho>(std::move(msg.data));
+      if (sn) {
+        serial_numbers_.push_back({sn->status, sn->sn});
       }
     }
   }
@@ -53,4 +59,15 @@ unsigned short CommandEchoHandler::Frequency() {
     return 0;
   }
   return *frequencies_.rbegin();
+}
+
+bool CommandEchoHandler::IsSerialNumberEchoed() {
+  return !serial_numbers_.empty();
+}
+
+QString CommandEchoHandler::SerialNumber() {
+  if (!serial_numbers_.rbegin()->first) {
+    return "";
+  }
+  return serial_numbers_.rbegin()->second;
 }

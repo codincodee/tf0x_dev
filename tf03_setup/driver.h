@@ -17,7 +17,7 @@ class QByteArray;
 QByteArray to_bytes(const unsigned short& value);
 
 enum class MessageType {
-  measure, status, frequency
+  measure, status, frequency, serial_number
 };
 
 struct Message {
@@ -38,6 +38,7 @@ class Driver
   void SetDevelMode();
   void SetReleaseMode();
   void SetFrequency(const unsigned short& frequency);
+  void RequestSerialNumber();
   std::vector<Message> GetMessages();
 
  private:
@@ -67,6 +68,8 @@ class Driver
   static bool ParseStatusEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseFrequencyEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseSerialNumberEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray ParseNineByteMeasureMessageAtFront(
       const QByteArray& buffer, int& from, int& to);
