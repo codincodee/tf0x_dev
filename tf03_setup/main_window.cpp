@@ -49,17 +49,6 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   command_echo_widgets_manager_->Update();
 }
 
-void MainWindow::on_TestPushButton_clicked()
-{
-  static bool release = true;
-  release = !release;
-  if (release) {
-    driver_->SetReleaseMode();
-  } else {
-    driver_->SetDevelMode();
-  }
-}
-
 void MainWindow::on_ChinesePushButton_clicked()
 {
   set_current_language(Language::chinese);

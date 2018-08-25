@@ -5,7 +5,7 @@
 #include <memory>
 #include <QElapsedTimer>
 #include "lingual.h"
-#include "command_echo_widgets.h"
+#include "command_echo_widgets_manager.h"
 #include <unordered_map>
 
 class Driver;
@@ -27,8 +27,6 @@ protected:
 
 private slots:
   void SetupUIText();
-
-  void on_TestPushButton_clicked();
 
   void on_ChinesePushButton_clicked();
 

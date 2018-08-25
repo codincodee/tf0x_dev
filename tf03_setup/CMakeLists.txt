@@ -22,6 +22,8 @@ add_executable(
     lingual.h
     command_echo_widgets.cpp
     command_echo_widgets.h
+    command_echo_widgets_manager.cpp
+    command_echo_widgets_manager.h
 )
 
 target_link_libraries(

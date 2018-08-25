@@ -3,52 +3,60 @@
 #include <QDebug>
 #include "driver.h"
 
-CommandEchoWidgetsManager::CommandEchoWidgetsManager()
-  : kSetButtonText{"Set", "设置"} {
+////////////////////// CommandEchoWidgets /////////////////////////////
+
+CommandEchoWidgets::CommandEchoWidgets() {
+  item = new QLabel;
+  button = new QPushButton;
+  status = new QLabel;
+  button_lingual = kButtonLingual;
+  button->setText(which_lingual(kButtonLingual));
+  connect(button, SIGNAL(clicked()), this, SLOT(OnButtonClicked()));
 }
 
-void CommandEchoWidgetsManager::AddWidgets(
-    const char& id, const std::shared_ptr<CommandEchoWidgets> &widget) {
-  widgets_[id] = widget;
+void CommandEchoWidgets::SetOptionLingual() {
+
 }
 
-void CommandEchoWidgetsManager::SetUIGrid(QGridLayout *layout) {
-  ui_grid_ = layout;
-
-  int row = 0;
-  auto grid = ui_grid_;
-  for (auto& widgets : widgets_) {
-    int column = 0;
-    grid->addWidget(widgets.second->item, row, column++);
-    grid->addWidget(widgets.second->option, row, column++);
-    grid->addWidget(widgets.second->button, row, column++);
-    grid->addWidget(widgets.second->status, row, column++);
+void CommandEchoWidgets::Update() {
+  if (button->isEnabled()) {
+    return;
+  }
+  if (timer.elapsed() > 1000) {
+    button->setDisabled(false);
+    status->setText(which_lingual(kNoResponseLingual));
+    status_lingual = kNoResponseLingual;
   }
 }
 
-void CommandEchoWidgetsManager::SetDriver(std::shared_ptr<Driver> driver) {
-  driver_ = driver;
+void CommandEchoWidgets::OnButtonClicked() {
+  return ButtonClicked();
+}
+void CommandEchoWidgets::ButtonClicked() {}
+
+////////////////////// SetProtocolWidgets /////////////////////////////
+
+SetProtocolWidgets::SetProtocolWidgets() : CommandEchoWidgets() {
+  item_lingual = {"Protocol", "通信协议"};
+  combo = new QComboBox;
+  option = combo;
 }
 
-void CommandEchoWidgetsManager::UpdateUITexts() {
-  for (auto& widgets : widgets_) {
-    widgets.second->item->setText(which_lingual(widgets.second->item_lingual));
-    widgets.second->button->setText(which_lingual(widgets.second->button_lingual));
-    widgets.second->SetOptionLingual();
-    widgets.second->status->setText(which_lingual(widgets.second->status_lingual));
+void SetProtocolWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(devel));
+  combo->addItem(which_lingual(release));
+}
+
+void SetProtocolWidgets::ButtonClicked() {
+  button->setDisabled(true);
+  status->clear();
+  timer.restart();
+  if (lingual_equal(combo->currentText(), devel)) {
+    driver->SetDevelMode();
+  } else if (lingual_equal(combo->currentText(), release)) {
+    driver->SetReleaseMode();
+  } else {
+    qDebug() << "Error: " << __FUNCTION__ << __LINE__;
   }
-}
-
-void CommandEchoWidgetsManager::Update() {
-  for (auto& widgets : widgets_) {
-    widgets.second->Update();
-  }
-}
-
-void CommandEchoWidgetsManager::LoadWidgets() {
-  std::shared_ptr<SetProtocolWidgets> widgets(new SetProtocolWidgets);
-  widgets->driver = driver_;
-  AddWidgets(0x44, widgets);
-
-  SetUIGrid(ui_grid_);
 }
