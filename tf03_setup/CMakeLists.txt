@@ -5,6 +5,10 @@ set(CMAKE_AUTOUIC ON)
 find_package(Qt5Widgets)
 # find_package(Qt5Charts)
 
+if (SUPPORT_DEVEL_MODE_PROTOCOL)
+  add_definitions(-DSUPPORT_DEVEL_MODE_PROTOCOL_)
+endif()
+
 add_executable(
   tf03_setup
     main.cpp

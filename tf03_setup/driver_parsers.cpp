@@ -33,6 +33,16 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_2,
           std::placeholders::_3,
           std::placeholders::_4));
+#ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
+  parsers.push_back(
+      std::bind(
+          &Driver::ParseDevelModeMeasure,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+#endif
 }
 
 bool Driver::ParseFrequencyEcho(
@@ -74,6 +84,24 @@ bool Driver::ParseSerialNumberEcho(
   data->sn = QString(len, 0);
   data->status = (msg[3] == char(0x00));
   memcpy(data->sn.data(), msg.data() + 4, len);
+  parsed.data = std::move(data);
+  return true;
+}
+
+bool Driver::ParseDevelModeMeasure(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 22) {
+    return false;
+  }
+  parsed.type = MessageType::measure;
+  std::unique_ptr<MeasureBasic> data(new MeasureBasic);
+  memcpy(&data->dist, msg.data() + 10, 2);
+  data->amp = 0;
+  data->id = measure_id_++;
   parsed.data = std::move(data);
   return true;
 }

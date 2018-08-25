@@ -46,7 +46,7 @@ private:
   const Lingual kLanguageLabelText = {"Language", "语言"};
   const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （厘米）"};
   const Lingual kFrequencyLabelText = {"Frequency (Hz)", "频率 （赫兹）"};
-  const Lingual kPortNameLabelText = {"Port", "串口名"};
+  const Lingual kPortNameLabelText = {"Port", "端口"};
   const Lingual kBaudRateLabelText = {"Baud Rate", "波特率"};
   const Lingual kConnectPushButtonText = {"Connect", "连接"};
   const Lingual kDisconnectPushButtonText = {"Disconnect", "断开"};
