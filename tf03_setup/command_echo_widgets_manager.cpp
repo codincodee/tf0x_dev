@@ -54,8 +54,10 @@ void CommandEchoWidgetsManager::Update() {
 void CommandEchoWidgetsManager::LoadWidgets() {
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets;
 
+  #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   widgets.push_back(
       std::shared_ptr<SetProtocolWidgets>(new SetProtocolWidgets));
+  #endif
   widgets.push_back(
       std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
   widgets.push_back(

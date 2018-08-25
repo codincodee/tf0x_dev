@@ -93,6 +93,7 @@ SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
   combo->addItem("40");
   combo->addItem("50");
   combo->addItem("100");
+  combo->addItem("500");
   combo->addItem("1000");
   item_lingual = {"Frequency (Hz)", "频率 (赫兹)"};
   option = combo;
