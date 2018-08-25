@@ -18,6 +18,12 @@ void Driver::SetReleaseMode() {
   });
 }
 
+void Driver::SetFrequency(const unsigned short &frequency) {
+  EnqueueCommand([this, frequency](){
+    return SendMessage(CommonCommand(char(0x03), to_bytes(frequency)));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);

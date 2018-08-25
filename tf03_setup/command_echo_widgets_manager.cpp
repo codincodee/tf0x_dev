@@ -23,6 +23,7 @@ void CommandEchoWidgetsManager::SetUIGrid(QGridLayout *layout) {
     grid->addWidget(widgets.second->option, row, column++);
     grid->addWidget(widgets.second->button, row, column++);
     grid->addWidget(widgets.second->status, row, column++);
+    ++row;
   }
 }
 
@@ -51,10 +52,18 @@ void CommandEchoWidgetsManager::Update() {
 }
 
 void CommandEchoWidgetsManager::LoadWidgets() {
-  std::shared_ptr<SetProtocolWidgets> widgets(new SetProtocolWidgets);
-  widgets->driver = driver_;
-  widgets->echo_handler = echo_handler_;
-  AddWidgets(0x44, widgets);
+  std::vector<std::shared_ptr<CommandEchoWidgets>> widgets;
+
+  widgets.push_back(
+      std::shared_ptr<SetProtocolWidgets>(new SetProtocolWidgets));
+  widgets.push_back(
+      std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
+
+  for (auto& widget : widgets) {
+    widget->driver = driver_;
+    widget->echo_handler = echo_handler_;
+    AddWidgets(widget->id, widget);
+  }
 
   SetUIGrid(ui_grid_);
 }

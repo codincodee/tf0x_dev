@@ -54,10 +54,18 @@ struct CommandEchoWidgets : public QObject
 
 struct SetProtocolWidgets : public CommandEchoWidgets {
   SetProtocolWidgets();
-  void SetOptionLingual();
-  void ButtonClicked();
+  void SetOptionLingual() override;
+  void ButtonClicked() override;
   const Lingual kDevelLingual = {"Devel", "开发"};
   const Lingual kReleaseLingual = {"Release", "发布"};
+  QComboBox* combo;
+};
+
+////////////////////// SetFrequencyWidgets /////////////////////////////
+
+struct SetFrequencyWidgets : public CommandEchoWidgets {
+  SetFrequencyWidgets();
+  void ButtonClicked() override;
   QComboBox* combo;
 };
 

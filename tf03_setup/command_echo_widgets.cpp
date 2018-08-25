@@ -47,7 +47,11 @@ void CommandEchoWidgets::Update() {
 void CommandEchoWidgets::OnButtonClicked() {
   return ButtonClicked();
 }
-void CommandEchoWidgets::ButtonClicked() {}
+void CommandEchoWidgets::ButtonClicked() {
+  button->setDisabled(true);
+  status->clear();
+  timer.restart();
+}
 
 ////////////////////// SetProtocolWidgets /////////////////////////////
 
@@ -65,9 +69,7 @@ void SetProtocolWidgets::SetOptionLingual() {
 }
 
 void SetProtocolWidgets::ButtonClicked() {
-  button->setDisabled(true);
-  status->clear();
-  timer.restart();
+  CommandEchoWidgets::ButtonClicked();
   if (lingual_equal(combo->currentText(), kDevelLingual)) {
     driver->SetDevelMode();
   } else if (lingual_equal(combo->currentText(), kReleaseLingual)) {
@@ -75,4 +77,32 @@ void SetProtocolWidgets::ButtonClicked() {
   } else {
     qDebug() << "Error: " << __FUNCTION__ << __LINE__;
   }
+}
+
+////////////////////// SetFrequencyWidgets /////////////////////////////
+
+SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
+  id = 0x03;
+  combo = new QComboBox;
+  combo->addItem("1");
+  combo->addItem("5");
+  combo->addItem("10");
+  combo->addItem("20");
+  combo->addItem("30");
+  combo->addItem("40");
+  combo->addItem("50");
+  combo->addItem("100");
+  combo->addItem("1000");
+  item_lingual = {"Frequency (Hz)", "频率 (赫兹)"};
+  option = combo;
+}
+
+void SetFrequencyWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto freq = combo->currentText().toInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetFrequency(freq);
 }

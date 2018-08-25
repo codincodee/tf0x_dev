@@ -41,7 +41,7 @@ private:
   unsigned long last_freq_measure_id_ = 0;
   const Lingual kLanguageLabelText = {"Language", "语言"};
   const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （厘米）"};
-  const Lingual kFrequencyLabelText = {"Frequency (hz)", "频率 （赫兹）"};
+  const Lingual kFrequencyLabelText = {"Frequency (Hz)", "频率 （赫兹）"};
   std::shared_ptr<CommandEchoWidgetsManager> command_echo_widgets_manager_;
   std::shared_ptr<CommandEchoHandler> command_echo_handler_;
 };

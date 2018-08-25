@@ -14,6 +14,8 @@
 class QSerialPort;
 class QByteArray;
 
+QByteArray to_bytes(const unsigned short& value);
+
 enum class MessageType {
   measure, status
 };
@@ -35,6 +37,7 @@ class Driver
   bool LastMeasure(MeasureBasic& measure);
   void SetDevelMode();
   void SetReleaseMode();
+  void SetFrequency(const unsigned short& frequency);
   std::vector<Message> GetMessages();
 
  private:

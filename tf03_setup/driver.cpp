@@ -6,6 +6,12 @@
 #include <QElapsedTimer>
 #include "static_unique_ptr_cast.h"
 
+QByteArray to_bytes(const unsigned short &value) {
+  QByteArray buffer(sizeof(value), 0);
+  memcpy(buffer.data(), &value, sizeof(value));
+  return buffer;
+}
+
 std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x44, {"Communication Protocol", "通信协议"}}
 };
