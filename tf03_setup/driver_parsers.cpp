@@ -37,6 +37,7 @@ bool Driver::ParseStatusEcho(
   std::unique_ptr<StatusEcho> data(new StatusEcho);
   data->command = kEchoStatusIDMap[id];
   data->success = (msg.at(3) == 0);
+  data->cmd_id = id;
   parsed.data = std::move(data);
   return true;
 }

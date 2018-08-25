@@ -10,6 +10,7 @@ struct ParsedBase {
 };
 
 struct StatusEcho : public ParsedBase {
+  char cmd_id;
   Lingual command;
   bool success;
 };

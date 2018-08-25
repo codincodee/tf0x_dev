@@ -4,6 +4,8 @@
 #include <QElapsedTimer>
 #include <QComboBox>
 #include <QDebug>
+#include "command_echo_handler.h"
+#include "command_echo_widgets_manager.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -15,9 +17,13 @@ MainWindow::MainWindow(QWidget *parent) :
   timer_id_ = startTimer(100);
   frequency_timer_.start();
 
+  command_echo_handler_.reset(new CommandEchoHandler);
+  command_echo_handler_->SetDriver(driver_);
+
   command_echo_widgets_manager_.reset(new CommandEchoWidgetsManager);
   command_echo_widgets_manager_->SetUIGrid(ui->CommandEchoGridLayout);
   command_echo_widgets_manager_->SetDriver(driver_);
+  command_echo_widgets_manager_->SetEchoHandler(command_echo_handler_);
   command_echo_widgets_manager_->LoadWidgets();
 
   SetupUIText();
@@ -46,6 +52,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
     }
   }
 
+  command_echo_handler_->Probe();
   command_echo_widgets_manager_->Update();
 }
 

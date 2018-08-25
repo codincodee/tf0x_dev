@@ -4,10 +4,12 @@
 #include <QComboBox>
 #include "driver.h"
 #include <QDebug>
+#include "command_echo_handler.h"
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
 CommandEchoWidgets::CommandEchoWidgets() {
+  id = 0;
   item = new QLabel;
   button = new QPushButton;
   status = new QLabel;
@@ -29,6 +31,17 @@ void CommandEchoWidgets::Update() {
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
   }
+  if (echo_handler->IsCommandEchoed(id)) {
+    button->setDisabled(false);
+    if (echo_handler->IsCommandSucceeded(id)) {
+      status_lingual = kSuccessLingual;
+    } else if (echo_handler->IsCommandSucceeded(id)) {
+      status_lingual = kFailLingual;
+    } else {
+      status_lingual = kUnknownLingual;
+    }
+    status->setText(which_lingual(status_lingual));
+  }
 }
 
 void CommandEchoWidgets::OnButtonClicked() {
@@ -39,6 +52,7 @@ void CommandEchoWidgets::ButtonClicked() {}
 ////////////////////// SetProtocolWidgets /////////////////////////////
 
 SetProtocolWidgets::SetProtocolWidgets() : CommandEchoWidgets() {
+  id = 0x44;
   item_lingual = {"Protocol", "通信协议"};
   combo = new QComboBox;
   option = combo;
@@ -46,17 +60,17 @@ SetProtocolWidgets::SetProtocolWidgets() : CommandEchoWidgets() {
 
 void SetProtocolWidgets::SetOptionLingual() {
   combo->clear();
-  combo->addItem(which_lingual(devel));
-  combo->addItem(which_lingual(release));
+  combo->addItem(which_lingual(kDevelLingual));
+  combo->addItem(which_lingual(kReleaseLingual));
 }
 
 void SetProtocolWidgets::ButtonClicked() {
   button->setDisabled(true);
   status->clear();
   timer.restart();
-  if (lingual_equal(combo->currentText(), devel)) {
+  if (lingual_equal(combo->currentText(), kDevelLingual)) {
     driver->SetDevelMode();
-  } else if (lingual_equal(combo->currentText(), release)) {
+  } else if (lingual_equal(combo->currentText(), kReleaseLingual)) {
     driver->SetReleaseMode();
   } else {
     qDebug() << "Error: " << __FUNCTION__ << __LINE__;

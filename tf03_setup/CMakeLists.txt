@@ -24,6 +24,8 @@ add_executable(
     command_echo_widgets.h
     command_echo_widgets_manager.cpp
     command_echo_widgets_manager.h
+    command_echo_handler.cpp
+    command_echo_handler.h
 )
 
 target_link_libraries(

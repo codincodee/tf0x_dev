@@ -30,6 +30,11 @@ void CommandEchoWidgetsManager::SetDriver(std::shared_ptr<Driver> driver) {
   driver_ = driver;
 }
 
+void CommandEchoWidgetsManager::SetEchoHandler(
+    std::shared_ptr<CommandEchoHandler> handler) {
+  echo_handler_ = handler;
+}
+
 void CommandEchoWidgetsManager::UpdateUITexts() {
   for (auto& widgets : widgets_) {
     widgets.second->item->setText(which_lingual(widgets.second->item_lingual));
@@ -48,6 +53,7 @@ void CommandEchoWidgetsManager::Update() {
 void CommandEchoWidgetsManager::LoadWidgets() {
   std::shared_ptr<SetProtocolWidgets> widgets(new SetProtocolWidgets);
   widgets->driver = driver_;
+  widgets->echo_handler = echo_handler_;
   AddWidgets(0x44, widgets);
 
   SetUIGrid(ui_grid_);

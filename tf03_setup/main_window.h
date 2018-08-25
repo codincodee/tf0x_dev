@@ -5,10 +5,11 @@
 #include <memory>
 #include <QElapsedTimer>
 #include "lingual.h"
-#include "command_echo_widgets_manager.h"
 #include <unordered_map>
 
+class CommandEchoHandler;
 class Driver;
+class CommandEchoWidgetsManager;
 
 namespace Ui {
   class MainWindow;
@@ -42,6 +43,7 @@ private:
   const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （厘米）"};
   const Lingual kFrequencyLabelText = {"Frequency (hz)", "频率 （赫兹）"};
   std::shared_ptr<CommandEchoWidgetsManager> command_echo_widgets_manager_;
+  std::shared_ptr<CommandEchoHandler> command_echo_handler_;
 };
 
 #endif // MAIN_WINDOW_H

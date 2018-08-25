@@ -9,11 +9,15 @@ class QLabel;
 class QPushButton;
 class Driver;
 class QComboBox;
+class CommandEchoHandler;
+
+////////////////////// CommandEchoWidgets /////////////////////////////
 
 struct CommandEchoWidgets : public QObject
 {
   CommandEchoWidgets();
 
+  char id;
   QLabel* item;
   QWidget* option;
   QPushButton* button;
@@ -26,10 +30,16 @@ struct CommandEchoWidgets : public QObject
 
   virtual void Update();
 
-  Lingual kButtonLingual = {"Set", "设置"};
-  Lingual kNoResponseLingual = {"No Response", "未响应"};
+  const Lingual kButtonLingual = {"Set", "设置"};
+  const Lingual kNoResponseLingual = {"No Response", "未响应"};
+  const Lingual kSuccessLingual = {"Successful", "成功"};
+  const Lingual kFailLingual = {"Failed", "失败"};
+  const Lingual kUnknownLingual = {"Unknown", "未知错误"};
 
   QElapsedTimer timer;
+
+  std::shared_ptr<Driver> driver;
+  std::shared_ptr<CommandEchoHandler> echo_handler;
 
   Q_OBJECT
 
@@ -40,13 +50,14 @@ struct CommandEchoWidgets : public QObject
   virtual void ButtonClicked();
 };
 
+////////////////////// SetProtocolWidgets /////////////////////////////
+
 struct SetProtocolWidgets : public CommandEchoWidgets {
   SetProtocolWidgets();
   void SetOptionLingual();
   void ButtonClicked();
-  Lingual devel = {"Devel", "开发"};
-  Lingual release = {"Release", "发布"};
-  std::shared_ptr<Driver> driver;
+  const Lingual kDevelLingual = {"Devel", "开发"};
+  const Lingual kReleaseLingual = {"Release", "发布"};
   QComboBox* combo;
 };
 
