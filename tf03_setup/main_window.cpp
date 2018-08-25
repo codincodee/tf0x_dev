@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
   command_echo_widgets_manager_->SetEchoHandler(command_echo_handler_);
   command_echo_widgets_manager_->LoadWidgets();
 
+  connect_button_current_lingual_ = kConnectPushButtonText;
+  ui->BaudRateComboBox->addItem("115200");
+
   SetupUIText();
 }
 
@@ -40,7 +43,13 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (event->timerId() != timer_id_) {
     return;
   }
-  driver_->DetectAndAutoConnect();
+  if (driver_->DetectAndAutoConnect()) {
+    connect_button_current_lingual_ = kDisconnectPushButtonText;
+    ui->ConnectPushButton->setText(
+        which_lingual(connect_button_current_lingual_));
+  }
+  UpdatePortNameComboBox();
+
   MeasureBasic measure;
   if (driver_->LastMeasure(measure)) {
     ui->DistanceDisplayLabel->setText(QString::number(measure.dist));
@@ -74,8 +83,61 @@ void MainWindow::SetupUIText() {
   ui->LanguageLabel->setText(which_lingual(kLanguageLabelText));
   ui->DistanceHintLabel->setText(which_lingual(kDistanceLabelText));
   ui->FrequencyHintLabel->setText(which_lingual(kFrequencyLabelText));
+  ui->PortNameLabel->setText(which_lingual(kPortNameLabelText));
+  ui->BaudRateLabel->setText(which_lingual(kBaudRateLabelText));
+  ui->ConnectPushButton->setText(
+      which_lingual(connect_button_current_lingual_));
+  this->setWindowTitle(which_lingual(kWindowTitle));
 
   if (command_echo_widgets_manager_) {
     command_echo_widgets_manager_->UpdateUITexts();
+  }
+}
+
+void MainWindow::on_ConnectPushButton_clicked()
+{
+  if (lingual_equal(ui->ConnectPushButton->text(), kDisconnectPushButtonText)) {
+    driver_->Close();
+    connect_button_current_lingual_ = kConnectPushButtonText;
+    ui->ConnectPushButton->setText(
+        which_lingual(connect_button_current_lingual_));
+    return;
+  }
+  driver_->SetPortName(ui->SerialPortComboBox->currentText());
+  bool ok;
+  driver_->SetBaudRate(ui->BaudRateComboBox->currentText().toInt(&ok));
+  if (!ok) {
+    return;
+  }
+  driver_->Open();
+  connect_button_current_lingual_ = kDisconnectPushButtonText;
+  ui->ConnectPushButton->setText(
+      which_lingual(connect_button_current_lingual_));
+}
+
+void MainWindow::UpdatePortNameComboBox() {
+  auto ports = QSerialPortInfo::availablePorts();
+  auto update = [this, ports](){
+    ui->SerialPortComboBox->clear();
+    for (auto& port : ports) {
+      ui->SerialPortComboBox->addItem(port.portName());
+    }
+    port_combo_.clear();
+    for (auto& port : ports) {
+      port_combo_.push_back(port.portName());
+    }
+  };
+  if (ports.size() != port_combo_.size()) {
+    update();
+    return;
+  }
+  bool should_update = false;
+  for (auto& port : ports) {
+    if (!port_combo_.contains(port.portName())) {
+      should_update = true;
+    }
+  }
+  if (should_update) {
+    update();
   }
 }

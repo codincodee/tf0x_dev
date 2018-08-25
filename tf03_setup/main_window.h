@@ -33,7 +33,11 @@ private slots:
 
   void on_EnglishPushButton_clicked();
 
+  void on_ConnectPushButton_clicked();
+
 private:
+  void UpdatePortNameComboBox();
+
   Ui::MainWindow *ui;
   std::shared_ptr<Driver> driver_;
   int timer_id_;
@@ -42,8 +46,18 @@ private:
   const Lingual kLanguageLabelText = {"Language", "语言"};
   const Lingual kDistanceLabelText = {"Distance (cm)", "距离 （厘米）"};
   const Lingual kFrequencyLabelText = {"Frequency (Hz)", "频率 （赫兹）"};
+  const Lingual kPortNameLabelText = {"Port", "串口名"};
+  const Lingual kBaudRateLabelText = {"Baud Rate", "波特率"};
+  const Lingual kConnectPushButtonText = {"Connect", "连接"};
+  const Lingual kDisconnectPushButtonText = {"Disconnect", "断开"};
+  const Lingual kWindowTitle = {"TF03 Setup", "TF03 功能配置客户端"};
+
+  Lingual connect_button_current_lingual_;
+
   std::shared_ptr<CommandEchoWidgetsManager> command_echo_widgets_manager_;
   std::shared_ptr<CommandEchoHandler> command_echo_handler_;
+
+  QStringList port_combo_;
 };
 
 #endif // MAIN_WINDOW_H

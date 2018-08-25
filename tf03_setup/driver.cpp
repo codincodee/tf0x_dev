@@ -28,6 +28,7 @@ void Driver::SetBaudRate(const int &baudrate) {
 }
 
 bool Driver::Open() {
+  Close();
   LoadAllParsers(receive_parsers_);
   stop_signal_ = false;
   work_thead_ = std::thread(&Driver::WorkThread, this);

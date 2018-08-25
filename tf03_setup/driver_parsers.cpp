@@ -3,6 +3,7 @@
 #include <iostream>
 
 void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
+  parsers.clear();
   parsers.push_back(
       std::bind(
           Driver::ParseStatusEcho,
