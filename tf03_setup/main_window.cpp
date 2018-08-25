@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
   command_echo_widgets_manager_.reset(new CommandEchoWidgetsManager);
   command_echo_widgets_manager_->SetUIGrid(ui->CommandEchoGridLayout);
   command_echo_widgets_manager_->SetDriver(driver_);
+  command_echo_widgets_manager_->LoadWidgets();
 
   SetupUIText();
 }

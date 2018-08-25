@@ -8,11 +8,22 @@
 #include "lingual.h"
 #include <memory>
 #include <QElapsedTimer>
+#include <QComboBox>
 
-class Driver;
+#include "driver.h"
+#include <QDebug>
 
-struct CommandEchoWidgets
+struct CommandEchoWidgets : public QObject
 {
+  CommandEchoWidgets() {
+    item = new QLabel;
+    button = new QPushButton;
+    status = new QLabel;
+    button_lingual = kButtonLingual;
+    button->setText(which_lingual(kButtonLingual));
+    connect(button, SIGNAL(clicked()), this, SLOT(OnButtonClicked()));
+  }
+
   QLabel* item;
   QWidget* option;
   QPushButton* button;
@@ -20,15 +31,64 @@ struct CommandEchoWidgets
 
   Lingual item_lingual;
   Lingual button_lingual;
-  std::function<void()> option_lingual;
+  virtual void SetOptionLingual() {
+
+  }
   Lingual status_lingual;
 
-  std::function<void()> update;
+  virtual void Update() {
+    if (button->isEnabled()) {
+      return;
+    }
+    if (timer.elapsed() > 1000) {
+      button->setDisabled(false);
+      status->setText(which_lingual(kNoResponseLingual));
+      status_lingual = kNoResponseLingual;
+    }
+  }
 
-  Lingual kButtonText = {"Set", "设置"};
-  Lingual kNoResponse = {"No Response", "未响应"};
+  Lingual kButtonLingual = {"Set", "设置"};
+  Lingual kNoResponseLingual = {"No Response", "未响应"};
 
-  std::shared_ptr<QElapsedTimer> timer;
+  QElapsedTimer timer;
+
+  Q_OBJECT
+
+ public slots:
+  void OnButtonClicked() {
+    return ButtonClicked();
+  }
+ protected:
+  virtual void ButtonClicked() {}
+};
+
+struct SetProtocolWidgets : public CommandEchoWidgets {
+  SetProtocolWidgets() : CommandEchoWidgets() {
+    item_lingual = {"Protocol", "通信协议"};
+    combo = new QComboBox;
+    option = combo;
+  }
+  void SetOptionLingual() override {
+    combo->clear();
+    combo->addItem(which_lingual(devel));
+    combo->addItem(which_lingual(release));
+  }
+  void ButtonClicked() override {
+    button->setDisabled(true);
+    status->clear();
+    timer.restart();
+    if (lingual_equal(combo->currentText(), devel)) {
+      driver->SetDevelMode();
+    } else if (lingual_equal(combo->currentText(), release)) {
+      driver->SetReleaseMode();
+    } else {
+      qDebug() << "Error: " << __FUNCTION__ << __LINE__;
+    }
+  }
+  Lingual devel = {"Devel", "开发"};
+  Lingual release = {"Release", "发布"};
+  std::shared_ptr<Driver> driver;
+  QComboBox* combo;
 };
 
 class CommandEchoWidgetsManager : public QObject {
@@ -36,11 +96,14 @@ class CommandEchoWidgetsManager : public QObject {
   CommandEchoWidgetsManager();
   void SetUIGrid(QGridLayout* layout);
   void SetDriver(std::shared_ptr<Driver> driver);
-  void AddWidgets(const char& id, const CommandEchoWidgets& widget);
+  void LoadWidgets();
+
+  void AddWidgets(
+      const char& id, const std::shared_ptr<CommandEchoWidgets>& widget);
   void UpdateUITexts();
   void Update();
  private:
-  std::unordered_map<char, CommandEchoWidgets> widgets_;
+  std::unordered_map<char, std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_;
   const Lingual kSetButtonText;
   std::shared_ptr<Driver> driver_;
