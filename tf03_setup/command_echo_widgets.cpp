@@ -84,6 +84,7 @@ void SetProtocolWidgets::ButtonClicked() {
 SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
   id = 0x03;
   combo = new QComboBox;
+  combo->addItem("0");
   combo->addItem("1");
   combo->addItem("5");
   combo->addItem("10");
