@@ -1,17 +1,14 @@
 #ifndef COMMAND_ECHO_WIDGETS_H
 #define COMMAND_ECHO_WIDGETS_H
 
-#include <QLabel>
-#include <QPushButton>
-#include <unordered_map>
-#include <QGridLayout>
+#include <QObject>
 #include "lingual.h"
-#include <memory>
 #include <QElapsedTimer>
-#include <QComboBox>
 
-#include "driver.h"
-#include <QDebug>
+class QLabel;
+class QPushButton;
+class Driver;
+class QComboBox;
 
 struct CommandEchoWidgets : public QObject
 {

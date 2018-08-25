@@ -1,7 +1,9 @@
 #include "command_echo_widgets.h"
+#include <QLabel>
+#include <QPushButton>
 #include <QComboBox>
-#include <QDebug>
 #include "driver.h"
+#include <QDebug>
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 

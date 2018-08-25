@@ -1,7 +1,8 @@
 #include "command_echo_widgets_manager.h"
-
 #include <QGridLayout>
 #include "command_echo_widgets.h"
+#include <QLabel>
+#include <QPushButton>
 
 CommandEchoWidgetsManager::CommandEchoWidgetsManager() {
 }
