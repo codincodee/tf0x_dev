@@ -10,6 +10,7 @@
 #include <queue>
 #include <unordered_map>
 #include "lingual.h"
+#include <QSerialPortInfo>
 
 class QSerialPort;
 class QByteArray;
@@ -30,6 +31,8 @@ class Driver
  public:
   Driver();
   // Configurations
+  void SetPortName(const QString& port);
+  void SetBaudRate(const int& baudrate);
 
   // Initialize
   bool Open();
@@ -40,6 +43,7 @@ class Driver
   void SetFrequency(const unsigned short& frequency);
   void RequestSerialNumber();
   std::vector<Message> GetMessages();
+  bool DetectAndAutoConnect();
 
  private:
   using CommandFunc = std::function<bool()>;
@@ -91,6 +95,11 @@ class Driver
   void LoadAllParsers(std::vector<ReceiveParser>& parsers);
 
   static std::unordered_map<char, Lingual> kEchoStatusIDMap;
+
+  QList<QSerialPortInfo> last_serial_ports_;
+
+  QString port_name_;
+  int baud_rate_;
 };
 
 #endif // DRIVER_H

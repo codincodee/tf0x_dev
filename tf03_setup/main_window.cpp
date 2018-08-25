@@ -6,6 +6,7 @@
 #include <QDebug>
 #include "command_echo_handler.h"
 #include "command_echo_widgets_manager.h"
+#include <QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -39,6 +40,7 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   if (event->timerId() != timer_id_) {
     return;
   }
+  driver_->DetectAndAutoConnect();
   MeasureBasic measure;
   if (driver_->LastMeasure(measure)) {
     ui->DistanceDisplayLabel->setText(QString::number(measure.dist));

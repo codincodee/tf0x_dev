@@ -16,7 +16,15 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x44, {"Communication Protocol", "通信协议"}}
 };
 
-Driver::Driver() {
+Driver::Driver() : baud_rate_(115200) {
+}
+
+void Driver::SetPortName(const QString &port) {
+  port_name_ = port;
+}
+
+void Driver::SetBaudRate(const int &baudrate) {
+  baud_rate_ = baudrate;
 }
 
 bool Driver::Open() {
@@ -49,12 +57,8 @@ bool Driver::LastMeasure(MeasureBasic &measure) {
 
 void Driver::WorkThread() {
   serial_port_.reset(new QSerialPort);
-  serial_port_->setBaudRate(115200);
-  auto ports = QSerialPortInfo::availablePorts();
-  if (ports.empty()) {
-    return;
-  }
-  serial_port_->setPortName(ports.begin()->portName());
+  serial_port_->setBaudRate(baud_rate_);
+  serial_port_->setPortName(port_name_);
   if (!serial_port_->open(QIODevice::ReadWrite)) {
     return;
   }
@@ -119,4 +123,33 @@ bool Driver::SendMessage(const QByteArray &msg) {
   }
   serial_port_->write(msg);
   return true;
+}
+
+
+bool Driver::DetectAndAutoConnect() {
+  auto ports = QSerialPortInfo::availablePorts();
+  if (ports.isEmpty()) {
+    last_serial_ports_.clear();
+  }
+  if (ports.size() != 1) {
+    return false;
+  }
+  if (last_serial_ports_.isEmpty()) {
+    last_serial_ports_ = ports;
+    Close();
+    SetPortName(ports.front().portName());
+    Open();
+    return true;
+  }
+  if (last_serial_ports_.size() != 1) {
+    return false;
+  }
+  if (last_serial_ports_.front().portName() != ports.front().portName()) {
+    last_serial_ports_ = ports;
+    Close();
+    SetPortName(ports.front().portName());
+    Open();
+    return true;
+  }
+  return false;
 }
