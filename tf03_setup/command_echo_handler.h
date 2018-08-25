@@ -14,9 +14,12 @@ public:
   void Probe();
   bool IsCommandEchoed(const char& id);
   bool IsCommandSucceeded(const char& id);
+  bool IsFrequencyEchoed();
+  unsigned short Frequency();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
+  std::vector<unsigned short> frequencies_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

@@ -15,6 +15,10 @@ struct StatusEcho : public ParsedBase {
   bool success;
 };
 
+struct FrequencyEcho : public ParsedBase {
+  unsigned short frequency;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

@@ -17,7 +17,7 @@ class QByteArray;
 QByteArray to_bytes(const unsigned short& value);
 
 enum class MessageType {
-  measure, status
+  measure, status, frequency
 };
 
 struct Message {
@@ -65,6 +65,8 @@ class Driver
   static QByteArray Parse0x5AMessageAtFront(
       const QByteArray& buffer, int& from, int& to);
   static bool ParseStatusEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseFrequencyEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray ParseNineByteMeasureMessageAtFront(
       const QByteArray& buffer, int& from, int& to);

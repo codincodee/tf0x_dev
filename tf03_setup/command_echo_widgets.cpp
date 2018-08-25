@@ -106,3 +106,15 @@ void SetFrequencyWidgets::ButtonClicked() {
   }
   driver->SetFrequency(freq);
 }
+
+void SetFrequencyWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsFrequencyEchoed()) {
+    auto str = QString::number(echo_handler->Frequency());
+    status_lingual = kSuccessLingual;
+    status_lingual.eng += ": " + str + "Hz";
+    status_lingual.chn += ": " + str + "赫兹";
+    status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
+  }
+}

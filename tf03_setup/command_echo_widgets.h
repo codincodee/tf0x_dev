@@ -66,6 +66,7 @@ struct SetProtocolWidgets : public CommandEchoWidgets {
 struct SetFrequencyWidgets : public CommandEchoWidgets {
   SetFrequencyWidgets();
   void ButtonClicked() override;
+  void Update() override;
   QComboBox* combo;
 };
 

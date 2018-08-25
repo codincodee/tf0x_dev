@@ -12,12 +12,39 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
+          Driver::ParseFrequencyEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
           &Driver::ParseNineByteMeasure,
           this,
           std::placeholders::_1,
           std::placeholders::_2,
           std::placeholders::_3,
           std::placeholders::_4));
+}
+
+bool Driver::ParseFrequencyEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 6) {
+    return false;
+  }
+  auto id = msg[2];
+  if (id != char(0x03)) {
+    return false;
+  }
+  parsed.type = MessageType::frequency;
+  std::unique_ptr<FrequencyEcho> data(new FrequencyEcho);
+  memcpy(&data->frequency, msg.data() + 3, 2);
+  parsed.data = std::move(data);
+  return true;
 }
 
 bool Driver::ParseStatusEcho(
