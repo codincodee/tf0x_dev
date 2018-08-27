@@ -28,7 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
   command_echo_widgets_manager_->LoadWidgets();
 
   connect_button_current_lingual_ = kConnectPushButtonText;
-  ui->BaudRateComboBox->addItem("115200");
+  auto baud_rates = Driver::BaudRates();
+  for (auto& rate : baud_rates) {
+    ui->BaudRateComboBox->addItem(QString::number(rate));
+  }
 
   SetupUIText();
 }

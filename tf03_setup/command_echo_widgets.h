@@ -123,4 +123,12 @@ struct RestoreFactoryWidgets : public CommandEchoWidgets {
   void ButtonClicked() override;
 };
 
+////////////////////// SetSerialBaudRateWidgets /////////////////////////////
+
+struct SetSerialBaudRateWidgets : public CommandEchoWidgets {
+  SetSerialBaudRateWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+  QComboBox* combo;
+};
 #endif // COMMAND_ECHO_WIDGETS_H

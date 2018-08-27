@@ -20,6 +20,7 @@ void CommandEchoHandler::Probe() {
   frequencies_.clear();
   serial_numbers_.clear();
   output_status_.clear();
+  baud_rates_.clear();
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
     if (msg.type == MessageType::status) {
@@ -42,6 +43,11 @@ void CommandEchoHandler::Probe() {
           static_unique_ptr_cast<OutputSwitchEcho>(std::move(msg.data));
       if (status) {
         output_status_.push_back(status->on);
+      }
+    } else if (msg.type == MessageType::baud_rate) {
+      auto baud_rate = static_unique_ptr_cast<BaudRateEcho>(std::move(msg.data));
+      if (baud_rate) {
+        baud_rates_.push_back(baud_rate->value);
       }
     }
   }
@@ -92,4 +98,15 @@ bool CommandEchoHandler::IsOutputOn() {
     return false;
   }
   return *output_status_.rbegin();
+}
+
+bool CommandEchoHandler::IsBaudRateEchoed() {
+  return !baud_rates_.empty();
+}
+
+int CommandEchoHandler::BaudRate() {
+  if (!IsBaudRateEchoed()) {
+    return 0;
+  }
+  return *baud_rates_.rbegin();
 }

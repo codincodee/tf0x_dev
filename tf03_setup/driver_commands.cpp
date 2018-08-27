@@ -60,6 +60,12 @@ void Driver::RestoreFactory() {
   });
 }
 
+void Driver::SetDeviceBaudRate(const uint32_t &rate) {
+  EnqueueCommand([this, rate](){
+    return SendMessage(CommonCommand(char(0x06), to_bytes(rate)));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);

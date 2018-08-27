@@ -28,6 +28,10 @@ struct OutputSwitchEcho : public ParsedBase {
   bool on;
 };
 
+struct BaudRateEcho : public ParsedBase {
+  uint32_t value;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

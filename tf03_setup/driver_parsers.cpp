@@ -34,6 +34,13 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
+          Driver::ParseBaudRateEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
           &Driver::ParseNineByteMeasure,
           this,
           std::placeholders::_1,
@@ -111,6 +118,27 @@ bool Driver::ParseOutputSwitchEcho(
   parsed.type = MessageType::output_switch;
   std::unique_ptr<OutputSwitchEcho> data(new OutputSwitchEcho);
   data->on = (msg[3] == char(1));
+  parsed.data = std::move(data);
+  return true;
+}
+
+
+bool Driver::ParseBaudRateEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 8) {
+    return false;
+  }
+  auto id = msg[2];
+  if (id != char(0x06)) {
+    return false;
+  }
+  parsed.type = MessageType::baud_rate;
+  std::unique_ptr<BaudRateEcho> data(new BaudRateEcho);
+  memcpy(&data->value, msg.data() + 3, 4);
   parsed.data = std::move(data);
   return true;
 }

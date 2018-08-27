@@ -15,10 +15,15 @@
 class QSerialPort;
 class QByteArray;
 
-QByteArray to_bytes(const unsigned short& value);
+template<typename T>
+QByteArray to_bytes(const T& value) {
+  QByteArray buffer(sizeof(value), 0);
+  memcpy(buffer.data(), &value, sizeof(value));
+  return buffer;
+}
 
 enum class MessageType {
-  measure, status, frequency, serial_number, output_switch
+  measure, status, frequency, serial_number, output_switch, baud_rate
 };
 
 struct Message {
@@ -47,9 +52,12 @@ class Driver
   void TriggerOnce();
   void SaveSettingsToFlash();
   void RestoreFactory();
+  void SetDeviceBaudRate(const uint32_t& rate);
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
+  static std::vector<int> BaudRates();
+  static int DefaultBaudRate();
 
  private:
   using CommandFunc = std::function<bool()>;
@@ -82,6 +90,8 @@ class Driver
   static bool ParseSerialNumberEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseOutputSwitchEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseBaudRateEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   bool ParseDevelModeMeasure(
       const QByteArray& buffer, Message& parsed, int& from, int& to);

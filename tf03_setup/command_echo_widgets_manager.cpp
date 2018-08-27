@@ -81,6 +81,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<MeasureTriggerWidgets>(new MeasureTriggerWidgets));
   AddWidgets(
+      std::shared_ptr<SetSerialBaudRateWidgets>(new SetSerialBaudRateWidgets));
+  AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));

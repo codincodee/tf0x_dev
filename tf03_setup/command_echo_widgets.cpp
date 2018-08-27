@@ -284,3 +284,39 @@ void RestoreFactoryWidgets::ButtonClicked() {
   CommandEchoWidgets::ButtonClicked();
   driver->RestoreFactory();
 }
+
+////////////////////// SetSerialBaudRateWidgets /////////////////////////////
+
+SetSerialBaudRateWidgets::SetSerialBaudRateWidgets() {
+  id = 0x06;
+  item_lingual = {"Baud Rate", "设置波特率"};
+  combo = new QComboBox;
+  auto baud_rates = Driver::BaudRates();
+  for (auto& rate : baud_rates) {
+    combo->addItem(QString::number(rate));
+  }
+  option = combo;
+}
+
+void SetSerialBaudRateWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto rate = combo->currentText().toInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetDeviceBaudRate(rate);
+}
+
+void SetSerialBaudRateWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsBaudRateEchoed()) {
+    auto rate = echo_handler->BaudRate();
+    auto str = QString::number(rate);
+    status_lingual = kSuccessLingual;
+    status_lingual.eng = status_lingual.eng + ": " + str;
+    status_lingual.chn = status_lingual.chn + ": " + str;
+    status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
+  }
+}
