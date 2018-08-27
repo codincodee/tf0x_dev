@@ -13,17 +13,17 @@ class CommandEchoHandler;
 class CommandEchoWidgetsManager {
  public:
   CommandEchoWidgetsManager();
-  void SetUIGrid(QGridLayout* layout);
+  void SetUIGrid(QGridLayout *layout);
   void SetDriver(std::shared_ptr<Driver> driver);
   void SetEchoHandler(std::shared_ptr<CommandEchoHandler> handler);
   void LoadWidgets();
 
-  void AddWidgets(
-      const char& id, const std::shared_ptr<CommandEchoWidgets>& widget);
+  void AddWidgets(const std::shared_ptr<CommandEchoWidgets>& widget);
   void UpdateUITexts();
   void Update();
  private:
-  std::unordered_map<char, std::shared_ptr<CommandEchoWidgets>> widgets_;
+  void SetupUIGrid(QGridLayout* layout);
+  std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_;
   std::shared_ptr<Driver> driver_;
   std::shared_ptr<CommandEchoHandler> echo_handler_;
