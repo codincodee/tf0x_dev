@@ -109,6 +109,10 @@ class Driver
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray ParseNineByteMeasureMessageAtFront(
       const QByteArray& buffer, int& from, int& to);
+  bool ParsePIXMeasure(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static QByteArray ParsePIXMeasureMessageAtFront(
+      const QByteArray& buffer, int& from, int& to);
   static bool CheckSum(const QByteArray& buffer, const int& from, const int& to);
   using ReceiveParser =
       std::function<bool(

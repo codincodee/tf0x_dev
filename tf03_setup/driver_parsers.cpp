@@ -54,6 +54,14 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_2,
           std::placeholders::_3,
           std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
+          &Driver::ParsePIXMeasure,
+          this,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   parsers.push_back(
       std::bind(
@@ -275,6 +283,58 @@ QByteArray Driver::ParseNineByteMeasureMessageAtFront(
               result.reserve(to - from + 1);
               for (int j = from; j <= to; ++j) {
                 result.push_back(buffer[j]);
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+
+bool Driver::ParsePIXMeasure(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = ParsePIXMeasureMessageAtFront(buffer, from, to);
+  msg.remove(msg.size() - 2, 2);
+  bool ok;
+  auto dist = msg.toFloat(&ok);
+  if (!ok) {
+    return false;
+  }
+  std::unique_ptr<MeasureBasic> measure(new MeasureBasic);
+  ++measure_id_;
+  measure->id = measure_id_;
+  measure->dist = dist * 100;
+  parsed.type = MessageType::measure;
+  parsed.data = std::move(measure);
+  return true;
+}
+
+QByteArray Driver::ParsePIXMeasureMessageAtFront(
+    const QByteArray &buffer, int &from, int &to) {
+  QByteArray result;
+  for (int i = 0; i < buffer.size(); ++i) {
+    if (buffer[i] == '\r') {
+      auto ii = i + 1;
+      if (ii < buffer.size()) {
+        if (buffer[ii] == '\n') {
+          auto _iiii = i - 3;
+          if (_iiii >= 0) {
+            if (buffer[_iiii] == '.') {
+              int j = _iiii;
+              while (j >= 0) {
+                --j;
+                if (!isdigit(buffer[j])) {
+                  break;
+                }
+              }
+              from = j + 1;
+              to = ii;
+              result.reserve(to - from + 1);
+              for (int k = from; k <= to; ++k) {
+                result.push_back(buffer[k]);
               }
               break;
             }
