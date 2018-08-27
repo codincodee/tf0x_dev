@@ -54,16 +54,20 @@ void MainWindow::timerEvent(QTimerEvent *event) {
   UpdatePortNameComboBox();
 
   MeasureBasic measure;
-  if (driver_->LastMeasure(measure)) {
+  auto new_measure = driver_->LastMeasure(measure);
+  if (new_measure) {
     ui->DistanceDisplayLabel->setText(QString::number(measure.dist));
-    auto elapse = frequency_timer_.elapsed();
-    if (elapse > 1000) {
-      auto frequency =
-          (measure.id - last_freq_measure_id_) / (elapse / 1000.0f);
-      ui->FrequencyDisplayLabel->setText(QString::number(frequency, 'f', 2));
-      last_freq_measure_id_ = measure.id;
-      frequency_timer_.restart();
+  }
+  auto elapse = frequency_timer_.elapsed();
+  if (elapse > 1000) {
+    if (!new_measure) {
+      measure.id = last_freq_measure_id_;
     }
+    auto id_diff = measure.id - last_freq_measure_id_;
+    float frequency = (id_diff != 0) ? id_diff / (elapse / 1000.0f) : 0.0f;
+    ui->FrequencyDisplayLabel->setText(QString::number(frequency, 'f', 2));
+    last_freq_measure_id_ = measure.id;
+    frequency_timer_.restart();
   }
 
   command_echo_handler_->Probe();
