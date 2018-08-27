@@ -82,6 +82,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<MeasureTriggerWidgets>(new MeasureTriggerWidgets));
   AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
+  AddWidgets(
+      std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));
 
   if (ui_grid_) {
     SetupUIGrid(ui_grid_);

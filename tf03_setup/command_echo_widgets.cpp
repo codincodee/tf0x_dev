@@ -8,7 +8,7 @@
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
-CommandEchoWidgets::CommandEchoWidgets() {
+CommandEchoWidgets::CommandEchoWidgets() : timeout(1000) {
   id = 0;
   item = new QLabel;
   option = nullptr;
@@ -27,7 +27,7 @@ void CommandEchoWidgets::Update() {
   if (button->isEnabled()) {
     return;
   }
-  if (timer.elapsed() > 2000) {
+  if (timer.elapsed() > timeout) {
     button->setDisabled(false);
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
@@ -52,6 +52,44 @@ void CommandEchoWidgets::ButtonClicked() {
   button->setDisabled(true);
   status->clear();
   timer.restart();
+}
+
+//void CommandEchoWidgets::SetWidgetNotApplicable(QWidget*& widget) {
+//  if (widget) {
+//    delete widget;
+//  }
+//  auto label = new QLabel;
+//  label->setText("---");
+//  label->setAlignment(Qt::AlignHCenter);
+//  widget = label;
+//}
+
+const QString CommandEchoWidgets::kUINullString(" --- ");
+
+QLabel* CommandEchoWidgets::UINullLabel() {
+  auto label = new QLabel;
+  label->setText(kUINullString);
+  label->setAlignment(Qt::AlignHCenter);
+  return label;
+}
+
+void CommandEchoWidgets::SetWidgetUINullLabel(QWidget *&widget) {
+  if (widget) {
+    delete widget;
+  }
+  widget = UINullLabel();
+}
+
+void CommandEchoWidgets::SetStatusLabelUINull() {
+  if (status) {
+    delete status;
+  }
+  status = UINullLabel();
+  status_lingual = {kUINullString, kUINullString};
+}
+
+void CommandEchoWidgets::SetOptionWidgetUINull() {
+  SetWidgetUINullLabel(option);
 }
 
 ////////////////////// SetProtocolWidgets /////////////////////////////
@@ -207,6 +245,8 @@ MeasureTriggerWidgets::MeasureTriggerWidgets() {
   id = 0x04;
   item_lingual = {"Trigger Once", "单次触发"};
   button_lingual = {"Trigger", "触发"};
+  SetOptionWidgetUINull();
+  SetStatusLabelUINull();
 }
 
 void MeasureTriggerWidgets::ButtonClicked() {
@@ -217,11 +257,13 @@ void MeasureTriggerWidgets::Update() {
 
 }
 
-////////////////////// SaveSettingsWidgets /////////////////////////////
+////////////////////// FlashSettingsWidgets /////////////////////////////
 
 FlashSettingsWidgets::FlashSettingsWidgets() {
   id = 0x11;
+  timeout = 3000;
   item_lingual = {"Flash Settings", "写入设置"};
+  SetOptionWidgetUINull();
 }
 
 void FlashSettingsWidgets::ButtonClicked() {
@@ -229,4 +271,16 @@ void FlashSettingsWidgets::ButtonClicked() {
   driver->SaveSettingsToFlash();
 }
 
+////////////////////// RestoreFactoryWidgets /////////////////////////////
 
+RestoreFactoryWidgets::RestoreFactoryWidgets() {
+  id = 0x10;
+  timeout = 3000;
+  item_lingual = {"Restore Factory", "出厂设置"};
+  SetWidgetUINullLabel(option);
+}
+
+void RestoreFactoryWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  driver->RestoreFactory();
+}

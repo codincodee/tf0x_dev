@@ -42,6 +42,8 @@ struct CommandEchoWidgets : public QObject
   std::shared_ptr<Driver> driver;
   std::shared_ptr<CommandEchoHandler> echo_handler;
 
+  int timeout;
+
   Q_OBJECT
 
  public slots:
@@ -49,6 +51,11 @@ struct CommandEchoWidgets : public QObject
 
  protected:
   virtual void ButtonClicked();
+  static QLabel* UINullLabel();
+  static void SetWidgetUINullLabel(QWidget*& widget);
+  void SetOptionWidgetUINull();
+  void SetStatusLabelUINull();
+  const static QString kUINullString;
 };
 
 ////////////////////// SetProtocolWidgets /////////////////////////////
@@ -102,10 +109,17 @@ struct MeasureTriggerWidgets : public CommandEchoWidgets {
   void Update() override;
 };
 
-////////////////////// SaveSettingsWidgets /////////////////////////////
+////////////////////// FlashSettingsWidgets /////////////////////////////
 
 struct FlashSettingsWidgets : public CommandEchoWidgets {
   FlashSettingsWidgets();
+  void ButtonClicked() override;
+};
+
+////////////////////// RestoreFactoryWidgets /////////////////////////////
+
+struct RestoreFactoryWidgets : public CommandEchoWidgets {
+  RestoreFactoryWidgets();
   void ButtonClicked() override;
 };
 

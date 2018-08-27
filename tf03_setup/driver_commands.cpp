@@ -54,6 +54,12 @@ void Driver::SaveSettingsToFlash() {
   });
 }
 
+void Driver::RestoreFactory() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x10), QByteArray()));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);
