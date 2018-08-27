@@ -362,7 +362,7 @@ void SetOutputFormatWidgets::SetOptionLingual() {
   CommandEchoWidgets::SetOptionLingual();
   combo->clear();
   combo->addItem(which_lingual(kNineBytes));
-  combo->addItem(which_lingual(kPIX));
+  combo->addItem(which_lingual(kPixhawk));
 }
 
 void SetOutputFormatWidgets::ButtonClicked() {
@@ -370,7 +370,7 @@ void SetOutputFormatWidgets::ButtonClicked() {
   auto type = combo->currentText();
   if (lingual_equal(type, kNineBytes)) {
     driver->SetOutputFormatNineBytes();
-  } else if (lingual_equal(type, kPIX)) {
+  } else if (lingual_equal(type, kPixhawk)) {
     driver->SetOutputFormatPIX();
   }
 }
@@ -383,7 +383,7 @@ void SetOutputFormatWidgets::Update() {
     if (format == OutputFormat::nine_bytes) {
       status_lingual = status_lingual + ": " + kNineBytes;
     } else if (format == OutputFormat::pix) {
-      status_lingual = status_lingual + ": " + kPIX;
+      status_lingual = status_lingual + ": " + kPixhawk;
     } else {
       return;
     }

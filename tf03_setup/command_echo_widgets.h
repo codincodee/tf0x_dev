@@ -152,6 +152,6 @@ struct SetOutputFormatWidgets : public CommandEchoWidgets {
   void Update() override;
   QComboBox* combo;
   const Lingual kNineBytes = {"9 Bytes", "9字节"};
-  const Lingual kPIX = {"PIX", "PIX"};
+  const Lingual kPixhawk = {"Pixhawk", "Pixhawk"};
 };
 #endif // COMMAND_ECHO_WIDGETS_H

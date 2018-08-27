@@ -56,7 +56,7 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
-          &Driver::ParsePIXMeasure,
+          &Driver::ParsePixhawkMeasure,
           this,
           std::placeholders::_1,
           std::placeholders::_2,
@@ -294,9 +294,9 @@ QByteArray Driver::ParseNineByteMeasureMessageAtFront(
   return result;
 }
 
-bool Driver::ParsePIXMeasure(
+bool Driver::ParsePixhawkMeasure(
     const QByteArray &buffer, Message &parsed, int &from, int &to) {
-  auto msg = ParsePIXMeasureMessageAtFront(buffer, from, to);
+  auto msg = ParsePixhawkMeasureMessageAtFront(buffer, from, to);
   msg.remove(msg.size() - 2, 2);
   bool ok;
   auto dist = msg.toFloat(&ok);
@@ -312,7 +312,7 @@ bool Driver::ParsePIXMeasure(
   return true;
 }
 
-QByteArray Driver::ParsePIXMeasureMessageAtFront(
+QByteArray Driver::ParsePixhawkMeasureMessageAtFront(
     const QByteArray &buffer, int &from, int &to) {
   QByteArray result;
   for (int i = 0; i < buffer.size(); ++i) {
