@@ -102,4 +102,11 @@ struct MeasureTriggerWidgets : public CommandEchoWidgets {
   void Update() override;
 };
 
+////////////////////// SaveSettingsWidgets /////////////////////////////
+
+struct FlashSettingsWidgets : public CommandEchoWidgets {
+  FlashSettingsWidgets();
+  void ButtonClicked() override;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

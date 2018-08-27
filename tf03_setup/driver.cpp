@@ -13,7 +13,8 @@ QByteArray to_bytes(const unsigned short &value) {
 }
 
 std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
-  {0x44, {"Communication Protocol", "通信协议"}}
+  {0x44, {"Communication Protocol", "通信协议"}},
+  {0x11, {"Save Settings to Flash", "写入设置"}}
 };
 
 Driver::Driver() : baud_rate_(115200) {

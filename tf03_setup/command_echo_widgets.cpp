@@ -27,7 +27,7 @@ void CommandEchoWidgets::Update() {
   if (button->isEnabled()) {
     return;
   }
-  if (timer.elapsed() > 1000) {
+  if (timer.elapsed() > 2000) {
     button->setDisabled(false);
     status->setText(which_lingual(kNoResponseLingual));
     status_lingual = kNoResponseLingual;
@@ -216,3 +216,17 @@ void MeasureTriggerWidgets::ButtonClicked() {
 void MeasureTriggerWidgets::Update() {
 
 }
+
+////////////////////// SaveSettingsWidgets /////////////////////////////
+
+FlashSettingsWidgets::FlashSettingsWidgets() {
+  id = 0x11;
+  item_lingual = {"Flash Settings", "写入设置"};
+}
+
+void FlashSettingsWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  driver->SaveSettingsToFlash();
+}
+
+

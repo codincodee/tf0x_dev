@@ -24,7 +24,7 @@ class CommandEchoWidgetsManager {
  private:
   void SetupUIGrid(QGridLayout* layout);
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
-  QGridLayout* ui_grid_;
+  QGridLayout* ui_grid_ = nullptr;
   std::shared_ptr<Driver> driver_;
   std::shared_ptr<CommandEchoHandler> echo_handler_;
 };

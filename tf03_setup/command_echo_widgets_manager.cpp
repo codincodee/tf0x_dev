@@ -80,6 +80,10 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<OutputSwitchWidgets>(new OutputSwitchWidgets));
   AddWidgets(
       std::shared_ptr<MeasureTriggerWidgets>(new MeasureTriggerWidgets));
+  AddWidgets(
+      std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
 
-  SetupUIGrid(ui_grid_);
+  if (ui_grid_) {
+    SetupUIGrid(ui_grid_);
+  }
 }

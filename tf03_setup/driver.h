@@ -45,6 +45,7 @@ class Driver
   void SetOutputSwitchOn();
   void SetOutputSwitchOff();
   void TriggerOnce();
+  void SaveSettingsToFlash();
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
