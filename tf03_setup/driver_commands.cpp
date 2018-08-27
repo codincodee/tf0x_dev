@@ -72,6 +72,18 @@ void Driver::SetTransTypeCAN() {
   });
 }
 
+void Driver::SetOutputFormatNineBytes() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x05), QByteArray(1, 0x01)));
+  });
+}
+
+void Driver::SetOutputFormatPIX() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x05), QByteArray(1, 0x02)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

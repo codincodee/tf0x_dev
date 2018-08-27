@@ -85,6 +85,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<SetPortTypeWidgets>(new SetPortTypeWidgets));
   AddWidgets(
+      std::shared_ptr<SetOutputFormatWidgets>(new SetOutputFormatWidgets));
+  AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));

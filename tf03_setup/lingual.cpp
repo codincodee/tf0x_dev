@@ -1,5 +1,17 @@
 #include "lingual.h"
 
+Lingual& Lingual::operator+(const QString& str) {
+  eng += str;
+  chn += str;
+  return *this;
+}
+
+Lingual& Lingual::operator+(const Lingual& lingual) {
+  eng += lingual.eng;
+  chn += lingual.chn;
+  return *this;
+}
+
 Language gCurrentLanguage = Language::chinese;
 std::shared_mutex gCurrentLanguageMutex;
 

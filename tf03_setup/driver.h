@@ -23,7 +23,13 @@ QByteArray to_bytes(const T& value) {
 }
 
 enum class MessageType {
-  measure, status, frequency, serial_number, output_switch, baud_rate
+  measure,
+  status,
+  frequency,
+  serial_number,
+  output_switch,
+  baud_rate,
+  output_format
 };
 
 struct Message {
@@ -55,6 +61,8 @@ class Driver
   void SetDeviceBaudRate(const uint32_t& rate);
   void SetTransTypeSerial();
   void SetTransTypeCAN();
+  void SetOutputFormatNineBytes();
+  void SetOutputFormatPIX();
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
@@ -94,6 +102,8 @@ class Driver
   static bool ParseOutputSwitchEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseBaudRateEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseOutputFormatEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   bool ParseDevelModeMeasure(
       const QByteArray& buffer, Message& parsed, int& from, int& to);

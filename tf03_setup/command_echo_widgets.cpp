@@ -332,6 +332,7 @@ SetPortTypeWidgets::SetPortTypeWidgets() {
 }
 
 void SetPortTypeWidgets::SetOptionLingual() {
+  CommandEchoWidgets::SetOptionLingual();
   combo->clear();
   combo->addItem(which_lingual(kSerial));
   combo->addItem(which_lingual(kCAN));
@@ -344,5 +345,49 @@ void SetPortTypeWidgets::ButtonClicked() {
     driver->SetTransTypeSerial();
   } else if (lingual_equal(type, kCAN)) {
     driver->SetTransTypeCAN();
+  }
+}
+
+////////////////////// SetOutputFormatWidgets /////////////////////////////
+
+SetOutputFormatWidgets::SetOutputFormatWidgets() {
+  id = 0x05;
+  // timeout = 3000;
+  item_lingual = {"Output Format", "输出格式"};
+  combo = new QComboBox;
+  option = combo;
+}
+
+void SetOutputFormatWidgets::SetOptionLingual() {
+  CommandEchoWidgets::SetOptionLingual();
+  combo->clear();
+  combo->addItem(which_lingual(kNineBytes));
+  combo->addItem(which_lingual(kPIX));
+}
+
+void SetOutputFormatWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto type = combo->currentText();
+  if (lingual_equal(type, kNineBytes)) {
+    driver->SetOutputFormatNineBytes();
+  } else if (lingual_equal(type, kPIX)) {
+    driver->SetOutputFormatPIX();
+  }
+}
+
+void SetOutputFormatWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsOutputFormatEchoed()) {
+    auto format = echo_handler->GetOutputFormat();
+    status_lingual = kSuccessLingual;
+    if (format == OutputFormat::nine_bytes) {
+      status_lingual = status_lingual + ": " + kNineBytes;
+    } else if (format == OutputFormat::pix) {
+      status_lingual = status_lingual + ": " + kPIX;
+    } else {
+      return;
+    }
+    status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
   }
 }

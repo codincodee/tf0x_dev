@@ -142,4 +142,16 @@ struct SetPortTypeWidgets : public CommandEchoWidgets {
   const Lingual kSerial = {"Serial", "串口"};
   const Lingual kCAN = {"CAN", "CAN"};
 };
+
+////////////////////// SetOutputFormatWidgets /////////////////////////////
+
+struct SetOutputFormatWidgets : public CommandEchoWidgets {
+  SetOutputFormatWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  void Update() override;
+  QComboBox* combo;
+  const Lingual kNineBytes = {"9 Bytes", "9字节"};
+  const Lingual kPIX = {"PIX", "PIX"};
+};
 #endif // COMMAND_ECHO_WIDGETS_H

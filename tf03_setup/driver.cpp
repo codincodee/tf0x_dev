@@ -107,6 +107,9 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
       }
     }
     if (parsed_cnt == 0) {
+      if (buffer.size() > 30) {
+        buffer.clear();
+      }
       break;
     }
   }
@@ -124,7 +127,7 @@ bool Driver::SendMessage(const QByteArray &msg) {
 }
 
 std::vector<int> Driver::BaudRates() {
-  return {115200, 57600};
+  return {115200, 57600, 38400, 19200, 9600, 4800, 2400, 1200};
 }
 
 int Driver::DefaultBaudRate() {

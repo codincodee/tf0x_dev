@@ -32,6 +32,14 @@ struct BaudRateEcho : public ParsedBase {
   uint32_t value;
 };
 
+enum class OutputFormat {
+  nine_bytes, pix
+};
+
+struct OutputFormatEcho : public ParsedBase {
+  OutputFormat format;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

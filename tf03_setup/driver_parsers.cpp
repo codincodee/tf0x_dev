@@ -41,6 +41,13 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
+          Driver::ParseOutputFormatEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
           &Driver::ParseNineByteMeasure,
           this,
           std::placeholders::_1,
@@ -143,6 +150,32 @@ bool Driver::ParseBaudRateEcho(
   return true;
 }
 
+bool Driver::ParseOutputFormatEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 5) {
+    return false;
+  }
+  auto id = msg[2];
+  if (id != char(0x05)) {
+    return false;
+  }
+  parsed.type = MessageType::output_format;
+  std::unique_ptr<OutputFormatEcho> data(new OutputFormatEcho);
+  if (msg[3] == char(0x01)) {
+    data->format = OutputFormat::nine_bytes;
+  } else if (msg[3] = char(0x02)) {
+    data->format = OutputFormat::pix;
+  } else {
+    return false;
+  }
+  parsed.data = std::move(data);
+  return true;
+}
+
 bool Driver::ParseDevelModeMeasure(
     const QByteArray &buffer, Message &parsed, int &from, int &to) {
   auto msg = Parse0x5AMessageAtFront(buffer, from, to);
@@ -171,6 +204,7 @@ bool Driver::ParseStatusEcho(
     return false;
   }
   auto id = msg[2];
+  // qDebug() << short(id);
   if (kEchoStatusIDMap.count(id) == 0) {
     return false;
   }

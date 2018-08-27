@@ -6,6 +6,7 @@
 
 class Driver;
 class QString;
+enum class OutputFormat;
 
 class CommandEchoHandler
 {
@@ -23,6 +24,8 @@ public:
   bool IsOutputOn();
   bool IsBaudRateEchoed();
   int BaudRate();
+  bool IsOutputFormatEchoed();
+  OutputFormat GetOutputFormat();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
@@ -30,6 +33,7 @@ private:
   std::vector<std::pair<bool, QString>> serial_numbers_;
   std::vector<bool> output_status_;
   std::vector<int> baud_rates_;
+  std::vector<OutputFormat> output_formats_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

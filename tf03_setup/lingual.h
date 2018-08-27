@@ -8,6 +8,8 @@
 struct Lingual {
   QString eng;
   QString chn;
+  Lingual& operator+(const QString& str);
+  Lingual& operator+(const Lingual& lingual);
 };
 
 enum class Language {
