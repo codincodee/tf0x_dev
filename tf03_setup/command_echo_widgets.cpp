@@ -11,6 +11,7 @@
 CommandEchoWidgets::CommandEchoWidgets() {
   id = 0;
   item = new QLabel;
+  option = nullptr;
   button = new QPushButton;
   status = new QLabel;
   button_lingual = kButtonSetLingual;
@@ -84,7 +85,6 @@ void SetProtocolWidgets::ButtonClicked() {
 SetFrequencyWidgets::SetFrequencyWidgets() : CommandEchoWidgets() {
   id = 0x03;
   combo = new QComboBox;
-  combo->addItem("0");
   combo->addItem("1");
   combo->addItem("5");
   combo->addItem("10");
@@ -151,4 +151,68 @@ void SerialNumberWidgets::Update() {
     label->setText(sn);
     button->setDisabled(false);
   }
+}
+
+////////////////////// OutputSwitchWidgets /////////////////////////////
+
+OutputSwitchWidgets::OutputSwitchWidgets() {
+  id = 0x07;
+  combo = new QComboBox;
+  option = combo;
+  item_lingual = {"Output Switch", "输出开关"};
+}
+
+void OutputSwitchWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  if (lingual_equal(combo->currentText(), kSwitchOnLingual)) {
+    driver->SetOutputSwitchOn();
+  } else if (lingual_equal(combo->currentText(), kSwitchOffLingual)) {
+    driver->SetOutputSwitchOff();
+  }
+}
+
+void OutputSwitchWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsOutputSwitchEchoed()) {
+    if (echo_handler->IsOutputOn()) {
+      status_lingual = kOutputOnLingual;
+    } else {
+      status_lingual = kOutputOffLingual;
+    }
+    status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
+  }
+//  if (echo_handler->IsSerialNumberEchoed()) {
+//    auto sn = echo_handler->SerialNumber();
+//    if (sn.isEmpty()) {
+//      status_lingual = kFailLingual;
+//    } else {
+//      status_lingual = kSuccessLingual;
+//    }
+//    status->setText(which_lingual(status_lingual));
+//    label->setText(sn);
+//    button->setDisabled(false);
+//  }
+}
+
+void OutputSwitchWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kSwitchOnLingual));
+  combo->addItem(which_lingual(kSwitchOffLingual));
+}
+
+////////////////////// MeasureTriggerWidgets /////////////////////////////
+
+MeasureTriggerWidgets::MeasureTriggerWidgets() {
+  id = 0x04;
+  item_lingual = {"Trigger Once", "单次触发"};
+  button_lingual = {"Trigger", "触发"};
+}
+
+void MeasureTriggerWidgets::ButtonClicked() {
+  driver->TriggerOnce();
+}
+
+void MeasureTriggerWidgets::Update() {
+
 }

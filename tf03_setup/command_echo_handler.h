@@ -19,11 +19,14 @@ public:
   unsigned short Frequency();
   bool IsSerialNumberEchoed();
   QString SerialNumber();
+  bool IsOutputSwitchEchoed();
+  bool IsOutputOn();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
   std::vector<unsigned short> frequencies_;
   std::vector<std::pair<bool, QString>> serial_numbers_;
+  std::vector<bool> output_status_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

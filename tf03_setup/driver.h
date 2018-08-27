@@ -18,7 +18,7 @@ class QByteArray;
 QByteArray to_bytes(const unsigned short& value);
 
 enum class MessageType {
-  measure, status, frequency, serial_number
+  measure, status, frequency, serial_number, output_switch
 };
 
 struct Message {
@@ -42,6 +42,10 @@ class Driver
   void SetReleaseMode();
   void SetFrequency(const unsigned short& frequency);
   void RequestSerialNumber();
+  void SetOutputSwitchOn();
+  void SetOutputSwitchOff();
+  void TriggerOnce();
+
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
 
@@ -74,6 +78,8 @@ class Driver
   static bool ParseFrequencyEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseSerialNumberEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseOutputSwitchEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   bool ParseDevelModeMeasure(
       const QByteArray& buffer, Message& parsed, int& from, int& to);

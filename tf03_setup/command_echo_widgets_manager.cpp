@@ -20,7 +20,11 @@ void CommandEchoWidgetsManager::SetUIGrid(QGridLayout *layout) {
   for (auto& widgets : widgets_) {
     int column = 0;
     grid->addWidget(widgets.second->item, row, column++);
-    grid->addWidget(widgets.second->option, row, column++);
+    if (widgets.second->option) {
+      grid->addWidget(widgets.second->option, row, column++);
+    } else {
+      ++column;
+    }
     grid->addWidget(widgets.second->button, row, column++);
     grid->addWidget(widgets.second->status, row, column++);
     ++row;
@@ -62,6 +66,10 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
   widgets.push_back(
       std::shared_ptr<SerialNumberWidgets>(new SerialNumberWidgets));
+  widgets.push_back(
+      std::shared_ptr<OutputSwitchWidgets>(new OutputSwitchWidgets));
+  widgets.push_back(
+      std::shared_ptr<MeasureTriggerWidgets>(new MeasureTriggerWidgets));
 
   for (auto& widget : widgets) {
     widget->driver = driver_;

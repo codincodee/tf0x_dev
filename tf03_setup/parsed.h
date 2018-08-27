@@ -24,6 +24,10 @@ struct SerialNumberEcho : public ParsedBase {
   bool status;
 };
 
+struct OutputSwitchEcho : public ParsedBase {
+  bool on;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

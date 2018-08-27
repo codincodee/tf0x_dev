@@ -79,4 +79,27 @@ struct SerialNumberWidgets : public CommandEchoWidgets {
   void Update() override;
   QLabel* label;
 };
+
+////////////////////// OutputSwitchWidgets /////////////////////////////
+
+struct OutputSwitchWidgets : public CommandEchoWidgets {
+  OutputSwitchWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+  const Lingual kSwitchOnLingual = {"ON", "开"};
+  const Lingual kSwitchOffLingual = {"OFF", "关"};
+  const Lingual kOutputOnLingual = {"Output On", "已开"};
+  const Lingual kOutputOffLingual = {"Output Off", "已关"};
+};
+
+////////////////////// MeasureTriggerWidgets /////////////////////////////
+
+struct MeasureTriggerWidgets : public CommandEchoWidgets {
+  MeasureTriggerWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

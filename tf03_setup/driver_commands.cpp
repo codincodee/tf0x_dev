@@ -30,6 +30,24 @@ void Driver::RequestSerialNumber() {
   });
 }
 
+void Driver::SetOutputSwitchOn() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x07), QByteArray(1, 0x01)));
+  });
+}
+
+void Driver::SetOutputSwitchOff() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x07), QByteArray(1, 0x00)));
+  });
+}
+
+void Driver::TriggerOnce() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x04), QByteArray()));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);
