@@ -66,6 +66,18 @@ void Driver::SetDeviceBaudRate(const uint32_t &rate) {
   });
 }
 
+void Driver::SetTransTypeCAN() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x02)));
+  });
+}
+
+void Driver::SetTransTypeSerial() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));
+  });
+}
+
 std::vector<Message> Driver::GetMessages() {
   receive_messages_mutex_.lock();
   auto messages = std::move(receive_messages_);

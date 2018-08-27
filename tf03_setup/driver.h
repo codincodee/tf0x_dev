@@ -53,6 +53,8 @@ class Driver
   void SaveSettingsToFlash();
   void RestoreFactory();
   void SetDeviceBaudRate(const uint32_t& rate);
+  void SetTransTypeSerial();
+  void SetTransTypeCAN();
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();

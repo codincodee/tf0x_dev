@@ -320,3 +320,29 @@ void SetSerialBaudRateWidgets::Update() {
     button->setDisabled(false);
   }
 }
+
+////////////////////// SetPortTypeWidgets /////////////////////////////
+
+SetPortTypeWidgets::SetPortTypeWidgets() {
+  id = 0x45;
+  item_lingual = {"Port Type", "传输类型"};
+  combo = new QComboBox;
+  SetOptionLingual();
+  option = combo;
+}
+
+void SetPortTypeWidgets::SetOptionLingual() {
+  combo->clear();
+  combo->addItem(which_lingual(kSerial));
+  combo->addItem(which_lingual(kCAN));
+}
+
+void SetPortTypeWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  auto type = combo->currentText();
+  if (lingual_equal(type, kSerial)) {
+    driver->SetTransTypeSerial();
+  } else if (lingual_equal(type, kCAN)) {
+    driver->SetTransTypeCAN();
+  }
+}

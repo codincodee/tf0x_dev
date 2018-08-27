@@ -131,4 +131,15 @@ struct SetSerialBaudRateWidgets : public CommandEchoWidgets {
   void Update() override;
   QComboBox* combo;
 };
+
+////////////////////// SetPortTypeWidgets /////////////////////////////
+
+struct SetPortTypeWidgets : public CommandEchoWidgets {
+  SetPortTypeWidgets();
+  void ButtonClicked() override;
+  void SetOptionLingual() override;
+  QComboBox* combo;
+  const Lingual kSerial = {"Serial", "串口"};
+  const Lingual kCAN = {"CAN", "CAN"};
+};
 #endif // COMMAND_ECHO_WIDGETS_H
