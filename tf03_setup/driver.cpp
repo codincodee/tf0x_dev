@@ -10,7 +10,9 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x44, {"Communication Protocol", "通信协议"}},
   {0x11, {"Save Settings to Flash", "写入设置"}},
   {0x10, {"Restore Factory", "恢复出厂设置"}},
-  {0x45, {"Trans Type", "传输类型"}}
+  {0x45, {"Trans Type", "传输类型"}},
+  {0x50, {"CAN Send ID", "CAN发送ID"}},
+  {0x51, {"CAN Receive ID", "CAN接收ID"}}
 };
 
 Driver::Driver() : baud_rate_(115200) {

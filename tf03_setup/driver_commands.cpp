@@ -84,6 +84,18 @@ void Driver::SetOutputFormatPIX() {
   });
 }
 
+void Driver::SetCANSendID(const uint32_t &id) {
+  EnqueueCommand([this, id](){
+    return SendMessage(CommonCommand(char(0x50), to_bytes(id)));
+  });
+}
+
+void Driver::SetCANReceiveID(const uint32_t &id) {
+  EnqueueCommand([this, id](){
+    return SendMessage(CommonCommand(char(0x51), to_bytes(id)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

@@ -63,6 +63,8 @@ class Driver
   void SetTransTypeCAN();
   void SetOutputFormatNineBytes();
   void SetOutputFormatPIX();
+  void SetCANSendID(const uint32_t& id);
+  void SetCANReceiveID(const uint32_t& id);
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();

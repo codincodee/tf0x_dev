@@ -10,6 +10,7 @@ class QPushButton;
 class Driver;
 class QComboBox;
 class CommandEchoHandler;
+class QLineEdit;
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -154,4 +155,26 @@ struct SetOutputFormatWidgets : public CommandEchoWidgets {
   const Lingual kNineBytes = {"9 Bytes", "9字节"};
   const Lingual kPixhawk = {"Pixhawk", "Pixhawk"};
 };
+
+////////////////////// SetCANIDWidgetsBase /////////////////////////////
+
+struct SetCANIDWidgetsBase : public CommandEchoWidgets {
+  SetCANIDWidgetsBase();
+  QLineEdit* edit;
+};
+
+////////////////////// SetCANSendIDWidgets /////////////////////////////
+
+struct SetCANSendIDWidgets : public SetCANIDWidgetsBase {
+  SetCANSendIDWidgets();
+  void ButtonClicked() override;
+};
+
+////////////////////// SetCANReceiveIDWidgets /////////////////////////////
+
+struct SetCANReceiveIDWidgets : public SetCANIDWidgetsBase {
+  SetCANReceiveIDWidgets();
+  void ButtonClicked() override;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

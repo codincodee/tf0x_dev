@@ -5,6 +5,8 @@
 #include "driver.h"
 #include <QDebug>
 #include "command_echo_handler.h"
+#include <QLineEdit>
+#include <QSizePolicy>
 
 ////////////////////// CommandEchoWidgets /////////////////////////////
 
@@ -390,4 +392,46 @@ void SetOutputFormatWidgets::Update() {
     status->setText(which_lingual(status_lingual));
     button->setDisabled(false);
   }
+}
+
+////////////////////// SetCANIDWidgetsBase /////////////////////////////
+
+SetCANIDWidgetsBase::SetCANIDWidgetsBase() {
+  edit = new QLineEdit;
+  edit->setValidator(new QIntValidator(0, 100000, this));
+  option = edit;
+}
+
+////////////////////// SetCANSendIDWidgets /////////////////////////////
+
+SetCANSendIDWidgets::SetCANSendIDWidgets() {
+  id = 0x50;
+  item_lingual = {"CAN Send ID", "CAN发送ID"};
+}
+
+void SetCANSendIDWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto id = edit->text().toUInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetCANSendID(id);
+}
+
+////////////////////// SetCANReceiveIDWidgets /////////////////////////////
+
+SetCANReceiveIDWidgets::SetCANReceiveIDWidgets() {
+  id = 0x51;
+  item_lingual = {"CAN Receive ID", "CAN接收ID"};
+}
+
+void SetCANReceiveIDWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto id = edit->text().toUInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetCANReceiveID(id);
 }
