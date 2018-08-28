@@ -89,6 +89,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<SetCANReceiveIDWidgets>(new SetCANReceiveIDWidgets));
   AddWidgets(
+      std::shared_ptr<SetCANBaudRateWidgets>(new SetCANBaudRateWidgets));
+  AddWidgets(
       std::shared_ptr<SetOutputFormatWidgets>(new SetOutputFormatWidgets));
   AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));

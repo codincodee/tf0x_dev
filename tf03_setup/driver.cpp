@@ -12,7 +12,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x10, {"Restore Factory", "恢复出厂设置"}},
   {0x45, {"Trans Type", "传输类型"}},
   {0x50, {"CAN Send ID", "CAN发送ID"}},
-  {0x51, {"CAN Receive ID", "CAN接收ID"}}
+  {0x51, {"CAN Receive ID", "CAN接收ID"}},
+  {0x52, {"CAN Baud Rate", "CAN波特率"}}
 };
 
 Driver::Driver() : baud_rate_(115200) {
@@ -130,6 +131,10 @@ bool Driver::SendMessage(const QByteArray &msg) {
 
 std::vector<int> Driver::BaudRates() {
   return {115200, 57600, 38400, 19200, 9600, 4800, 2400, 1200};
+}
+
+std::vector<int> Driver::CANBaudRates() {
+  return {1000000, 500000, 250000, 125000};
 }
 
 int Driver::DefaultBaudRate() {

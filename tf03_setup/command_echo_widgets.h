@@ -177,4 +177,12 @@ struct SetCANReceiveIDWidgets : public SetCANIDWidgetsBase {
   void ButtonClicked() override;
 };
 
+////////////////////// SetCANBaudRateWidgets /////////////////////////////
+
+struct SetCANBaudRateWidgets : public CommandEchoWidgets {
+  SetCANBaudRateWidgets();
+  void ButtonClicked() override;
+  QComboBox* combo;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

@@ -435,3 +435,27 @@ void SetCANReceiveIDWidgets::ButtonClicked() {
   }
   driver->SetCANReceiveID(id);
 }
+
+////////////////////// SetCANBaudRateWidgets /////////////////////////////
+
+
+SetCANBaudRateWidgets::SetCANBaudRateWidgets() {
+  id = 0x52;
+  item_lingual = {"CAN Baud Rate", "CAN波特率"};
+  auto rates = Driver::CANBaudRates();
+  combo = new QComboBox;
+  for (auto& rate : rates) {
+    combo->addItem(QString::number(rate));
+  }
+  option = combo;
+}
+
+void SetCANBaudRateWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto rate = combo->currentText().toUInt(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetDeviceCANBaudRate(rate);
+}

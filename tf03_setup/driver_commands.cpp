@@ -96,6 +96,12 @@ void Driver::SetCANReceiveID(const uint32_t &id) {
   });
 }
 
+void Driver::SetDeviceCANBaudRate(const uint32_t &rate) {
+  EnqueueCommand([this, rate](){
+    return SendMessage(CommonCommand(char(0x52), to_bytes(rate)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

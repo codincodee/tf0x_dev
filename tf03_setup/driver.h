@@ -65,10 +65,12 @@ class Driver
   void SetOutputFormatPIX();
   void SetCANSendID(const uint32_t& id);
   void SetCANReceiveID(const uint32_t& id);
+  void SetDeviceCANBaudRate(const uint32_t& rate);
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
   static std::vector<int> BaudRates();
+  static std::vector<int> CANBaudRates();
   static int DefaultBaudRate();
 
  private:
