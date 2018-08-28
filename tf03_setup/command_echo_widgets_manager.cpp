@@ -27,18 +27,45 @@ void CommandEchoWidgetsManager::AddWidgets(
 }
 
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
-  int row = 0;
-  auto grid = layout;
-  for (auto& widgets : widgets_) {
-    int column = 0;
-    grid->addWidget(widgets->item, row, column++);
-    if (widgets->option) {
-      grid->addWidget(widgets->option, row, column++);
-    } else {
-      ++column;
+  auto widget_num = widgets_.size();
+  constexpr int kRowMax = 10;
+  auto column_num = widgets_.size() / kRowMax + 1;
+  auto parent = parent_widget_;
+
+  std::vector<QGridLayout*> layouts;
+  {
+    int col = 0;
+    for (int i = 0; i < column_num; ++i) {
+      auto sub_layout = new QGridLayout(parent);
+      layouts.push_back(sub_layout);
+      if (i != 0) {
+        QFrame* vline = new QFrame(parent);
+        vline->setFrameShape(QFrame::VLine);
+        vline->setLineWidth(1);
+        layout->addWidget(vline, 0, col++);
+      }
+      layout->addLayout(sub_layout, 0, col++);
     }
-    grid->addWidget(widgets->button, row, column++);
-    grid->addWidget(widgets->status, row, column++);
+  }
+
+  int row = 0;
+  auto id = 0;
+  while (id < widgets_.size()) {
+    for (int i = 0; i < column_num; ++i) {
+      if (id >= widgets_.size()) {
+        break;
+      }
+      int column = 0;
+      layouts[i]->addWidget(widgets_[id]->item, row, column++);
+      if (widgets_[id]->option) {
+        layouts[i]->addWidget(widgets_[id]->option, row, column++);
+      } else {
+        ++column;
+      }
+      layouts[i]->addWidget(widgets_[id]->button, row, column++);
+      layouts[i]->addWidget(widgets_[id]->status, row, column++);
+      ++id;
+    }
     ++row;
   }
 }
@@ -65,6 +92,10 @@ void CommandEchoWidgetsManager::Update() {
   for (auto& widgets : widgets_) {
     widgets->Update();
   }
+}
+
+void CommandEchoWidgetsManager::SetParentWidget(QWidget *widget) {
+  parent_widget_ = widget;
 }
 
 void CommandEchoWidgetsManager::LoadWidgets() {

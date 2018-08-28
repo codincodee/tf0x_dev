@@ -4,13 +4,14 @@
 #include <memory>
 #include <unordered_map>
 #include "lingual.h"
+#include <QObject>
 
 class Driver;
 class QGridLayout;
 struct CommandEchoWidgets;
 class CommandEchoHandler;
 
-class CommandEchoWidgetsManager {
+class CommandEchoWidgetsManager : QObject {
  public:
   CommandEchoWidgetsManager();
   void SetUIGrid(QGridLayout *layout);
@@ -21,11 +22,13 @@ class CommandEchoWidgetsManager {
   void AddWidgets(const std::shared_ptr<CommandEchoWidgets>& widget);
   void UpdateUITexts();
   void Update();
+  void SetParentWidget(QWidget* widget);
  private:
   void SetupUIGrid(QGridLayout* layout);
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_ = nullptr;
   std::shared_ptr<Driver> driver_;
   std::shared_ptr<CommandEchoHandler> echo_handler_;
+  QWidget* parent_widget_;
 };
 #endif // COMMAND_ECHO_WIDGETS_MANAGER_H
