@@ -102,6 +102,12 @@ void Driver::SetDeviceCANBaudRate(const uint32_t &rate) {
   });
 }
 
+void Driver::SetOutRangeValue(const uint16_t &value) {
+  EnqueueCommand([this, value](){
+    return SendMessage(CommonCommand(char(0x4f), to_bytes(value)));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

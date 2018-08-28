@@ -93,6 +93,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
   AddWidgets(
       std::shared_ptr<SetOutputFormatWidgets>(new SetOutputFormatWidgets));
   AddWidgets(
+      std::shared_ptr<SetOutRangeValueWidgets>(new SetOutRangeValueWidgets));
+  AddWidgets(
       std::shared_ptr<FlashSettingsWidgets>(new FlashSettingsWidgets));
   AddWidgets(
       std::shared_ptr<RestoreFactoryWidgets>(new RestoreFactoryWidgets));

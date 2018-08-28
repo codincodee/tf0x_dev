@@ -56,6 +56,8 @@ struct CommandEchoWidgets : public QObject
   static void SetWidgetUINullLabel(QWidget*& widget);
   void SetOptionWidgetUINull();
   void SetStatusLabelUINull();
+  void SetLineEditIntValidity(
+      QLineEdit *edit, const int& min, const int& max);
   const static QString kUINullString;
 };
 
@@ -183,6 +185,14 @@ struct SetCANBaudRateWidgets : public CommandEchoWidgets {
   SetCANBaudRateWidgets();
   void ButtonClicked() override;
   QComboBox* combo;
+};
+
+////////////////////// SetOutRangeValueWidgets /////////////////////////////
+
+struct SetOutRangeValueWidgets : public CommandEchoWidgets {
+  SetOutRangeValueWidgets();
+  void ButtonClicked() override;
+  QLineEdit* edit;
 };
 
 #endif // COMMAND_ECHO_WIDGETS_H

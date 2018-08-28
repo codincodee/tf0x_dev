@@ -90,6 +90,12 @@ void CommandEchoWidgets::SetStatusLabelUINull() {
   status_lingual = {kUINullString, kUINullString};
 }
 
+void CommandEchoWidgets::SetLineEditIntValidity(
+    QLineEdit *edit, const int& min, const int& max) {
+  edit->setValidator(new QIntValidator(min, max, this));
+  edit->setPlaceholderText(QString::number(min) + " - " + QString::number(max));
+}
+
 void CommandEchoWidgets::SetOptionWidgetUINull() {
   SetWidgetUINullLabel(option);
 }
@@ -398,7 +404,7 @@ void SetOutputFormatWidgets::Update() {
 
 SetCANIDWidgetsBase::SetCANIDWidgetsBase() {
   edit = new QLineEdit;
-  edit->setValidator(new QIntValidator(0, 100000, this));
+  SetLineEditIntValidity(edit, 0, 100000);
   option = edit;
 }
 
@@ -458,4 +464,24 @@ void SetCANBaudRateWidgets::ButtonClicked() {
     return;
   }
   driver->SetDeviceCANBaudRate(rate);
+}
+
+////////////////////// SetOutRangeValueWidgets /////////////////////////////
+
+SetOutRangeValueWidgets::SetOutRangeValueWidgets() {
+  id = 0x4f;
+  item_lingual = {"Out-range Value", "超量程输出值"};
+  edit = new QLineEdit;
+  SetLineEditIntValidity(edit, 0, 65534);
+  option = edit;
+}
+
+void SetOutRangeValueWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  bool ok;
+  auto value = edit->text().toUShort(&ok);
+  if (!ok) {
+    return;
+  }
+  driver->SetOutRangeValue(value);
 }

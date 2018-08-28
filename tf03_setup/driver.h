@@ -66,6 +66,7 @@ class Driver
   void SetCANSendID(const uint32_t& id);
   void SetCANReceiveID(const uint32_t& id);
   void SetDeviceCANBaudRate(const uint32_t& rate);
+  void SetOutRangeValue(const uint16_t& value);
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();

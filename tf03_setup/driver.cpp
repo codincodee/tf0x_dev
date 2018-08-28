@@ -13,7 +13,8 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x45, {"Trans Type", "传输类型"}},
   {0x50, {"CAN Send ID", "CAN发送ID"}},
   {0x51, {"CAN Receive ID", "CAN接收ID"}},
-  {0x52, {"CAN Baud Rate", "CAN波特率"}}
+  {0x52, {"CAN Baud Rate", "CAN波特率"}},
+  {0x4f, {"Out-range Value", "超量程输出值"}}
 };
 
 Driver::Driver() : baud_rate_(115200) {
