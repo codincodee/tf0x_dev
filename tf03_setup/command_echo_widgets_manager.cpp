@@ -53,6 +53,12 @@ void CommandEchoWidgetsManager::SetupFirmwareUIGrid(QGridLayout *layout) {
   layout->addWidget(firmware_widgets_->status, 0, col++);
 }
 
+void CommandEchoWidgetsManager::SetRespondAllButtonClick(bool respond) {
+  for (auto& w : widgets_) {
+    w->respond_button_click = respond;
+  }
+}
+
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
   auto widget_num = widgets_.size();
   constexpr int kRowMax = 20;
@@ -173,6 +179,10 @@ void CommandEchoWidgetsManager::LoadWidgets() {
 
   if (firmware_grid_) {
     firmware_widgets_.reset(new UpgradeFirmwareWidgets);
+    firmware_widgets_->set_respond_all_button =
+        std::bind(
+            &CommandEchoWidgetsManager::SetRespondAllButtonClick, this,
+            std::placeholders::_1);
     ConfigWidgets(firmware_widgets_);
     SetupFirmwareUIGrid(firmware_grid_);
   }

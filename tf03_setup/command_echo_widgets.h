@@ -45,6 +45,8 @@ struct CommandEchoWidgets : public QObject
 
   int timeout;
 
+  bool respond_button_click = true;
+
   Q_OBJECT
 
  public slots:

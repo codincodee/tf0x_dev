@@ -79,7 +79,7 @@ void Driver::WorkThread() {
     HandleIncomingCommandInWorkThread();
     if (serial_port_->waitForReadyRead(100)) {
       buffer_ += serial_port_->readAll();
-//      qDebug() << buffer_;
+      qDebug() << buffer_;
       ProcessBufferInWorkThread(buffer_);
     }
   }
@@ -139,10 +139,10 @@ bool Driver::SendMessage(const QByteArray &msg) {
   if (!serial_port_->isOpen()) {
     return false;
   }
-//  for (auto& c : msg) {
-//    std::cout << std::hex << ushort(c) << " ";
-//  }
-//  std::cout << std::endl;
+  for (auto& c : msg) {
+    std::cout << std::hex << ushort(c) << " ";
+  }
+  std::cout << std::endl;
   serial_port_->write(msg);
   return true;
 }

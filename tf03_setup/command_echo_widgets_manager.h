@@ -29,6 +29,7 @@ class CommandEchoWidgetsManager : QObject {
   void ConfigWidgets(std::shared_ptr<CommandEchoWidgets> widget);
   void SetupUIGrid(QGridLayout* layout);
   void SetupFirmwareUIGrid(QGridLayout* layout);
+  void SetRespondAllButtonClick(bool respond);
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_ = nullptr;
   QGridLayout* firmware_grid_ = nullptr;

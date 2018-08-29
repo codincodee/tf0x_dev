@@ -123,8 +123,33 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
       HandleFailure();
       return;
     }
-    driver->SetOutputSwitchOff();
-    driver->SetBufferCleanerBytes(1000);
+    if (!before_upgrade_instructions_shown_) {
+      QMessageBox box(button);
+      box.setWindowTitle(which_lingual(kMsgBoxInfoTitle));
+      box.setText(
+          which_lingual(
+              {"Please read through following instructions before upgrade:\n"
+               "  1. Please unplug the device and reconnect it before continue.\n"
+               "  2. The program will switch off the sensor output during upgrade;\n"
+               "     You may manually switch it back after the upgrade.\n"
+               "  3. During upgrade, all setup buttons will not respond clicks.",
+               "升级前请仔细阅读以下注意事项：\n"
+               "  1. 升级前，请拔下设备并重连。\n"
+               "  2. 固件升级期间，程序将关闭传感器输出；\n"
+               "     如需恢复，请在升级结束后手动设置。\n"
+               "  3. 升级期间，所有设置按钮将不响应点击。"}));
+      box.setStandardButtons(QMessageBox::Ok);
+      box.setButtonText(QMessageBox::Ok, which_lingual(kMsgBoxOk));
+      box.exec();
+      before_upgrade_instructions_shown_ = true;
+      return;
+    }
+
+    if (set_respond_all_button) {
+      set_respond_all_button(false);
+    }
+//    driver->SetOutputSwitchOff();
+    driver->SetBufferCleanerBytes(200);
     button_lingual = kStopLingual;
     button->setText(which_lingual(button_lingual));
     timer.restart();
@@ -176,6 +201,9 @@ void UpgradeFirmwareWidgets::HandleStop() {
   browse_lingual = kSelectBinaryLingual;
   browse->setText(which_lingual(browse_lingual));
   driver->SetBufferCleanerBytesDefault();
+  if (set_respond_all_button) {
+    set_respond_all_button(true);
+  }
 }
 
 void UpgradeFirmwareWidgets::HandleSuccess() {

@@ -48,6 +48,9 @@ void CommandEchoWidgets::Update() {
 }
 
 void CommandEchoWidgets::OnButtonClicked() {
+  if (!respond_button_click) {
+    return;
+  }
   return ButtonClicked();
 }
 void CommandEchoWidgets::ButtonClicked() {
