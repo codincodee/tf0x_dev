@@ -121,9 +121,9 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
       box.setButtonText(QMessageBox::Abort, which_lingual(kMsgBoxAbort));
       box.exec();
       HandleFailure();
-      qDebug() << __LINE__;
       return;
     }
+    driver->SetOutputSwitchOff();
     driver->SetBufferCleanerBytes(1000);
     button_lingual = kStopLingual;
     button->setText(which_lingual(button_lingual));
@@ -131,11 +131,9 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
     progress->setValue(0);
     progress->setVisible(true);
     status->setVisible(false);
-    qDebug() << __LINE__;
     module->Step();
   } else if (lingual_equal(button->text(), kStopLingual)) {
     HandleFailure();
-    qDebug() << __LINE__;
   }
 }
 
@@ -145,7 +143,6 @@ void UpgradeFirmwareWidgets::Update() {
   }
   if (timer.elapsed() > 4000) {
     HandleFailure();
-    qDebug() << __LINE__;
     return;
   }
   if (module->SegmentNum() == 0) {
@@ -155,7 +152,6 @@ void UpgradeFirmwareWidgets::Update() {
   if (echo_handler->IsFirmwareUpdateEchoed()) {
     if (!module->Step(echo_handler->GetFirmwareUpdateStatus())) {
       HandleFailure();
-      qDebug() << __LINE__;
       return;
     } else {
       timer.restart();

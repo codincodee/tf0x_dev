@@ -28,6 +28,7 @@ class CommandEchoWidgetsManager : QObject {
  private:
   void ConfigWidgets(std::shared_ptr<CommandEchoWidgets> widget);
   void SetupUIGrid(QGridLayout* layout);
+  void SetupFirmwareUIGrid(QGridLayout* layout);
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_ = nullptr;
   QGridLayout* firmware_grid_ = nullptr;

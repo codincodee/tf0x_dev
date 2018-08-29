@@ -16,15 +16,6 @@ void CommandEchoWidgetsManager::SetUIGrid(QGridLayout *layout) {
 
 void CommandEchoWidgetsManager::SetupFirmwareLayout(QGridLayout *layout) {
   firmware_grid_ = layout;
-  firmware_widgets_.reset(new UpgradeFirmwareWidgets);
-  ConfigWidgets(firmware_widgets_);
-  int col = 0;
-  layout->addWidget(firmware_widgets_->item, 0, col++);
-  layout->addWidget(firmware_widgets_->option, 0, col++);
-  layout->addWidget(firmware_widgets_->browse, 0, col++);
-  layout->addWidget(firmware_widgets_->button, 0, col++);
-  layout->addWidget(firmware_widgets_->progress, 0, col++);
-  layout->addWidget(firmware_widgets_->status, 0, col++);
 }
 
 void CommandEchoWidgetsManager::ConfigWidgets(
@@ -47,6 +38,19 @@ void CommandEchoWidgetsManager::AddWidgets(
   }
   ConfigWidgets(widget);
   widgets_.push_back(widget);
+}
+
+void CommandEchoWidgetsManager::SetupFirmwareUIGrid(QGridLayout *layout) {
+  if (!firmware_grid_) {
+    return;
+  }
+  int col = 0;
+  layout->addWidget(firmware_widgets_->item, 0, col++);
+  layout->addWidget(firmware_widgets_->option, 0, col++);
+  layout->addWidget(firmware_widgets_->browse, 0, col++);
+  layout->addWidget(firmware_widgets_->button, 0, col++);
+  layout->addWidget(firmware_widgets_->progress, 0, col++);
+  layout->addWidget(firmware_widgets_->status, 0, col++);
 }
 
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
@@ -165,5 +169,11 @@ void CommandEchoWidgetsManager::LoadWidgets() {
 
   if (ui_grid_) {
     SetupUIGrid(ui_grid_);
+  }
+
+  if (firmware_grid_) {
+    firmware_widgets_.reset(new UpgradeFirmwareWidgets);
+    ConfigWidgets(firmware_widgets_);
+    SetupFirmwareUIGrid(firmware_grid_);
   }
 }
