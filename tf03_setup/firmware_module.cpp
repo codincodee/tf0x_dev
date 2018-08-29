@@ -66,11 +66,12 @@ bool FirmwareModule::Step(const FirmwareUpdateStatus &status) {
   }
   auto seg = queue_.front();
   queue_.pop();
+  auto id = segment_total_ - SegmentNum();
   if (queue_.empty()) {
     seg += QByteArray(segment_length_ - seg.size(), 0);
-    driver_->SendFirmwareLastSegment(segment_id_++, seg);
+    driver_->SendFirmwareLastSegment(id, seg);
   } else {
-    driver_->SendFirmwareSegment(segment_id_++, seg);
+    driver_->SendFirmwareSegment(id, seg);
   }
 
   return true;
@@ -120,18 +121,21 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
       box.setButtonText(QMessageBox::Abort, which_lingual(kMsgBoxAbort));
       box.exec();
       HandleFailure();
+      qDebug() << __LINE__;
       return;
     }
-    driver->SetBufferCleanerBytes(200);
+    driver->SetBufferCleanerBytes(1000);
     button_lingual = kStopLingual;
     button->setText(which_lingual(button_lingual));
     timer.restart();
     progress->setValue(0);
     progress->setVisible(true);
     status->setVisible(false);
+    qDebug() << __LINE__;
     module->Step();
   } else if (lingual_equal(button->text(), kStopLingual)) {
     HandleFailure();
+    qDebug() << __LINE__;
   }
 }
 
@@ -139,8 +143,9 @@ void UpgradeFirmwareWidgets::Update() {
   if (!lingual_equal(button->text(), kStopLingual)) {
     return;
   }
-  if (timer.elapsed() > 2000) {
+  if (timer.elapsed() > 4000) {
     HandleFailure();
+    qDebug() << __LINE__;
     return;
   }
   if (module->SegmentNum() == 0) {
@@ -150,6 +155,7 @@ void UpgradeFirmwareWidgets::Update() {
   if (echo_handler->IsFirmwareUpdateEchoed()) {
     if (!module->Step(echo_handler->GetFirmwareUpdateStatus())) {
       HandleFailure();
+      qDebug() << __LINE__;
       return;
     } else {
       timer.restart();

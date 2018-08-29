@@ -23,7 +23,6 @@ class FirmwareModule
   int segment_length_ = 249;
   std::queue<QByteArray> queue_;
   std::shared_ptr<Driver> driver_;
-  int segment_id_ = 1;
   int segment_total_;
   int bin_bytes_;
   // QByteArray last_segment_;
