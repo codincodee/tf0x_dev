@@ -15,7 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
   driver_.reset(new Driver);
   driver_->Open();
-  timer_id_ = startTimer(100);
+   timer_id_ = startTimer(100);
+//  timer_id_ = startTimer(0);
   frequency_timer_.start();
 
   command_echo_handler_.reset(new CommandEchoHandler);
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
   command_echo_widgets_manager_->SetUIGrid(ui->CommandEchoGridLayout);
   command_echo_widgets_manager_->SetDriver(driver_);
   command_echo_widgets_manager_->SetEchoHandler(command_echo_handler_);
+  command_echo_widgets_manager_->SetupFirmwareLayout(ui->FirmwareGridLayout);
   command_echo_widgets_manager_->LoadWidgets();
 
   connect_button_current_lingual_ = kConnectPushButtonText;

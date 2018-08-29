@@ -30,6 +30,8 @@ add_executable(
     command_echo_widgets_manager.h
     command_echo_handler.cpp
     command_echo_handler.h
+    firmware_module.cpp
+    firmware_module.h
 )
 
 target_link_libraries(

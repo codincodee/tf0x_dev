@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include "lingual.h"
 #include <QSerialPortInfo>
+#include <atomic>
 
 class QSerialPort;
 class QByteArray;
@@ -29,7 +30,8 @@ enum class MessageType {
   serial_number,
   output_switch,
   baud_rate,
-  output_format
+  output_format,
+  firmware_update
 };
 
 struct Message {
@@ -67,6 +69,12 @@ class Driver
   void SetCANReceiveID(const uint32_t& id);
   void SetDeviceCANBaudRate(const uint32_t& rate);
   void SetOutRangeValue(const uint16_t& value);
+  void SendFirmwareSegment(const uint16_t& id, const QByteArray& seg);
+  void SendFirmwareLastSegment(const uint16_t& id, const QByteArray& seg);
+  void SendFirmwareFirstSegment(const uint16_t& bytes, const QByteArray &seg);
+
+  void SetBufferCleanerBytes(const int& bytes);
+  void SetBufferCleanerBytesDefault();
 
   std::vector<Message> GetMessages();
   bool DetectAndAutoConnect();
@@ -110,6 +118,8 @@ class Driver
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseOutputFormatEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseUpdateFirmwareEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
   bool ParseDevelModeMeasure(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static QByteArray ParseNineByteMeasureMessageAtFront(
@@ -141,6 +151,9 @@ class Driver
 
   QString port_name_;
   int baud_rate_;
+
+  std::atomic<int> buffer_cleaner_from_bytes_;
+  const int kDefaultBufferCleanerBytes = 30;
 };
 
 #endif // DRIVER_H

@@ -62,6 +62,13 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_2,
           std::placeholders::_3,
           std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
+          Driver::ParseUpdateFirmwareEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
 #ifdef SUPPORT_DEVEL_MODE_PROTOCOL_
   parsers.push_back(
       std::bind(
@@ -177,6 +184,36 @@ bool Driver::ParseOutputFormatEcho(
     data->format = OutputFormat::nine_bytes;
   } else if (msg[3] = char(0x02)) {
     data->format = OutputFormat::pix;
+  } else {
+    return false;
+  }
+  parsed.data = std::move(data);
+  return true;
+}
+
+bool Driver::ParseUpdateFirmwareEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 5) {
+    return false;
+  }
+  auto id = msg[2];
+  if (id != char(0x49)) {
+    return false;
+  }
+  parsed.type = MessageType::firmware_update;
+  std::unique_ptr<UpdateFirmwareEcho> data(new UpdateFirmwareEcho);
+  if (msg[3] == char(0x00)) {
+    data->status = FirmwareUpdateStatus::ok;
+  } else if (msg[3] == char(0x01)) {
+    data->status = FirmwareUpdateStatus::sum_check_error;
+  } else if (msg[3] == char(0x02)) {
+    data->status = FirmwareUpdateStatus::index_error;
+  } else if (msg[3] == char(0x03)) {
+    data->status = FirmwareUpdateStatus::upgrade_fail;
   } else {
     return false;
   }

@@ -40,6 +40,14 @@ struct OutputFormatEcho : public ParsedBase {
   OutputFormat format;
 };
 
+enum class FirmwareUpdateStatus {
+  ok, sum_check_error, index_error, upgrade_fail
+};
+
+struct UpdateFirmwareEcho : public ParsedBase {
+  FirmwareUpdateStatus status;
+};
+
 struct MeasureBasic : public ParsedBase {
   unsigned short dist;
   unsigned short amp;

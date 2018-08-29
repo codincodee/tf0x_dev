@@ -17,7 +17,17 @@ std::unordered_map<char, Lingual> Driver::kEchoStatusIDMap{
   {0x4f, {"Out-range Value", "超量程输出值"}}
 };
 
-Driver::Driver() : baud_rate_(115200) {
+Driver::Driver()
+  : baud_rate_(115200),
+    buffer_cleaner_from_bytes_(kDefaultBufferCleanerBytes) {
+}
+
+void Driver::SetBufferCleanerBytes(const int &bytes) {
+  buffer_cleaner_from_bytes_.store(bytes);
+}
+
+void Driver::SetBufferCleanerBytesDefault() {
+  SetBufferCleanerBytes(kDefaultBufferCleanerBytes);
 }
 
 void Driver::SetPortName(const QString &port) {
@@ -111,13 +121,15 @@ void Driver::ProcessBufferInWorkThread(QByteArray &buffer) {
       }
     }
     if (parsed_cnt == 0) {
-      if (buffer.size() > 30) {
+      if (buffer.size() > buffer_cleaner_from_bytes_) {
         buffer.clear();
       }
       break;
     }
   }
 }
+
+#include <iostream>
 
 bool Driver::SendMessage(const QByteArray &msg) {
   if (!serial_port_) {
@@ -126,6 +138,10 @@ bool Driver::SendMessage(const QByteArray &msg) {
   if (!serial_port_->isOpen()) {
     return false;
   }
+//  for (auto& c : msg) {
+//    std::cout << std::hex << ushort(c) << " ";
+//  }
+//  std::cout << std::endl;
   serial_port_->write(msg);
   return true;
 }

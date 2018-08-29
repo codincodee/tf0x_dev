@@ -4,6 +4,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDebug>
+#include "firmware_module.h"
+#include <QProgressBar>
 
 CommandEchoWidgetsManager::CommandEchoWidgetsManager() {
 }
@@ -12,8 +14,21 @@ void CommandEchoWidgetsManager::SetUIGrid(QGridLayout *layout) {
   ui_grid_ = layout;
 }
 
-void CommandEchoWidgetsManager::AddWidgets(
-    const std::shared_ptr<CommandEchoWidgets> &widget) {
+void CommandEchoWidgetsManager::SetupFirmwareLayout(QGridLayout *layout) {
+  firmware_grid_ = layout;
+  firmware_widgets_.reset(new UpgradeFirmwareWidgets);
+  ConfigWidgets(firmware_widgets_);
+  int col = 0;
+  layout->addWidget(firmware_widgets_->item, 0, col++);
+  layout->addWidget(firmware_widgets_->option, 0, col++);
+  layout->addWidget(firmware_widgets_->browse, 0, col++);
+  layout->addWidget(firmware_widgets_->button, 0, col++);
+  layout->addWidget(firmware_widgets_->progress, 0, col++);
+  layout->addWidget(firmware_widgets_->status, 0, col++);
+}
+
+void CommandEchoWidgetsManager::ConfigWidgets(
+    std::shared_ptr<CommandEchoWidgets> widget) {
   if (!widget) {
     return;
   }
@@ -23,12 +38,20 @@ void CommandEchoWidgetsManager::AddWidgets(
   if (!widget->echo_handler) {
     widget->echo_handler = echo_handler_;
   }
+}
+
+void CommandEchoWidgetsManager::AddWidgets(
+    std::shared_ptr<CommandEchoWidgets> widget) {
+  if (!widget) {
+    return;
+  }
+  ConfigWidgets(widget);
   widgets_.push_back(widget);
 }
 
 void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
   auto widget_num = widgets_.size();
-  constexpr int kRowMax = 10;
+  constexpr int kRowMax = 20;
   auto column_num = widgets_.size() / kRowMax + 1;
   auto parent = parent_widget_;
 
@@ -36,7 +59,7 @@ void CommandEchoWidgetsManager::SetupUIGrid(QGridLayout *layout) {
   {
     int col = 0;
     for (int i = 0; i < column_num; ++i) {
-      auto sub_layout = new QGridLayout(parent);
+      auto sub_layout = new QGridLayout;
       layouts.push_back(sub_layout);
       if (i != 0) {
         QFrame* vline = new QFrame(parent);
@@ -80,17 +103,27 @@ void CommandEchoWidgetsManager::SetEchoHandler(
 }
 
 void CommandEchoWidgetsManager::UpdateUITexts() {
-  for (auto& widgets : widgets_) {
+  static auto func = [](std::shared_ptr<CommandEchoWidgets> widgets) {
     widgets->item->setText(which_lingual(widgets->item_lingual));
     widgets->button->setText(which_lingual(widgets->button_lingual));
     widgets->SetOptionLingual();
     widgets->status->setText(which_lingual(widgets->status_lingual));
+  };
+  for (auto& widgets : widgets_) {
+    func(widgets);
+  }
+
+  if (firmware_widgets_) {
+    func(firmware_widgets_);
   }
 }
 
 void CommandEchoWidgetsManager::Update() {
   for (auto& widgets : widgets_) {
     widgets->Update();
+  }
+  if (firmware_widgets_) {
+    firmware_widgets_->Update();
   }
 }
 

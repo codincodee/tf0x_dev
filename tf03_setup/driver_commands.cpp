@@ -108,6 +108,41 @@ void Driver::SetOutRangeValue(const uint16_t &value) {
   });
 }
 
+void Driver::SendFirmwareSegment(const uint16_t& id, const QByteArray &seg) {
+  EnqueueCommand([this, id, seg](){
+    return SendMessage(CommonCommand(char(0x49), to_bytes(id) + seg));
+  });
+}
+
+void Driver::SendFirmwareLastSegment(const uint16_t &id, const QByteArray &seg) {
+  EnqueueCommand([this, id, seg](){
+    return SendMessage(CommonCommand(char(0x49), to_bytes(id) + seg));
+  });
+}
+
+//void Driver::SendFirmwareLastSegment(const uint16_t &id, const QByteArray &seg) {
+//  auto msg = CommonCommand(char(0x49), to_bytes(id) + seg);
+//  *msg.rbegin() = 'B';
+//  msg += "ENEWAKE";
+//  msg += QByteArray(4, 0);
+//  int32_t sum = 0;
+//  for (auto& c : msg) {
+//    sum += c;
+//  }
+//  memcpy(msg.end() - 4, &sum, 4);
+//  EnqueueCommand([this, msg]{
+//    return SendMessage(msg);
+//  });
+//}
+
+void Driver::SendFirmwareFirstSegment(
+    const uint16_t &bytes, const QByteArray &seg) {
+  EnqueueCommand([this, bytes, seg](){
+    return SendMessage(
+        CommonCommand(char(0x49), to_bytes(uint16_t(0)) + to_bytes(bytes) + seg));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

@@ -7,6 +7,7 @@
 class Driver;
 class QString;
 enum class OutputFormat;
+enum class FirmwareUpdateStatus;
 
 class CommandEchoHandler
 {
@@ -26,6 +27,8 @@ public:
   int BaudRate();
   bool IsOutputFormatEchoed();
   OutputFormat GetOutputFormat();
+  bool IsFirmwareUpdateEchoed();
+  FirmwareUpdateStatus GetFirmwareUpdateStatus();
 private:
   std::shared_ptr<Driver> driver_;
   std::unordered_map<char, bool> echo_map_;
@@ -34,6 +37,7 @@ private:
   std::vector<bool> output_status_;
   std::vector<int> baud_rates_;
   std::vector<OutputFormat> output_formats_;
+  std::vector<FirmwareUpdateStatus> firmware_update_status_;
 };
 
 #endif // COMMAND_ECHO_HANDLER_H

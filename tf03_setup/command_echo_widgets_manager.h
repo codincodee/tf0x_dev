@@ -10,6 +10,7 @@ class Driver;
 class QGridLayout;
 struct CommandEchoWidgets;
 class CommandEchoHandler;
+struct UpgradeFirmwareWidgets;
 
 class CommandEchoWidgetsManager : QObject {
  public:
@@ -19,14 +20,18 @@ class CommandEchoWidgetsManager : QObject {
   void SetEchoHandler(std::shared_ptr<CommandEchoHandler> handler);
   void LoadWidgets();
 
-  void AddWidgets(const std::shared_ptr<CommandEchoWidgets>& widget);
+  void AddWidgets(std::shared_ptr<CommandEchoWidgets> widget);
   void UpdateUITexts();
   void Update();
   void SetParentWidget(QWidget* widget);
+  void SetupFirmwareLayout(QGridLayout* layout);
  private:
+  void ConfigWidgets(std::shared_ptr<CommandEchoWidgets> widget);
   void SetupUIGrid(QGridLayout* layout);
   std::vector<std::shared_ptr<CommandEchoWidgets>> widgets_;
   QGridLayout* ui_grid_ = nullptr;
+  QGridLayout* firmware_grid_ = nullptr;
+  std::shared_ptr<UpgradeFirmwareWidgets> firmware_widgets_;
   std::shared_ptr<Driver> driver_;
   std::shared_ptr<CommandEchoHandler> echo_handler_;
   QWidget* parent_widget_;
