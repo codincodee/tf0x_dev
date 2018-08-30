@@ -24,6 +24,12 @@ struct SerialNumberEcho : public ParsedBase {
   bool status;
 };
 
+struct VersionEcho : public ParsedBase {
+  int major;
+  int minor;
+  int patch;
+};
+
 struct OutputSwitchEcho : public ParsedBase {
   bool on;
 };

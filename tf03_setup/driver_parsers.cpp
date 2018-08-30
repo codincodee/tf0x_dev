@@ -48,6 +48,13 @@ void Driver::LoadAllParsers(std::vector<ReceiveParser> &parsers) {
           std::placeholders::_4));
   parsers.push_back(
       std::bind(
+          Driver::ParseVersionEcho,
+          std::placeholders::_1,
+          std::placeholders::_2,
+          std::placeholders::_3,
+          std::placeholders::_4));
+  parsers.push_back(
+      std::bind(
           &Driver::ParseNineByteMeasure,
           this,
           std::placeholders::_1,
@@ -120,6 +127,28 @@ bool Driver::ParseSerialNumberEcho(
   data->sn = QString(len, 0);
   data->status = (msg[3] == char(0x00));
   memcpy(data->sn.data(), msg.data() + 4, len);
+  parsed.data = std::move(data);
+  return true;
+}
+
+bool Driver::ParseVersionEcho(
+    const QByteArray &buffer, Message &parsed, int &from, int &to) {
+  auto msg = Parse0x5AMessageAtFront(buffer, from, to);
+  if (msg.isEmpty()) {
+    return false;
+  }
+  if (msg.size() != 7) {
+    return false;
+  }
+  auto id = msg[2];
+  if (id != char(0x01)) {
+    return false;
+  }
+  parsed.type = MessageType::version;
+  std::unique_ptr<VersionEcho> data(new VersionEcho);
+  data->patch = msg[3];
+  data->minor = msg[4];
+  data->major = msg[5];
   parsed.data = std::move(data);
   return true;
 }

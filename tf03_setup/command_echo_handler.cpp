@@ -23,6 +23,7 @@ void CommandEchoHandler::Probe() {
   baud_rates_.clear();
   output_formats_.clear();
   firmware_update_status_.clear();
+  versions_.clear();
   auto message = driver_->GetMessages();
   for (auto& msg : message) {
     if (msg.type == MessageType::status) {
@@ -62,6 +63,11 @@ void CommandEchoHandler::Probe() {
           static_unique_ptr_cast<UpdateFirmwareEcho>(std::move(msg.data));
       if (status) {
         firmware_update_status_.push_back(status->status);
+      }
+    } else if (msg.type == MessageType::version) {
+      auto version = static_unique_ptr_cast<VersionEcho>(std::move(msg.data));
+      if (version) {
+        versions_.push_back(*version);
       }
     }
   }
@@ -139,4 +145,12 @@ bool CommandEchoHandler::IsFirmwareUpdateEchoed() {
 
 FirmwareUpdateStatus CommandEchoHandler::GetFirmwareUpdateStatus() {
   return *firmware_update_status_.rbegin();
+}
+
+bool CommandEchoHandler::IsVersionEchoed() {
+  return !versions_.empty();
+}
+
+VersionEcho CommandEchoHandler::Version() {
+  return *versions_.rbegin();
 }

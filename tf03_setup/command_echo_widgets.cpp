@@ -488,3 +488,33 @@ void SetOutRangeValueWidgets::ButtonClicked() {
   }
   driver->SetOutRangeValue(value);
 }
+
+////////////////////// RequestVersionWidgets /////////////////////////////
+
+RequestVersionWidgets::RequestVersionWidgets() {
+  id = 0x01;
+  label = new QLabel;
+  option = label;
+  item_lingual = {"Firmware Version", "固件版本"};
+  button_lingual = kButtonRequestLingual;
+}
+
+void RequestVersionWidgets::ButtonClicked() {
+  CommandEchoWidgets::ButtonClicked();
+  label->clear();
+  driver->RequestVersion();
+}
+
+void RequestVersionWidgets::Update() {
+  CommandEchoWidgets::Update();
+  if (echo_handler->IsVersionEchoed()) {
+    auto version = echo_handler->Version();
+    label->setText(
+        QString::number(version.major) + "." +
+        QString::number(version.minor) + "." +
+        QString::number(version.patch));
+    status_lingual = kSuccessLingual;
+    status->setText(which_lingual(status_lingual));
+    button->setDisabled(false);
+  }
+}

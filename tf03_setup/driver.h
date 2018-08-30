@@ -31,7 +31,8 @@ enum class MessageType {
   output_switch,
   baud_rate,
   output_format,
-  firmware_update
+  firmware_update,
+  version
 };
 
 struct Message {
@@ -74,6 +75,7 @@ class Driver
   void SendFirmwareFirstSegment(const uint16_t& bytes, const QByteArray &seg);
   void SendFirmwareMultiSegment(
       const uint16_t& id, const std::vector<QByteArray>& segments);
+  void RequestVersion();
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();
@@ -113,6 +115,8 @@ class Driver
   static bool ParseFrequencyEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseSerialNumberEcho(
+      const QByteArray& buffer, Message& parsed, int& from, int& to);
+  static bool ParseVersionEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);
   static bool ParseOutputSwitchEcho(
       const QByteArray& buffer, Message& parsed, int& from, int& to);

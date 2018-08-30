@@ -166,6 +166,12 @@ void Driver::SendFirmwareMultiSegment(
   });
 }
 
+void Driver::RequestVersion() {
+  EnqueueCommand([this](){
+    return SendMessage(CommonCommand(char(0x01), QByteArray()));
+  });
+}
+
 void Driver::SetTransTypeSerial() {
   EnqueueCommand([this](){
     return SendMessage(CommonCommand(char(0x45), QByteArray(1, 0x01)));

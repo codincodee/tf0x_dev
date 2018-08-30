@@ -197,4 +197,13 @@ struct SetOutRangeValueWidgets : public CommandEchoWidgets {
   QLineEdit* edit;
 };
 
+////////////////////// RequestVersionWidgets /////////////////////////////
+
+struct RequestVersionWidgets : public CommandEchoWidgets {
+  RequestVersionWidgets();
+  void ButtonClicked() override;
+  void Update() override;
+  QLabel* label;
+};
+
 #endif // COMMAND_ECHO_WIDGETS_H

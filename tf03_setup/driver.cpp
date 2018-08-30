@@ -79,7 +79,7 @@ void Driver::WorkThread() {
     HandleIncomingCommandInWorkThread();
     if (serial_port_->waitForReadyRead(100)) {
       buffer_ += serial_port_->readAll();
-      // qDebug() << buffer_;
+//       qDebug() << buffer_;
       ProcessBufferInWorkThread(buffer_);
     }
   }

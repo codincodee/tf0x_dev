@@ -147,6 +147,8 @@ void CommandEchoWidgetsManager::LoadWidgets() {
       std::shared_ptr<SetProtocolWidgets>(new SetProtocolWidgets));
   #endif
   AddWidgets(
+      std::shared_ptr<RequestVersionWidgets>(new RequestVersionWidgets));
+  AddWidgets(
       std::shared_ptr<SetFrequencyWidgets>(new SetFrequencyWidgets));
   AddWidgets(
       std::shared_ptr<SerialNumberWidgets>(new SerialNumberWidgets));
