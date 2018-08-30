@@ -72,6 +72,8 @@ class Driver
   void SendFirmwareSegment(const uint16_t& id, const QByteArray& seg);
   void SendFirmwareLastSegment(const uint16_t& id, const QByteArray& seg);
   void SendFirmwareFirstSegment(const uint16_t& bytes, const QByteArray &seg);
+  void SendFirmwareMultiSegment(
+      const uint16_t& id, const std::vector<QByteArray>& segments);
 
   void SetBufferCleanerBytes(const int& bytes);
   void SetBufferCleanerBytesDefault();

@@ -13,6 +13,8 @@ class FirmwareModule
  public:
   FirmwareModule();
   void SetDriver(std::shared_ptr<Driver> driver);
+  void SetModeSerial();
+  void SetModeCAN();
   bool LoadBin(const QString& path);
   int SegmentNum();
   bool Step();
@@ -20,7 +22,8 @@ class FirmwareModule
   float GetProgress();
  private:
   // int segment_length_ = 249;
-  int segment_length_ = 249;
+  int segment_length_ = 2;
+  int segments_per_send_ = 10;
   std::queue<QByteArray> queue_;
   std::shared_ptr<Driver> driver_;
   int segment_total_;

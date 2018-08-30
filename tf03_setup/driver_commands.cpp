@@ -1,4 +1,7 @@
 #include "driver.h"
+#include <QThread>
+#include <QSerialPort>
+#include <QDebug>
 
 void Driver::EnqueueCommand(const CommandFunc &command) {
   command_queue_mutex_.lock();
@@ -140,6 +143,26 @@ void Driver::SendFirmwareFirstSegment(
   EnqueueCommand([this, bytes, seg](){
     return SendMessage(
         CommonCommand(char(0x49), to_bytes(uint16_t(0)) + to_bytes(bytes) + seg));
+  });
+}
+
+void Driver::SendFirmwareMultiSegment(
+    const uint16_t &id, const std::vector<QByteArray> &segments) {
+  EnqueueCommand([this, id, segments](){
+    auto i = id;
+    auto read = (segments.size() != 1);
+    for (auto& segment : segments) {
+      if (!SendMessage(CommonCommand(char(0x49), to_bytes(i++) + segment))) {
+        return false;
+      }
+      if (read) {
+        if (serial_port_->waitForReadyRead(100)) {
+          buffer_ += serial_port_->readAll();
+          ProcessBufferInWorkThread(buffer_);
+        }
+      }
+    }
+    return true;
   });
 }
 

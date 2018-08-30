@@ -13,11 +13,22 @@
 
 FirmwareModule::FirmwareModule()
 {
-
+  SetModeSerial();
 }
 
 void FirmwareModule::SetDriver(std::shared_ptr<Driver> driver) {
   driver_ = driver;
+}
+
+void FirmwareModule::SetModeCAN() {
+//  segments_per_send_ = 10;
+  segments_per_send_ = 10;
+  segment_length_ = 2;
+}
+
+void FirmwareModule::SetModeSerial() {
+  segments_per_send_ = 1;
+  segment_length_ = 249;
 }
 
 bool FirmwareModule::LoadBin(const QString &path) {
@@ -64,15 +75,27 @@ bool FirmwareModule::Step(const FirmwareUpdateStatus &status) {
   if (status != FirmwareUpdateStatus::ok) {
     return false;
   }
-  auto seg = queue_.front();
-  queue_.pop();
-  auto id = segment_total_ - SegmentNum();
-  if (queue_.empty()) {
-    seg += QByteArray(segment_length_ - seg.size(), 0);
-    driver_->SendFirmwareLastSegment(id, seg);
-  } else {
-    driver_->SendFirmwareSegment(id, seg);
+
+  auto id = segment_total_ - SegmentNum() + 1;
+
+  std::vector<QByteArray> segments;
+  for (int i = 0; i < segments_per_send_; ++i) {
+    if (queue_.empty()) {
+      break;
+    }
+    auto seg = queue_.front();
+    queue_.pop();
+    segments.push_back(seg);
   }
+
+  if (queue_.empty()) {
+    if (!segments.empty()) {
+      *segments.rbegin() +=
+          QByteArray(segment_length_ - segments.rbegin()->size(), 0);
+    }
+  }
+
+  driver_->SendFirmwareMultiSegment(id, segments);
 
   return true;
 }
@@ -110,6 +133,13 @@ void UpgradeFirmwareWidgets::ButtonClicked() {
   }
   if (lingual_equal(button->text(), kUpgradeLingual)) {
     if (bin_file.isEmpty()) {
+      return;
+    }
+    if (lingual_equal(combo->currentText(), kSerial)) {
+      module->SetModeSerial();
+    } else if (lingual_equal(combo->currentText(), kCAN)) {
+      module->SetModeCAN();
+    } else {
       return;
     }
     if (!module->LoadBin(bin_file)) {
