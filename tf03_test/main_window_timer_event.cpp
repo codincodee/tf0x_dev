@@ -37,6 +37,9 @@ void MainWindow::InitializeTimerEvent() {
   cycle_timer_high_ = startTimer(50);
   cycle_timer_low_ = startTimer(150);
   cycle_timer_ = cycle_timer_high_;
+
+  outrange_check_measurements_.reserve(kOutRangeCheckMeasureNum);
+  is_outranging_.store(false);
 }
 
 void MainWindow::HandleSerialDetectionEvent() {
@@ -147,6 +150,8 @@ void MainWindow::SensorThread() {
 
     HandleAPDExperiment(measurements);
 
+    HandleOutRangeCheck(measurements);
+
     sensor_last_measurement_mutex_.lock();
     sensor_last_measurement_ = *(measurements.end() - 1);
     sensor_last_measurement_mutex_.unlock();
@@ -214,4 +219,30 @@ void MainWindow::CartThread() {
       break;
     }
   }
+}
+
+void MainWindow::HandleOutRangeCheck(
+    const std::vector<tf03_driver::Measurement> &measurements) {
+  if (outrange_output_ == 0) {
+    return;
+  }
+  for (auto& mea : measurements) {
+    outrange_check_measurements_.push_back(mea);
+  }
+
+  if (outrange_check_measurements_.size() < kOutRangeCheckMeasureNum) {
+    return;
+  }
+  int outrange_cnt = 0;
+  for (auto& mea : outrange_check_measurements_) {
+    if (mea.dist1 == outrange_output_) {
+      ++outrange_cnt;
+    }
+  }
+  if (outrange_cnt > kOutRangeCheckMeasureNum * 0.5) {
+    is_outranging_.store(true);
+  } else {
+    is_outranging_.store(false);
+  }
+  outrange_check_measurements_.clear();
 }

@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1245</width>
-    <height>601</height>
+    <width>1332</width>
+    <height>614</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>TF03 Test v1.3.32</string>
+   <string>TF03 Test v1.3.33</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -328,6 +328,43 @@
             </item>
             <item>
              <layout class="QGridLayout" name="gridLayout_6">
+              <item row="0" column="26">
+               <widget class="QLabel" name="label_41">
+                <property name="text">
+                 <string>Out-range</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="26">
+               <widget class="QLabel" name="ReadingsPageIsOutRangingLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>---</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="14">
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>StdDev</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="15">
                <spacer name="horizontalSpacer_22">
                 <property name="orientation">
@@ -360,10 +397,10 @@
                 </property>
                </spacer>
               </item>
-              <item row="0" column="14">
-               <widget class="QLabel" name="label_9">
+              <item row="0" column="10">
+               <widget class="QLabel" name="label_32">
                 <property name="text">
-                 <string>StdDev</string>
+                 <string>Dist 3 (m)</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -414,16 +451,6 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="10">
-               <widget class="QLabel" name="label_32">
-                <property name="text">
-                 <string>Dist 3 (m)</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="6">
                <widget class="QLabel" name="label_8">
                 <property name="text">
@@ -450,6 +477,16 @@
                 </property>
                </spacer>
               </item>
+              <item row="0" column="20">
+               <widget class="QLabel" name="label_34">
+                <property name="text">
+                 <string>Temperature (C)</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="10">
                <widget class="QLabel" name="ReadingsPageDistance3Label">
                 <property name="font">
@@ -466,49 +503,6 @@
                  <set>Qt::AlignCenter</set>
                 </property>
                </widget>
-              </item>
-              <item row="0" column="20">
-               <widget class="QLabel" name="label_34">
-                <property name="text">
-                 <string>Temperature (C)</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="18">
-               <widget class="QLabel" name="ReadingsPageLaserVoltageLabel">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>---</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="21">
-               <spacer name="horizontalSpacer_25">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
               <item row="1" column="16">
                <widget class="QLabel" name="ReadingsPageAPDVoltageLabel">
@@ -554,15 +548,38 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="22">
-               <widget class="QLabel" name="label_40">
+              <item row="1" column="18">
+               <widget class="QLabel" name="ReadingsPageLaserVoltageLabel">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>Algorithm</string>
+                 <string>---</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="21">
+               <spacer name="horizontalSpacer_25">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="0" column="3">
                <spacer name="horizontalSpacer_27">
@@ -596,23 +613,6 @@
                 </property>
                </spacer>
               </item>
-              <item row="1" column="4">
-               <widget class="QLabel" name="ReadingsPageRawDist3Label">
-                <property name="font">
-                 <font>
-                  <pointsize>12</pointsize>
-                  <weight>75</weight>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>---</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="ReadingsPageRawDist1Label">
                 <property name="font">
@@ -630,8 +630,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="2">
-               <widget class="QLabel" name="ReadingsPageRawDist2Label">
+              <item row="1" column="4">
+               <widget class="QLabel" name="ReadingsPageRawDist3Label">
                 <property name="font">
                  <font>
                   <pointsize>12</pointsize>
@@ -641,6 +641,16 @@
                 </property>
                 <property name="text">
                  <string>---</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="22">
+               <widget class="QLabel" name="label_40">
+                <property name="text">
+                 <string>Algorithm</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -662,6 +672,23 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item row="1" column="2">
+               <widget class="QLabel" name="ReadingsPageRawDist2Label">
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>---</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
               </item>
               <item row="0" column="0">
                <widget class="QLabel" name="lable_40">
@@ -700,20 +727,20 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="label_39">
+              <item row="0" column="18">
+               <widget class="QLabel" name="label_33">
                 <property name="text">
-                 <string>RawDist2 (m)</string>
+                 <string>Laser Voltage (V)</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
                 </property>
                </widget>
               </item>
-              <item row="0" column="4">
-               <widget class="QLabel" name="label_38">
+              <item row="0" column="2">
+               <widget class="QLabel" name="label_39">
                 <property name="text">
-                 <string>RawDist3 (m)</string>
+                 <string>RawDist2 (m)</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -747,15 +774,47 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="18">
-               <widget class="QLabel" name="label_33">
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_38">
                 <property name="text">
-                 <string>Laser Voltage (V)</string>
+                 <string>RawDist3 (m)</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="23">
+               <spacer name="horizontalSpacer_29">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="17">
+               <spacer name="horizontalSpacer_23">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="1" column="6">
                <widget class="QLabel" name="ReadingsPageDistLabel">
@@ -774,72 +833,8 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="17">
-               <spacer name="horizontalSpacer_23">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="11">
-               <spacer name="horizontalSpacer_21">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
               <item row="0" column="13">
                <spacer name="horizontalSpacer_19">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="19">
-               <spacer name="horizontalSpacer_24">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>20</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="0" column="23">
-               <spacer name="horizontalSpacer_29">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
@@ -870,6 +865,54 @@
                  <set>Qt::AlignCenter</set>
                 </property>
                </widget>
+              </item>
+              <item row="0" column="19">
+               <spacer name="horizontalSpacer_24">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="11">
+               <spacer name="horizontalSpacer_21">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="25">
+               <spacer name="horizontalSpacer_31">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
              </layout>
             </item>
@@ -1967,7 +2010,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1245</width>
+     <width>1332</width>
      <height>17</height>
     </rect>
    </property>

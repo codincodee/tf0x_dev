@@ -143,6 +143,8 @@ public:
 
   void HandleAPDExperiment(const std::vector<tf03_driver::Measurement>& measurements);
 
+  void HandleOutRangeCheck(const std::vector<tf03_driver::Measurement>& measurements);
+
   void HandlePeriodicSave();
   void SaveLog(
       const std::list<tf03_driver::Measurement>& log,
@@ -225,6 +227,11 @@ public:
   int RobustSTD(std::shared_ptr<std::list<tf03_driver::Measurement>> dists, const int& std_dist);
   const int kMaxToIgnore = 2;
   const int kMinToIngore = 2;
+
+  std::vector<tf03_driver::Measurement> outrange_check_measurements_;
+  const int kOutRangeCheckMeasureNum = 100;
+  unsigned short outrange_output_ = 0;
+  std::atomic_bool is_outranging_;
 };
 
 #endif // MAIN_WINDOW_H

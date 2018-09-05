@@ -165,6 +165,8 @@ void MainWindow::HandleSensorTimerEvent() {
         QString::number((short)measurement.raw_dist3));
     ui->ReadingsPageAlgorithmLabel->setText(
         QString::number((short)measurement.algorithm));
+    ui->ReadingsPageIsOutRangingLabel->setText(
+        is_outranging_.load() ? "True" : "False");
 
     float standard_deviation, average;
     main_chart_->CurrentAverageAndStandardDeviation(average, standard_deviation);

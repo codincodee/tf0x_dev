@@ -776,6 +776,7 @@ void MainWindow::on_CommandPageTDCOutRangeValuePushButton_clicked()
   }
   sensor_driver_mutex_.lock();
   sensor_driver_->SetTDCOutRangeValue(value);
+  outrange_output_ = value;
   sensor_driver_mutex_.unlock();
   return;
 }
